@@ -1,0 +1,12 @@
+services:
+  mysql:
+    build:
+        context: ./docker
+        dockerfile: DockerFile
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=1111
+      - MYSQL_USER=tawUser
+      - MYSQL_DATABASE=polyBank
+      - MYSQL_PASSWORD=1111
