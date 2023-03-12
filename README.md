@@ -1,25 +1,11 @@
 # polyBank
 Trabajo de tecnologías de aplicaciones web, consiste en una aplicación web de gestión bancaria
 
-
 ## Seting up docker container with MySql database:
+- Execute the next command at the root of the repository and that's it. It will pull the image from DockerHub and then configure the sql needed.
 
-- get image and configure the container:
 ```
-docker pull mysql
-
-docker run --name mysql -e MYSQL_ROOT_PASSWORD=1111 -p 33060:33060 -p 3306:3306 -d mysql
-```
-- copy your script to the container root directory and log in:
-```
-docker cp <path/to/your/script.sql> mysql:.
-docker exec -it mysql mysql -u tawUser -p
-```
-where path/to/your/script.sql is the the location of your script. (Use double '\\' if on Windows)
-
-Insert your password when required.
-- execute the .sql script inside the container
-```
-source <./scriptName.sql>
+docker compose up -d
 ```
 
+- When the container is running you will be able to connect to it through port ```3306```.
