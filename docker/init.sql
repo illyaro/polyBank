@@ -32,9 +32,10 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- Table `polyBank`.`Badge`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`Badge` (
-  `idBadge` ENUM("EUR", "DOL") NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `value` FLOAT NOT NULL,
-  PRIMARY KEY (`idBadge`))
+  `name` VARCHAR(5) NOT NULL,
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
@@ -42,7 +43,7 @@ ENGINE = InnoDB;
 -- Table `polyBank`.`BankAccount`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`BankAccount` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `client_id` INT UNSIGNED NOT NULL,
   `IBAN` VARCHAR(34) NOT NULL,
   `active` TINYINT NOT NULL,
@@ -57,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `polyBank`.`BankAccount` (
     REFERENCES `polyBank`.`Client` (`id`),
   CONSTRAINT `fk_BankAccount_Badge1`
     FOREIGN KEY (`badge`)
-    REFERENCES `polyBank`.`Badge` (`idBadge`)
+    REFERENCES `polyBank`.`Badge` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -88,7 +89,7 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- Table `polyBank`.`Benficiary`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`Benficiary` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `badge` VARCHAR(3) NOT NULL,
   `IBAN` VARCHAR(34) NOT NULL,
@@ -102,7 +103,7 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- Table `polyBank`.`CurrencyExchange`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`CurrencyExchange` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `initialAmount` FLOAT NOT NULL,
   `finalAmount` FLOAT NOT NULL,
   `initialBadge` ENUM("EUR", "DOL") NOT NULL,
@@ -112,12 +113,12 @@ CREATE TABLE IF NOT EXISTS `polyBank`.`CurrencyExchange` (
   INDEX `fk_CurrencyExchange_Badge2_idx` (`finalBadge` ASC) VISIBLE,
   CONSTRAINT `fk_CurrencyExchange_Badge1`
     FOREIGN KEY (`initialBadge`)
-    REFERENCES `polyBank`.`Badge` (`idBadge`)
+    REFERENCES `polyBank`.`Badge` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_CurrencyExchange_Badge2`
     FOREIGN KEY (`finalBadge`)
-    REFERENCES `polyBank`.`Badge` (`idBadge`)
+    REFERENCES `polyBank`.`Badge` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -125,9 +126,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `polyBank`.`Enterprise`
+-- Table `polyBank`.`Company`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `polyBank`.`Enterprise` (
+CREATE TABLE IF NOT EXISTS `polyBank`.`Company` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `BankAccount_id` INT NOT NULL,
   `name` VARCHAR(45) NOT NULL,
@@ -143,22 +144,10 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `polyBank`.`Manager`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `polyBank`.`Manager` (
-  `id` INT NOT NULL,
-  `name` VARCHAR(45) NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb3;
-
-
--- -----------------------------------------------------
 -- Table `polyBank`.`Payment`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`Payment` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `Benficiary_id` INT NOT NULL,
   `CurrencyExchange_id` INT NULL,
   `amount` FLOAT NOT NULL,
@@ -179,7 +168,7 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- Table `polyBank`.`Transaction`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`Transaction` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `timestamp` TIMESTAMP NOT NULL,
   `Client_id` INT UNSIGNED NOT NULL,
   `BankAccount_id` INT NOT NULL,
@@ -215,12 +204,13 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `polyBank`.`Assistant`
+-- Table `polyBank`.`Employee`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `polyBank`.`Assistant` (
-  `id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `polyBank`.`Employee` (
+  `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `password` VARCHAR(45) NOT NULL,
+  `type` ENUM('assistant', 'manager') NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
@@ -230,24 +220,19 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- Table `polyBank`.`Request`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`Request` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `Client_id` INT UNSIGNED NOT NULL,
-  `Manager_id` INT NOT NULL,
   `BankAccount_id` INT NOT NULL,
   `solved` TINYINT NOT NULL,
   `timestamp` TIMESTAMP NOT NULL,
   `type` ENUM('activation', 'other') NOT NULL,
   `description` VARCHAR(100) NOT NULL,
   `approved` TINYINT NULL,
+  `Employee_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_Petition_Manager1_idx` (`Manager_id` ASC) VISIBLE,
   INDEX `fk_Petition_BankAccount1_idx` (`BankAccount_id` ASC) VISIBLE,
   INDEX `fk_Request_Client1_idx` (`Client_id` ASC) VISIBLE,
-  CONSTRAINT `fk_Petition_Manager1`
-    FOREIGN KEY (`Manager_id`)
-    REFERENCES `polyBank`.`Manager` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+  INDEX `fk_Request_Employee1_idx` (`Employee_id` ASC) VISIBLE,
   CONSTRAINT `fk_Petition_BankAccount1`
     FOREIGN KEY (`BankAccount_id`)
     REFERENCES `polyBank`.`BankAccount` (`id`)
@@ -257,6 +242,11 @@ CREATE TABLE IF NOT EXISTS `polyBank`.`Request` (
     FOREIGN KEY (`Client_id`)
     REFERENCES `polyBank`.`Client` (`id`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Request_Employee1`
+    FOREIGN KEY (`Employee_id`)
+    REFERENCES `polyBank`.`Employee` (`id`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -265,9 +255,9 @@ ENGINE = InnoDB;
 -- Table `polyBank`.`SuspiciousAccount`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`SuspiciousAccount` (
-  `idSuspiciousAccount` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `IBAN` VARCHAR(34) NOT NULL,
-  PRIMARY KEY (`idSuspiciousAccount`))
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
@@ -275,7 +265,7 @@ ENGINE = InnoDB;
 -- Table `polyBank`.`Chat`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`Chat` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `Client_id` INT UNSIGNED NOT NULL,
   `Assistant_id` INT NOT NULL,
   `closed` TINYINT NOT NULL,
@@ -289,7 +279,7 @@ CREATE TABLE IF NOT EXISTS `polyBank`.`Chat` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Chat_Assistant1`
     FOREIGN KEY (`Assistant_id`)
-    REFERENCES `polyBank`.`Assistant` (`id`)
+    REFERENCES `polyBank`.`Employee` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -299,11 +289,11 @@ ENGINE = InnoDB;
 -- Table `polyBank`.`Message`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`Message` (
-  `idMessage` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `Chat_id` INT NOT NULL,
   `content` VARCHAR(45) NOT NULL,
   `timestamp` TIMESTAMP NOT NULL,
-  PRIMARY KEY (`idMessage`),
+  PRIMARY KEY (`id`),
   INDEX `fk_Message_Chat1_idx` (`Chat_id` ASC) VISIBLE,
   CONSTRAINT `fk_Message_Chat1`
     FOREIGN KEY (`Chat_id`)
