@@ -48,16 +48,16 @@ CREATE TABLE IF NOT EXISTS `polyBank`.`BankAccount` (
   `IBAN` VARCHAR(34) NOT NULL,
   `active` TINYINT NOT NULL,
   `balance` INT NOT NULL,
-  `badge` ENUM("EUR", "DOL") NOT NULL,
+  `Badge_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_BankAccount_Client_idx` (`client_id` ASC) VISIBLE,
-  INDEX `fk_BankAccount_Badge1_idx` (`badge` ASC) VISIBLE,
   UNIQUE INDEX `IBAN_UNIQUE` (`IBAN` ASC) VISIBLE,
+  INDEX `fk_BankAccount_Badge1_idx` (`Badge_id` ASC) VISIBLE,
   CONSTRAINT `fk_BankAccount_Client`
     FOREIGN KEY (`client_id`)
     REFERENCES `polyBank`.`Client` (`id`),
   CONSTRAINT `fk_BankAccount_Badge1`
-    FOREIGN KEY (`badge`)
+    FOREIGN KEY (`Badge_id`)
     REFERENCES `polyBank`.`Badge` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -106,18 +106,18 @@ CREATE TABLE IF NOT EXISTS `polyBank`.`CurrencyExchange` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `initialAmount` FLOAT NOT NULL,
   `finalAmount` FLOAT NOT NULL,
-  `initialBadge` ENUM("EUR", "DOL") NOT NULL,
-  `finalBadge` ENUM("EUR", "DOL") NOT NULL,
+  `initialBadge_id` INT NOT NULL,
+  `finalBadge_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_CurrencyExchange_Badge1_idx` (`initialBadge` ASC) VISIBLE,
-  INDEX `fk_CurrencyExchange_Badge2_idx` (`finalBadge` ASC) VISIBLE,
+  INDEX `fk_CurrencyExchange_Badge1_idx` (`initialBadge_id` ASC) VISIBLE,
+  INDEX `fk_CurrencyExchange_Badge2_idx` (`finalBadge_id` ASC) VISIBLE,
   CONSTRAINT `fk_CurrencyExchange_Badge1`
-    FOREIGN KEY (`initialBadge`)
+    FOREIGN KEY (`initialBadge_id`)
     REFERENCES `polyBank`.`Badge` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_CurrencyExchange_Badge2`
-    FOREIGN KEY (`finalBadge`)
+    FOREIGN KEY (`finalBadge_id`)
     REFERENCES `polyBank`.`Badge` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
