@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `polyBank`.`BankAccount` (
   `client_id` INT NOT NULL,
   `IBAN` VARCHAR(34) NOT NULL,
   `active` TINYINT NOT NULL,
-  `balance` FLOAT NOT NULL,
+  `balance` INT NOT NULL,
   `Badge_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_BankAccount_Client_idx` (`client_id` ASC) VISIBLE,
@@ -289,6 +289,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `polyBank`.`AuthorizedAccount` (
   `Client_id` INT NOT NULL,
   `BankAccount_id` INT NOT NULL,
+  `blocked` TINYINT NOT NULL,
   PRIMARY KEY (`Client_id`, `BankAccount_id`),
   INDEX `fk_Client_has_BankAccount_BankAccount1_idx` (`BankAccount_id` ASC) VISIBLE,
   INDEX `fk_Client_has_BankAccount_Client1_idx` (`Client_id` ASC) VISIBLE,
