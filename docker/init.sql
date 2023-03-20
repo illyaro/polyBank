@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `polyBank`.`BankAccount` (
   `client_id` INT NOT NULL,
   `IBAN` VARCHAR(34) NOT NULL,
   `active` TINYINT NOT NULL,
-  `balance` INT NOT NULL,
+  `balance` FLOAT NOT NULL,
   `Badge_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_BankAccount_Client_idx` (`client_id` ASC) VISIBLE,

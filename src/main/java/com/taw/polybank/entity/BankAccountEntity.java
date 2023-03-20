@@ -22,7 +22,7 @@ public class BankAccountEntity {
     private byte active;
     @Basic
     @Column(name = "balance")
-    private int balance;
+    private float balance;
     @Basic
     @Column(name = "Badge_id")
     private int badgeId;
@@ -59,11 +59,11 @@ public class BankAccountEntity {
         this.active = active;
     }
 
-    public int getBalance() {
+    public float getBalance() {
         return balance;
     }
 
-    public void setBalance(int balance) {
+    public void setBalance(float balance) {
         this.balance = balance;
     }
 
