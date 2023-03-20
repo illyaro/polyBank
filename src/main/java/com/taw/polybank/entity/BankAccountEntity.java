@@ -63,6 +63,10 @@ public class BankAccountEntity {
         return balance;
     }
 
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
     public void setBalance(float balance) {
         this.balance = balance;
     }
