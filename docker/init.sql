@@ -18,7 +18,7 @@ USE `polyBank` ;
 -- Table `polyBank`.`Client`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`Client` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `password` VARCHAR(45) NOT NULL,
   `surname` VARCHAR(45) NOT NULL,
@@ -32,7 +32,7 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- Table `polyBank`.`Badge`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`Badge` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `value` FLOAT NOT NULL,
   `name` VARCHAR(5) NOT NULL,
   PRIMARY KEY (`id`))
@@ -43,12 +43,12 @@ ENGINE = InnoDB;
 -- Table `polyBank`.`BankAccount`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`BankAccount` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `client_id` INT UNSIGNED NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `client_id` INT NOT NULL,
   `IBAN` VARCHAR(34) NOT NULL,
   `active` TINYINT NOT NULL,
   `balance` INT NOT NULL,
-  `Badge_id` INT UNSIGNED NOT NULL,
+  `Badge_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_BankAccount_Client_idx` (`client_id` ASC) VISIBLE,
   UNIQUE INDEX `IBAN_UNIQUE` (`IBAN` ASC) VISIBLE,
@@ -69,7 +69,7 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- Table `polyBank`.`Benficiary`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`Benficiary` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `badge` VARCHAR(3) NOT NULL,
   `IBAN` VARCHAR(34) NOT NULL,
@@ -83,11 +83,11 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- Table `polyBank`.`CurrencyExchange`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`CurrencyExchange` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `initialAmount` FLOAT NOT NULL,
   `finalAmount` FLOAT NOT NULL,
-  `initialBadge_id` INT UNSIGNED NOT NULL,
-  `finalBadge_id` INT UNSIGNED NOT NULL,
+  `initialBadge_id` INT NOT NULL,
+  `finalBadge_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_CurrencyExchange_Badge1_idx` (`initialBadge_id` ASC) VISIBLE,
   INDEX `fk_CurrencyExchange_Badge2_idx` (`finalBadge_id` ASC) VISIBLE,
@@ -109,8 +109,8 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- Table `polyBank`.`Company`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`Company` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `BankAccount_id` INT UNSIGNED NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `BankAccount_id` INT NOT NULL,
   `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_Enterprise_BankAccount1_idx` (`BankAccount_id` ASC) VISIBLE,
@@ -127,9 +127,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- Table `polyBank`.`Payment`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`Payment` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Benficiary_id` INT UNSIGNED NOT NULL,
-  `CurrencyExchange_id` INT UNSIGNED NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `Benficiary_id` INT NOT NULL,
+  `CurrencyExchange_id` INT NULL,
   `amount` FLOAT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_Payment_CurrencyExchange1_idx` (`CurrencyExchange_id` ASC) VISIBLE,
@@ -148,12 +148,12 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- Table `polyBank`.`Transaction`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`Transaction` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `timestamp` TIMESTAMP NOT NULL,
-  `Client_id` INT UNSIGNED NOT NULL,
-  `BankAccount_id` INT UNSIGNED NOT NULL,
-  `CurrencyExchange_id` INT UNSIGNED NOT NULL,
-  `Payment_id` INT UNSIGNED NOT NULL,
+  `Client_id` INT NOT NULL,
+  `BankAccount_id` INT NOT NULL,
+  `CurrencyExchange_id` INT NOT NULL,
+  `Payment_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_Transaction_BankAccount2_idx` (`BankAccount_id` ASC) VISIBLE,
   INDEX `fk_Transaction_CurrencyExchange1_idx` (`CurrencyExchange_id` ASC) VISIBLE,
@@ -187,7 +187,7 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- Table `polyBank`.`Employee`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`Employee` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `password` VARCHAR(45) NOT NULL,
   `type` ENUM('assistant', 'manager') NOT NULL,
@@ -200,10 +200,10 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- Table `polyBank`.`Request`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`Request` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Client_id` INT UNSIGNED NOT NULL,
-  `BankAccount_id` INT UNSIGNED NOT NULL,
-  `Employee_id` INT UNSIGNED NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `Client_id` INT NOT NULL,
+  `BankAccount_id` INT NOT NULL,
+  `Employee_id` INT NOT NULL,
   `solved` TINYINT NOT NULL,
   `timestamp` TIMESTAMP NOT NULL,
   `type` ENUM('activation', 'other') NOT NULL,
@@ -235,7 +235,7 @@ ENGINE = InnoDB;
 -- Table `polyBank`.`SuspiciousAccount`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`SuspiciousAccount` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `IBAN` VARCHAR(34) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
@@ -245,9 +245,9 @@ ENGINE = InnoDB;
 -- Table `polyBank`.`Chat`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`Chat` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Client_id` INT UNSIGNED NOT NULL,
-  `Assistant_id` INT UNSIGNED NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `Client_id` INT NOT NULL,
+  `Assistant_id` INT NOT NULL,
   `closed` TINYINT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_Chat_Client1_idx` (`Client_id` ASC) VISIBLE,
@@ -269,8 +269,8 @@ ENGINE = InnoDB;
 -- Table `polyBank`.`Message`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`Message` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Chat_id` INT UNSIGNED NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `Chat_id` INT NOT NULL,
   `content` VARCHAR(45) NOT NULL,
   `timestamp` TIMESTAMP NOT NULL,
   PRIMARY KEY (`id`),
@@ -287,8 +287,8 @@ ENGINE = InnoDB;
 -- Table `polyBank`.`AuthorizedAccount`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`AuthorizedAccount` (
-  `Client_id` INT UNSIGNED NOT NULL,
-  `BankAccount_id` INT UNSIGNED NOT NULL,
+  `Client_id` INT NOT NULL,
+  `BankAccount_id` INT NOT NULL,
   PRIMARY KEY (`Client_id`, `BankAccount_id`),
   INDEX `fk_Client_has_BankAccount_BankAccount1_idx` (`BankAccount_id` ASC) VISIBLE,
   INDEX `fk_Client_has_BankAccount_Client1_idx` (`Client_id` ASC) VISIBLE,
