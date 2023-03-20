@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -28,5 +29,12 @@ public class AssistantController {
         model.addAttribute("chatList", chatList);
 
         return "assistantChats";
+    }
+
+    @GetMapping("/chat")
+    public String doOpenChat (@RequestParam("id") Integer idChat, Model model) {
+        ChatEntity chat = this.chatRepository.findById(idChat).orElse(null);
+
+        return "chat";
     }
 }
