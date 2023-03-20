@@ -8,9 +8,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>HelloWorld</title>
+    <title>Polybank - Login</title>
 </head>
 <body>
-
+<h1>Inicia sesión:</h1>
+<form action="/">
+    <label for="name">Nombre: </label>
+    <input type="text" id="name"><br>
+    <label for="password">Contraseña: </label>
+    <input type="password" id="password"><br>
+    <input type="submit">
+</form>
 </body>
 </html>
