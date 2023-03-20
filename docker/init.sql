@@ -311,7 +311,6 @@ SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
-using polyBank;
 insert into Client (`name`, surname, `password`, creationDate) values ('Debbie', 'Vasyutichev', 'password', '2018-04-24 14:11:09');
 insert into Client (`name`, surname, `password`, creationDate) values ('Stacie', 'Bonniface', 'password', '2018-04-21 14:11:09');
 insert into Client (`name`, surname, `password`, creationDate) values ('Doralynne', 'Bennington', 'password', '2018-04-21 14:11:09');
