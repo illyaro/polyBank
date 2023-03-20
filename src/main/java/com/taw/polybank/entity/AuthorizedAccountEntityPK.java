@@ -8,7 +8,6 @@ import jakarta.persistence.Id;
 import java.io.Serializable;
 import java.util.Objects;
 
-
 public class AuthorizedAccountEntityPK implements Serializable {
     @Column(name = "Client_id")
     @Id

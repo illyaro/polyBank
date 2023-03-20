@@ -6,6 +6,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "AuthorizedAccount", schema = "polyBank", catalog = "")
+@IdClass(AuthorizedAccountEntityPK.class)
 public class AuthorizedAccountEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -15,6 +16,9 @@ public class AuthorizedAccountEntity {
     @Id
     @Column(name = "BankAccount_id")
     private int bankAccountId;
+    @Basic
+    @Column(name = "blocked")
+    private byte blocked;
 
     public int getClientId() {
         return clientId;
@@ -43,5 +47,13 @@ public class AuthorizedAccountEntity {
     @Override
     public int hashCode() {
         return Objects.hash(clientId, bankAccountId);
+    }
+
+    public byte getBlocked() {
+        return blocked;
+    }
+
+    public void setBlocked(byte blocked) {
+        this.blocked = blocked;
     }
 }
