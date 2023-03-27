@@ -1,6 +1,7 @@
 package com.taw.polybank.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 import java.util.Objects;
@@ -21,7 +22,7 @@ public class ClientEntity {
     @Basic
     @Column(name = "surname")
     private String surname;
-    @Basic
+    @CreationTimestamp
     @Column(name = "creationDate")
     private Timestamp creationDate;
     @Basic
