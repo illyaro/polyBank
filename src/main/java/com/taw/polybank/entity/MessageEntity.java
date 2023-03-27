@@ -27,6 +27,15 @@ public class MessageEntity {
     @Basic
     @Column(name = "Client_id")
     private int clientId;
+    @ManyToOne
+    @JoinColumn(name = "Chat_id", referencedColumnName = "id", nullable = false)
+    private ChatEntity chatByChatId;
+    @ManyToOne
+    @JoinColumn(name = "Employee_id", referencedColumnName = "id", nullable = false)
+    private EmployeeEntity employeeByEmployeeId;
+    @ManyToOne
+    @JoinColumn(name = "Client_id", referencedColumnName = "id", nullable = false)
+    private ClientEntity clientByClientId;
 
     public int getId() {
         return id;
@@ -87,5 +96,29 @@ public class MessageEntity {
 
     public void setClientId(int clientId) {
         this.clientId = clientId;
+    }
+
+    public ChatEntity getChatByChatId() {
+        return chatByChatId;
+    }
+
+    public void setChatByChatId(ChatEntity chatByChatId) {
+        this.chatByChatId = chatByChatId;
+    }
+
+    public EmployeeEntity getEmployeeByEmployeeId() {
+        return employeeByEmployeeId;
+    }
+
+    public void setEmployeeByEmployeeId(EmployeeEntity employeeByEmployeeId) {
+        this.employeeByEmployeeId = employeeByEmployeeId;
+    }
+
+    public ClientEntity getClientByClientId() {
+        return clientByClientId;
+    }
+
+    public void setClientByClientId(ClientEntity clientByClientId) {
+        this.clientByClientId = clientByClientId;
     }
 }

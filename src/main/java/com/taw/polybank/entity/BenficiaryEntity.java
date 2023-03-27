@@ -2,6 +2,7 @@ package com.taw.polybank.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -23,6 +24,8 @@ public class BenficiaryEntity {
     @Basic
     @Column(name = "swift")
     private String swift;
+    @OneToMany(mappedBy = "benficiaryByBenficiaryId")
+    private Collection<PaymentEntity> paymentsById;
 
     public int getId() {
         return id;
@@ -75,5 +78,13 @@ public class BenficiaryEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, badge, iban, swift);
+    }
+
+    public Collection<PaymentEntity> getPaymentsById() {
+        return paymentsById;
+    }
+
+    public void setPaymentsById(Collection<PaymentEntity> paymentsById) {
+        this.paymentsById = paymentsById;
     }
 }

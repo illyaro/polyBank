@@ -2,6 +2,7 @@ package com.taw.polybank.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -23,6 +24,16 @@ public class CurrencyExchangeEntity {
     @Basic
     @Column(name = "finalBadge_id")
     private int finalBadgeId;
+    @ManyToOne
+    @JoinColumn(name = "initialBadge_id", referencedColumnName = "id", nullable = false)
+    private BadgeEntity badgeByInitialBadgeId;
+    @ManyToOne
+    @JoinColumn(name = "finalBadge_id", referencedColumnName = "id", nullable = false)
+    private BadgeEntity badgeByFinalBadgeId;
+    @OneToMany(mappedBy = "currencyExchangeByCurrencyExchangeId")
+    private Collection<PaymentEntity> paymentsById;
+    @OneToMany(mappedBy = "currencyExchangeByCurrencyExchangeId")
+    private Collection<TransactionEntity> transactionsById;
 
     public int getId() {
         return id;
@@ -75,5 +86,37 @@ public class CurrencyExchangeEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, initialAmount, finalAmount, initialBadgeId, finalBadgeId);
+    }
+
+    public BadgeEntity getBadgeByInitialBadgeId() {
+        return badgeByInitialBadgeId;
+    }
+
+    public void setBadgeByInitialBadgeId(BadgeEntity badgeByInitialBadgeId) {
+        this.badgeByInitialBadgeId = badgeByInitialBadgeId;
+    }
+
+    public BadgeEntity getBadgeByFinalBadgeId() {
+        return badgeByFinalBadgeId;
+    }
+
+    public void setBadgeByFinalBadgeId(BadgeEntity badgeByFinalBadgeId) {
+        this.badgeByFinalBadgeId = badgeByFinalBadgeId;
+    }
+
+    public Collection<PaymentEntity> getPaymentsById() {
+        return paymentsById;
+    }
+
+    public void setPaymentsById(Collection<PaymentEntity> paymentsById) {
+        this.paymentsById = paymentsById;
+    }
+
+    public Collection<TransactionEntity> getTransactionsById() {
+        return transactionsById;
+    }
+
+    public void setTransactionsById(Collection<TransactionEntity> transactionsById) {
+        this.transactionsById = transactionsById;
     }
 }

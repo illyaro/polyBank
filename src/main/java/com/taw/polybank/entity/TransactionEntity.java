@@ -27,6 +27,18 @@ public class TransactionEntity {
     @Basic
     @Column(name = "Payment_id")
     private int paymentId;
+    @ManyToOne
+    @JoinColumn(name = "Client_id", referencedColumnName = "id", nullable = false)
+    private ClientEntity clientByClientId;
+    @ManyToOne
+    @JoinColumn(name = "BankAccount_id", referencedColumnName = "id", nullable = false)
+    private BankAccountEntity bankAccountByBankAccountId;
+    @ManyToOne
+    @JoinColumn(name = "CurrencyExchange_id", referencedColumnName = "id", nullable = false)
+    private CurrencyExchangeEntity currencyExchangeByCurrencyExchangeId;
+    @ManyToOne
+    @JoinColumn(name = "Payment_id", referencedColumnName = "id", nullable = false)
+    private PaymentEntity paymentByPaymentId;
 
     public int getId() {
         return id;
@@ -87,5 +99,37 @@ public class TransactionEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, timestamp, clientId, bankAccountId, currencyExchangeId, paymentId);
+    }
+
+    public ClientEntity getClientByClientId() {
+        return clientByClientId;
+    }
+
+    public void setClientByClientId(ClientEntity clientByClientId) {
+        this.clientByClientId = clientByClientId;
+    }
+
+    public BankAccountEntity getBankAccountByBankAccountId() {
+        return bankAccountByBankAccountId;
+    }
+
+    public void setBankAccountByBankAccountId(BankAccountEntity bankAccountByBankAccountId) {
+        this.bankAccountByBankAccountId = bankAccountByBankAccountId;
+    }
+
+    public CurrencyExchangeEntity getCurrencyExchangeByCurrencyExchangeId() {
+        return currencyExchangeByCurrencyExchangeId;
+    }
+
+    public void setCurrencyExchangeByCurrencyExchangeId(CurrencyExchangeEntity currencyExchangeByCurrencyExchangeId) {
+        this.currencyExchangeByCurrencyExchangeId = currencyExchangeByCurrencyExchangeId;
+    }
+
+    public PaymentEntity getPaymentByPaymentId() {
+        return paymentByPaymentId;
+    }
+
+    public void setPaymentByPaymentId(PaymentEntity paymentByPaymentId) {
+        this.paymentByPaymentId = paymentByPaymentId;
     }
 }
