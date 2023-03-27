@@ -20,6 +20,12 @@ public class EmployeeEntity {
     @Basic
     @Column(name = "type")
     private Object type;
+    @Basic
+    @Column(name = "DNI")
+    private String dni;
+    @Basic
+    @Column(name = "salt")
+    private String salt;
 
     public int getId() {
         return id;
@@ -64,5 +70,21 @@ public class EmployeeEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, password, type);
+    }
+
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 }

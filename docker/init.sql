@@ -19,11 +19,14 @@ USE `polyBank` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`Client` (
   `id` INT NOT NULL AUTO_INCREMENT,
+  `DNI` VARCHAR(45) NOT NULL,
   `name` VARCHAR(45) NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(64) NOT NULL,
+  `salt` VARCHAR(32) NOT NULL,
   `surname` VARCHAR(45) NOT NULL,
   `creationDate` TIMESTAMP NOT NULL,
-  PRIMARY KEY (`id`))
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `DNI_UNIQUE` (`DNI` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
@@ -188,10 +191,13 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`Employee` (
   `id` INT NOT NULL AUTO_INCREMENT,
+  `DNI` VARCHAR(45) NOT NULL,
   `name` VARCHAR(45) NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(64) NOT NULL,
   `type` ENUM('assistant', 'manager') NOT NULL,
-  PRIMARY KEY (`id`))
+  `salt` VARCHAR(32) NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `DNI_UNIQUE` (`DNI` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
@@ -271,13 +277,27 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `polyBank`.`Message` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `Chat_id` INT NOT NULL,
-  `content` VARCHAR(45) NOT NULL,
+  `Employee_id` INT NOT NULL,
+  `Client_id` INT NOT NULL,
+  `content` VARCHAR(1000) NOT NULL,
   `timestamp` TIMESTAMP NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_Message_Chat1_idx` (`Chat_id` ASC) VISIBLE,
+  INDEX `fk_Message_Employee1_idx` (`Employee_id` ASC) VISIBLE,
+  INDEX `fk_Message_Client1_idx` (`Client_id` ASC) VISIBLE,
   CONSTRAINT `fk_Message_Chat1`
     FOREIGN KEY (`Chat_id`)
     REFERENCES `polyBank`.`Chat` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Message_Employee1`
+    FOREIGN KEY (`Employee_id`)
+    REFERENCES `polyBank`.`Employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Message_Client1`
+    FOREIGN KEY (`Client_id`)
+    REFERENCES `polyBank`.`Client` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -311,22 +331,23 @@ SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
-insert into Client (`name`, surname, `password`, creationDate) values ('Debbie', 'Vasyutichev', 'password', '2018-04-24 14:11:09');
-insert into Client (`name`, surname, `password`, creationDate) values ('Stacie', 'Bonniface', 'password', '2018-04-21 14:11:09');
-insert into Client (`name`, surname, `password`, creationDate) values ('Doralynne', 'Bennington', 'password', '2018-04-21 14:11:09');
-insert into Client (`name`, surname, `password`, creationDate) values ('Kristos', 'Rotherforth', 'password', '2020-04-21 14:11:09');
-insert into Client (`name`, surname, `password`, creationDate) values ('Keelby', 'Giacovetti', 'password', '2018-04-1 14:11:09');
-insert into Client (`name`, surname, `password`, creationDate) values ('Courtnay', 'Candlin', 'password', '2018-04-21 14:11:09');
-insert into Client (`name`, surname, `password`, creationDate) values ('Gloriane', 'Brice', 'password', '2019-04-21 14:11:09');
-insert into Client (`name`, surname, `password`, creationDate) values ('Roxie', 'Ivancevic', 'password', '2018-04-21 14:11:09');
-insert into Client (`name`, surname, `password`, creationDate) values ('Lorilee', 'Leile', 'password', '2016-04-21 14:11:09');
-insert into Client (`name`, surname, `password`, creationDate) values ('Abdul', 'Gauthorpp', 'password', '2018-04-21 14:11:09');
 
-insert into Employee (`name`, `password`, `type`) values ('Kienan Benaine', 'TqbcDk', 'assistant');
-insert into Employee (`name`, `password`, `type`) values ('Leah Aguirre', 'AHdUsN', 'assistant');
-insert into Employee (`name`, `password`, `type`) values ('Levon Izak', 'iW5PcuT', 'assistant');
-insert into Employee (`name`, `password`, `type`) values ('Martguerita Strase', '6hUdplam76Wd', 'assistant');
-insert into Employee (`name`, `password`, `type`) values ('Julissa Bernade', 'Si5yIaDK', 'manager');
+insert into Client (`name`, dni, surname, `password`, `salt`, creationDate) values ('Debbie', '40397815V', 'Vasyutichev', 'password', '1234', '2018-04-24 14:11:09');
+insert into Client (`name`, dni, surname, `password`, `salt`, creationDate) values ('Stacie', 'Y0192459D',  'Vasyutichev', 'password', '1234', '2018-04-21 14:11:09');
+insert into Client (`name`, dni, surname, `password`, `salt`, creationDate) values ('Doralynne', '17080917J',  'Vasyutichev', 'password', '1234', '2018-04-21 14:11:09');
+insert into Client (`name`, dni, surname, `password`, `salt`, creationDate) values ('Kristos',  '17080917A','Rotherforth', 'password', '1234', '2020-04-21 14:11:09');
+insert into Client (`name`, dni, surname, `password`, `salt`, creationDate) values ('Keelby',  '17080917X','Giacovetti', 'password', '1234', '2018-04-1 14:11:09');
+insert into Client (`name`, dni, surname, `password`, `salt`, creationDate) values ('Courtnay',  '17080917T','Candlin', 'password', '1234', '2018-04-21 14:11:09');
+insert into Client (`name`, dni, surname, `password`, `salt`, creationDate) values ('Gloriane',  '17080917F','Brice', 'password', '1234', '2019-04-21 14:11:09');
+insert into Client (`name`, dni, surname, `password`, `salt`, creationDate) values ('Roxie', '17080917L', 'Ivancevic', 'password', '1234', '2018-04-21 14:11:09');
+insert into Client (`name`, dni, surname, `password`, `salt`, creationDate) values ('Lorilee', '17080917M', 'Leile', 'password', '1234', '2016-04-21 14:11:09');
+insert into Client (`name`, dni, surname, `password`, `salt`, creationDate) values ('Abdul', '17080917R', 'Gauthorpp', 'password', '1234', '2018-04-21 14:11:09');
+
+insert into Employee (`name`, dni, `password`, `salt`, `type`) values ('Kienan Benaine', '40397815A','TqbcDk', '1234', 'assistant');
+insert into Employee (`name`, dni, `password`, `salt`, `type`) values ('Leah Aguirre', '40397815S','AHdUsN', '1234', 'assistant');
+insert into Employee (`name`, dni, `password`, `salt`, `type`) values ('Levon Izak', '40397815T','iW5PcuT', '1234', 'assistant');
+insert into Employee (`name`, dni, `password`, `salt`, `type`) values ('Martguerita Strase', '40397815P','6hUdplam76Wd', '1234', 'assistant');
+insert into Employee (`name`, dni, `password`, `salt`, `type`) values ('Julissa Bernade', '40397815J','Si5yIaDK', '1234', 'manager');
 
 insert into Badge (`name`, `value`) values ('RUB', 2059.1);
 insert into Badge (`name`, `value`) values ('MXN', 6188.03);
