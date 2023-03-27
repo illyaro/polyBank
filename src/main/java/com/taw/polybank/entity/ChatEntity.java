@@ -2,6 +2,7 @@ package com.taw.polybank.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -20,6 +21,14 @@ public class ChatEntity {
     @Basic
     @Column(name = "closed")
     private byte closed;
+    @ManyToOne
+    @JoinColumn(name = "Client_id", referencedColumnName = "id", nullable = false)
+    private ClientEntity clientByClientId;
+    @ManyToOne
+    @JoinColumn(name = "Assistant_id", referencedColumnName = "id", nullable = false)
+    private EmployeeEntity employeeByAssistantId;
+    @OneToMany(mappedBy = "chatByChatId")
+    private Collection<MessageEntity> messagesById;
 
     public int getId() {
         return id;
@@ -64,5 +73,29 @@ public class ChatEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, clientId, assistantId, closed);
+    }
+
+    public ClientEntity getClientByClientId() {
+        return clientByClientId;
+    }
+
+    public void setClientByClientId(ClientEntity clientByClientId) {
+        this.clientByClientId = clientByClientId;
+    }
+
+    public EmployeeEntity getEmployeeByAssistantId() {
+        return employeeByAssistantId;
+    }
+
+    public void setEmployeeByAssistantId(EmployeeEntity employeeByAssistantId) {
+        this.employeeByAssistantId = employeeByAssistantId;
+    }
+
+    public Collection<MessageEntity> getMessagesById() {
+        return messagesById;
+    }
+
+    public void setMessagesById(Collection<MessageEntity> messagesById) {
+        this.messagesById = messagesById;
     }
 }

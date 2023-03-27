@@ -2,6 +2,7 @@ package com.taw.polybank.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -20,6 +21,14 @@ public class PaymentEntity {
     @Basic
     @Column(name = "amount")
     private double amount;
+    @ManyToOne
+    @JoinColumn(name = "Benficiary_id", referencedColumnName = "id", nullable = false)
+    private BenficiaryEntity benficiaryByBenficiaryId;
+    @ManyToOne
+    @JoinColumn(name = "CurrencyExchange_id", referencedColumnName = "id")
+    private CurrencyExchangeEntity currencyExchangeByCurrencyExchangeId;
+    @OneToMany(mappedBy = "paymentByPaymentId")
+    private Collection<TransactionEntity> transactionsById;
 
     public int getId() {
         return id;
@@ -64,5 +73,29 @@ public class PaymentEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, benficiaryId, currencyExchangeId, amount);
+    }
+
+    public BenficiaryEntity getBenficiaryByBenficiaryId() {
+        return benficiaryByBenficiaryId;
+    }
+
+    public void setBenficiaryByBenficiaryId(BenficiaryEntity benficiaryByBenficiaryId) {
+        this.benficiaryByBenficiaryId = benficiaryByBenficiaryId;
+    }
+
+    public CurrencyExchangeEntity getCurrencyExchangeByCurrencyExchangeId() {
+        return currencyExchangeByCurrencyExchangeId;
+    }
+
+    public void setCurrencyExchangeByCurrencyExchangeId(CurrencyExchangeEntity currencyExchangeByCurrencyExchangeId) {
+        this.currencyExchangeByCurrencyExchangeId = currencyExchangeByCurrencyExchangeId;
+    }
+
+    public Collection<TransactionEntity> getTransactionsById() {
+        return transactionsById;
+    }
+
+    public void setTransactionsById(Collection<TransactionEntity> transactionsById) {
+        this.transactionsById = transactionsById;
     }
 }

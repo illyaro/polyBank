@@ -17,6 +17,9 @@ public class CompanyEntity {
     @Basic
     @Column(name = "name")
     private String name;
+    @ManyToOne
+    @JoinColumn(name = "BankAccount_id", referencedColumnName = "id", nullable = false)
+    private BankAccountEntity bankAccountByBankAccountId;
 
     public int getId() {
         return id;
@@ -53,5 +56,13 @@ public class CompanyEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, bankAccountId, name);
+    }
+
+    public BankAccountEntity getBankAccountByBankAccountId() {
+        return bankAccountByBankAccountId;
+    }
+
+    public void setBankAccountByBankAccountId(BankAccountEntity bankAccountByBankAccountId) {
+        this.bankAccountByBankAccountId = bankAccountByBankAccountId;
     }
 }

@@ -36,6 +36,15 @@ public class RequestEntity {
     @Basic
     @Column(name = "approved")
     private Byte approved;
+    @ManyToOne
+    @JoinColumn(name = "Client_id", referencedColumnName = "id", nullable = false)
+    private ClientEntity clientByClientId;
+    @ManyToOne
+    @JoinColumn(name = "BankAccount_id", referencedColumnName = "id", nullable = false)
+    private BankAccountEntity bankAccountByBankAccountId;
+    @ManyToOne
+    @JoinColumn(name = "Employee_id", referencedColumnName = "id", nullable = false)
+    private EmployeeEntity employeeByEmployeeId;
 
     public int getId() {
         return id;
@@ -120,5 +129,29 @@ public class RequestEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, clientId, bankAccountId, employeeId, solved, timestamp, type, description, approved);
+    }
+
+    public ClientEntity getClientByClientId() {
+        return clientByClientId;
+    }
+
+    public void setClientByClientId(ClientEntity clientByClientId) {
+        this.clientByClientId = clientByClientId;
+    }
+
+    public BankAccountEntity getBankAccountByBankAccountId() {
+        return bankAccountByBankAccountId;
+    }
+
+    public void setBankAccountByBankAccountId(BankAccountEntity bankAccountByBankAccountId) {
+        this.bankAccountByBankAccountId = bankAccountByBankAccountId;
+    }
+
+    public EmployeeEntity getEmployeeByEmployeeId() {
+        return employeeByEmployeeId;
+    }
+
+    public void setEmployeeByEmployeeId(EmployeeEntity employeeByEmployeeId) {
+        this.employeeByEmployeeId = employeeByEmployeeId;
     }
 }
