@@ -14,7 +14,7 @@
 
 <html>
 <head>
-    <title>Polybank - Assistant</title>
+    <title>Polybank - Assistence</title>
 </head>
 <body>
 <h1>Chats List</h1>
@@ -32,7 +32,7 @@
         <td><%= chat.getId() %></td>
         <td><%= chat.getClientId() %></td>
         <td><%= chat.getClosed() %></td>
-        <td><a href="employee/assistant/chat?id=<%= chat.getId() %>">Open</a></td>
+        <td><a href="employee/assistence/chat?id=<%= chat.getId() %>">Open</a></td>
     </tr>
     <%
         }

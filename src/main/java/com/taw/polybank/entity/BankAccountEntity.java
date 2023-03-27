@@ -22,7 +22,7 @@ public class BankAccountEntity {
     private byte active;
     @Basic
     @Column(name = "balance")
-    private float balance;
+    private double balance;
     @Basic
     @Column(name = "Badge_id")
     private int badgeId;

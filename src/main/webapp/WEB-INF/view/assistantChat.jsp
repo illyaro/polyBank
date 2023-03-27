@@ -6,7 +6,7 @@
 <%--
   Created by IntelliJ IDEA.
   User: Javier Jordán Luque
-  Date: 27/3/23
+  Date: 27/03/23
   Time: 10:55
   To change this template use File | Settings | File Templates.
 --%>
@@ -30,17 +30,31 @@
     </tr>
         <%
             for (MessageEntity message : messageList) {
+                if (message.getOwner() == Assistant) {
         %>
     <tr>
         <td><%= message.getContent()%></td>
+        <td></td>
     </tr>
         <%
-            }
+                } else {
         %>
-    <form action="/employee/assistant/send" method="post">
+    <tr>
+        <td><%= message.getContent()%></td>
+        <td></td>
+    </tr>
+        <%
+                }
+            }
+            if (chat.getClosed() == 0) {
+        %>
+    <form action="/employee/assistence/send" method="post">
         <input hidden="true" name="chatId" value="<%= chat.getId() %>">
         <textarea name="content" cols="50" rows="50" maxlength="1000"/><br/>
         <button>Send</button>
     </form>
+        <%
+            }
+        %>
 </body>
 </html>

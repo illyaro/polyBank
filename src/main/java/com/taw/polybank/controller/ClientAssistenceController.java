@@ -1,10 +1,10 @@
 package com.taw.polybank.controller;
 
 import com.taw.polybank.dao.ChatRepository;
-import com.taw.polybank.dao.EmployeeRepository;
+import com.taw.polybank.dao.ClientRepository;
 import com.taw.polybank.dao.MessageRepository;
 import com.taw.polybank.entity.ChatEntity;
-import com.taw.polybank.entity.EmployeeEntity;
+import com.taw.polybank.entity.ClientEntity;
 import com.taw.polybank.entity.MessageEntity;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +17,11 @@ import java.time.Instant;
 import java.util.List;
 
 @Controller
-@RequestMapping("employee/assistence")
-public class AssistantController {
+@RequestMapping("client/assistence")
+public class ClientAssistenceController {
 
     @Autowired
-    protected EmployeeRepository employeeRepository;
+    protected ClientRepository clientRepository;
 
     @Autowired
     protected ChatRepository chatRepository;
@@ -31,11 +31,11 @@ public class AssistantController {
 
     @GetMapping("/")
     public String doListChats(Model model, HttpSession session) {
-        EmployeeEntity employee = this.employeeRepository.findById((Integer) session.getAttribute("employeeId")).orElse(null);
-        List<ChatEntity> chatList = this.chatRepository.searchByAssistant(employee.getId());
+        ClientEntity client = this.clientRepository.findById((Integer) session.getAttribute("clientId")).orElse(null);
+        List<ChatEntity> chatList = this.chatRepository.searchByClient(client.getId());
         model.addAttribute("chatList", chatList);
 
-        return "assistantChatList";
+        return "clientChatList";
     }
 
     @GetMapping("/chat")
@@ -56,6 +56,14 @@ public class AssistantController {
         message.setContent(content);
         message.setTimestamp(Timestamp.from(Instant.now()));
         this.messageRepository.save(message);
-        return "redirect:/employee/assistence/chat?id=" + chatId + "/";
+        return "redirect:/client/assistence/chat?id=" + chatId + "/";
+    }
+
+    @PostMapping("/close")
+    public String doSend (@RequestParam("chatId") Integer chatId) {
+        ChatEntity chat = chatRepository.findById(chatId).orElse(null);
+        chat.setClosed((byte) 1);
+        this.chatRepository.save(chat);
+        return "redirect:/client/assistence/";
     }
 }
