@@ -23,6 +23,8 @@
         <th>NOMBRE</th>
         <th>APELLIDOS</th>
         <th>FECHA DE CREACIÓN</th>
+        <th></th>
+        <th></th>
     </tr>
     <%
         for (ClientEntity cliente : lista) {
@@ -32,9 +34,13 @@
         <td><%= cliente.getName() %></td>
         <td><%= cliente.getSurname() %></td>
         <td><%= cliente.getCreationDate() %></td>
+        <td><a href="/client/edit?id=<%= cliente.getId() %>"> Editar</a></td>
+        <td><a href="/client/delete?id=<%= cliente.getId() %>"> Borrar</a></td>
     </tr>
     <%
         }
     %>
+</table><br>
+<button type="button" onclick="location.href='/client/create'">Añadir Cliente</button>
 </body>
 </html>

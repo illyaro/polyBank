@@ -59,7 +59,7 @@ public class BankAccountEntity {
         this.active = active;
     }
 
-    public float getBalance() {
+    public double getBalance() {
         return balance;
     }
 
