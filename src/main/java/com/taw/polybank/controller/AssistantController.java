@@ -51,10 +51,13 @@ public class AssistantController {
 
     @PostMapping("/send")
     public String doSend (@RequestParam("content") String content, @RequestParam("chatId") Integer chatId) {
+        ChatEntity chat = chatRepository.findById(chatId).orElse(null);
         MessageEntity message = new MessageEntity();
         message.setChatId(chatId);
         message.setContent(content);
         message.setTimestamp(Timestamp.from(Instant.now()));
+        message.setEmployeeId(chat.getAssistantId());
+        message.setClientId(-1);
         this.messageRepository.save(message);
         return "redirect:/employee/assistence/chat?id=" + chatId + "/";
     }

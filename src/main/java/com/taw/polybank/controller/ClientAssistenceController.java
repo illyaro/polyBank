@@ -51,10 +51,13 @@ public class ClientAssistenceController {
 
     @PostMapping("/send")
     public String doSend (@RequestParam("content") String content, @RequestParam("chatId") Integer chatId) {
+        ChatEntity chat = chatRepository.findById(chatId).orElse(null);
         MessageEntity message = new MessageEntity();
         message.setChatId(chatId);
         message.setContent(content);
         message.setTimestamp(Timestamp.from(Instant.now()));
+        message.setEmployeeId(-1);
+        message.setClientId(chat.getClientId());
         this.messageRepository.save(message);
         return "redirect:/client/assistence/chat?id=" + chatId + "/";
     }

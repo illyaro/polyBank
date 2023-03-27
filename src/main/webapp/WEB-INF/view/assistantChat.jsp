@@ -30,7 +30,7 @@
     </tr>
         <%
             for (MessageEntity message : messageList) {
-                if (message.getOwner() == Assistant) {
+                if (message.getEmployeeId() > 0) {
         %>
     <tr>
         <td><%= message.getContent()%></td>
@@ -40,8 +40,8 @@
                 } else {
         %>
     <tr>
-        <td><%= message.getContent()%></td>
         <td></td>
+        <td><%= message.getContent()%></td>
     </tr>
         <%
                 }
