@@ -24,6 +24,12 @@ public class ClientEntity {
     @Basic
     @Column(name = "creationDate")
     private Timestamp creationDate;
+    @Basic
+    @Column(name = "DNI")
+    private String dni;
+    @Basic
+    @Column(name = "salt")
+    private String salt;
 
     public int getId() {
         return id;
@@ -76,5 +82,21 @@ public class ClientEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, password, surname, creationDate);
+    }
+
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 }

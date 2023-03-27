@@ -21,6 +21,12 @@ public class MessageEntity {
     @Basic
     @Column(name = "timestamp")
     private Timestamp timestamp;
+    @Basic
+    @Column(name = "Employee_id")
+    private int employeeId;
+    @Basic
+    @Column(name = "Client_id")
+    private int clientId;
 
     public int getId() {
         return id;
@@ -65,5 +71,21 @@ public class MessageEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, chatId, content, timestamp);
+    }
+
+    public int getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public int getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(int clientId) {
+        this.clientId = clientId;
     }
 }
