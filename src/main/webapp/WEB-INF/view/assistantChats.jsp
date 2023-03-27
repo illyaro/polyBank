@@ -32,9 +32,8 @@
         <td><%= chat.getId() %></td>
         <td><%= chat.getClientId() %></td>
         <td><%= chat.getClosed() %></td>
-        <td><a href="/chat/client?id=<%= chat.getId() %>">Open</a></td>
+        <td><a href="employee/assistant/chat?id=<%= chat.getId() %>">Open</a></td>
     </tr>
-
     <%
         }
     %>
