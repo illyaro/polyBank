@@ -66,9 +66,24 @@ public class ATMController {
         return "atm/user_data";
     }
 
-    @PostMapping("/enumerarTransacciones")
-    public String doListarAcciones(){
-        return "";
+    @PostMapping("/enumerarAcciones")
+    public String doListarAcciones(@RequestParam("bankAccount") int bankAccountId, HttpSession session, Model model){
+        BankAccountEntity bankAccount = bankAccountRepository.findById(bankAccountId).orElse(null);
+        ClientEntity client = (ClientEntity) session.getAttribute("client");
+        if (client == null)
+            return "atm/index";
+        if(bankAccount == null)
+            return "atm/user_data";
+
+        model.addAttribute("bankAccount", bankAccount);
+
+        return "atm/bankAccount_actions";
+    }
+
+    @PostMapping("/makeTransfer")
+    public String doMakeTransfer(@RequestParam("bankAccount") int bankAccountId, HttpSession session, Model model){
+        BankAccountEntity bankAccount = bankAccountRepository.findById(bankAccountId).orElse(null);
+        return "atm/bankAccount_transferMenu";
     }
 
 }

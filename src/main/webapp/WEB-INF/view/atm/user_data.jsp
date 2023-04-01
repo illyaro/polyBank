@@ -24,7 +24,7 @@
 <form action="/atm/editarDatos" method="get">
     <button type="submit">Modify my data</button> <br>
 </form>
-<form action="/atm/enumerarTransacciones">
+<form action="/atm/enumerarAcciones" method="post">
     <label for="bankAccount">Select a bank account:</label>
     <select id="bankAccount" name="bankAccount">
         <%
