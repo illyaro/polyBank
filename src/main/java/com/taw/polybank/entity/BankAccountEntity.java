@@ -13,9 +13,6 @@ public class BankAccountEntity {
     @Column(name = "id")
     private int id;
     @Basic
-    @Column(name = "client_id")
-    private int clientId;
-    @Basic
     @Column(name = "IBAN")
     private String iban;
     @Basic
@@ -24,9 +21,6 @@ public class BankAccountEntity {
     @Basic
     @Column(name = "balance")
     private double balance;
-    @Basic
-    @Column(name = "Badge_id")
-    private int badgeId;
     @OneToMany(mappedBy = "bankAccountByBankAccountId")
     private Collection<AuthorizedAccountEntity> authorizedAccountsById;
     @ManyToOne
@@ -48,14 +42,6 @@ public class BankAccountEntity {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(int clientId) {
-        this.clientId = clientId;
     }
 
     public String getIban() {
@@ -82,29 +68,17 @@ public class BankAccountEntity {
         this.balance = balance;
     }
 
-    public void setBalance(float balance) {
-        this.balance = balance;
-    }
-
-    public int getBadgeId() {
-        return badgeId;
-    }
-
-    public void setBadgeId(int badgeId) {
-        this.badgeId = badgeId;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BankAccountEntity that = (BankAccountEntity) o;
-        return id == that.id && clientId == that.clientId && active == that.active && balance == that.balance && badgeId == that.badgeId && Objects.equals(iban, that.iban);
+        return id == that.id && active == that.active && Double.compare(that.balance, balance) == 0 && Objects.equals(iban, that.iban);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, clientId, iban, active, balance, badgeId);
+        return Objects.hash(id, iban, active, balance);
     }
 
     public Collection<AuthorizedAccountEntity> getAuthorizedAccountsById() {

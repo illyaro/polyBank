@@ -13,15 +13,6 @@ public class RequestEntity {
     @Column(name = "id")
     private int id;
     @Basic
-    @Column(name = "Client_id")
-    private int clientId;
-    @Basic
-    @Column(name = "BankAccount_id")
-    private int bankAccountId;
-    @Basic
-    @Column(name = "Employee_id")
-    private int employeeId;
-    @Basic
     @Column(name = "solved")
     private byte solved;
     @Basic
@@ -52,30 +43,6 @@ public class RequestEntity {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(int clientId) {
-        this.clientId = clientId;
-    }
-
-    public int getBankAccountId() {
-        return bankAccountId;
-    }
-
-    public void setBankAccountId(int bankAccountId) {
-        this.bankAccountId = bankAccountId;
-    }
-
-    public int getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(int employeeId) {
-        this.employeeId = employeeId;
     }
 
     public byte getSolved() {
@@ -123,12 +90,12 @@ public class RequestEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RequestEntity that = (RequestEntity) o;
-        return id == that.id && clientId == that.clientId && bankAccountId == that.bankAccountId && employeeId == that.employeeId && solved == that.solved && Objects.equals(timestamp, that.timestamp) && Objects.equals(type, that.type) && Objects.equals(description, that.description) && Objects.equals(approved, that.approved);
+        return id == that.id && solved == that.solved && Objects.equals(timestamp, that.timestamp) && Objects.equals(type, that.type) && Objects.equals(description, that.description) && Objects.equals(approved, that.approved);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, clientId, bankAccountId, employeeId, solved, timestamp, type, description, approved);
+        return Objects.hash(id, solved, timestamp, type, description, approved);
     }
 
     public ClientEntity getClientByClientId() {
