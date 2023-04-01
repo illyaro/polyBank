@@ -2,6 +2,7 @@ package com.taw.polybank.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -26,6 +27,12 @@ public class EmployeeEntity {
     @Basic
     @Column(name = "salt")
     private String salt;
+    @OneToMany(mappedBy = "employeeByAssistantId")
+    private Collection<ChatEntity> chatsById;
+    @OneToMany(mappedBy = "employeeByEmployeeId")
+    private Collection<MessageEntity> messagesById;
+    @OneToMany(mappedBy = "employeeByEmployeeId")
+    private Collection<RequestEntity> requestsById;
 
     public int getId() {
         return id;
@@ -86,5 +93,29 @@ public class EmployeeEntity {
 
     public void setSalt(String salt) {
         this.salt = salt;
+    }
+
+    public Collection<ChatEntity> getChatsById() {
+        return chatsById;
+    }
+
+    public void setChatsById(Collection<ChatEntity> chatsById) {
+        this.chatsById = chatsById;
+    }
+
+    public Collection<MessageEntity> getMessagesById() {
+        return messagesById;
+    }
+
+    public void setMessagesById(Collection<MessageEntity> messagesById) {
+        this.messagesById = messagesById;
+    }
+
+    public Collection<RequestEntity> getRequestsById() {
+        return requestsById;
+    }
+
+    public void setRequestsById(Collection<RequestEntity> requestsById) {
+        this.requestsById = requestsById;
     }
 }
