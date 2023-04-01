@@ -20,10 +20,10 @@ public class AuthorizedAccountEntity {
     @Column(name = "blocked")
     private byte blocked;
     @ManyToOne
-    @JoinColumn(name = "Client_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "Client_id", referencedColumnName = "id", nullable = false, insertable=false, updatable=false)
     private ClientEntity clientByClientId;
     @ManyToOne
-    @JoinColumn(name = "BankAccount_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "BankAccount_id", referencedColumnName = "id", nullable = false, insertable=false, updatable=false)
     private BankAccountEntity bankAccountByBankAccountId;
 
     public int getClientId() {

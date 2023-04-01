@@ -13,6 +13,9 @@ public class EmployeeEntity {
     @Column(name = "id")
     private int id;
     @Basic
+    @Column(name = "DNI")
+    private String dni;
+    @Basic
     @Column(name = "name")
     private String name;
     @Basic
@@ -21,9 +24,6 @@ public class EmployeeEntity {
     @Basic
     @Column(name = "type")
     private Object type;
-    @Basic
-    @Column(name = "DNI")
-    private String dni;
     @Basic
     @Column(name = "salt")
     private String salt;
@@ -40,6 +40,14 @@ public class EmployeeEntity {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
     }
 
     public String getName() {
@@ -66,33 +74,25 @@ public class EmployeeEntity {
         this.type = type;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        EmployeeEntity that = (EmployeeEntity) o;
-        return id == that.id && Objects.equals(name, that.name) && Objects.equals(password, that.password) && Objects.equals(type, that.type);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, password, type);
-    }
-
-    public String getDni() {
-        return dni;
-    }
-
-    public void setDni(String dni) {
-        this.dni = dni;
-    }
-
     public String getSalt() {
         return salt;
     }
 
     public void setSalt(String salt) {
         this.salt = salt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EmployeeEntity that = (EmployeeEntity) o;
+        return id == that.id && Objects.equals(dni, that.dni) && Objects.equals(name, that.name) && Objects.equals(password, that.password) && Objects.equals(type, that.type) && Objects.equals(salt, that.salt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, dni, name, password, type, salt);
     }
 
     public Collection<ChatEntity> getChatsById() {

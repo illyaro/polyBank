@@ -13,20 +13,11 @@ public class MessageEntity {
     @Column(name = "id")
     private int id;
     @Basic
-    @Column(name = "Chat_id")
-    private int chatId;
-    @Basic
     @Column(name = "content")
     private String content;
     @Basic
     @Column(name = "timestamp")
     private Timestamp timestamp;
-    @Basic
-    @Column(name = "Employee_id")
-    private int employeeId;
-    @Basic
-    @Column(name = "Client_id")
-    private int clientId;
     @ManyToOne
     @JoinColumn(name = "Chat_id", referencedColumnName = "id", nullable = false)
     private ChatEntity chatByChatId;
@@ -43,14 +34,6 @@ public class MessageEntity {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getChatId() {
-        return chatId;
-    }
-
-    public void setChatId(int chatId) {
-        this.chatId = chatId;
     }
 
     public String getContent() {
@@ -74,28 +57,12 @@ public class MessageEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MessageEntity that = (MessageEntity) o;
-        return id == that.id && chatId == that.chatId && Objects.equals(content, that.content) && Objects.equals(timestamp, that.timestamp);
+        return id == that.id && Objects.equals(content, that.content) && Objects.equals(timestamp, that.timestamp);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, chatId, content, timestamp);
-    }
-
-    public int getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(int employeeId) {
-        this.employeeId = employeeId;
-    }
-
-    public int getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(int clientId) {
-        this.clientId = clientId;
+        return Objects.hash(id, content, timestamp);
     }
 
     public ChatEntity getChatByChatId() {
