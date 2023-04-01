@@ -1,6 +1,8 @@
 package com.taw.polybank.controller;
 
+import com.taw.polybank.dao.BankAccountRepository;
 import com.taw.polybank.dao.ClientRepository;
+import com.taw.polybank.entity.BankAccountEntity;
 import com.taw.polybank.entity.ClientEntity;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/atm")
 public class ATMController {
@@ -18,13 +22,17 @@ public class ATMController {
     @Autowired
     private ClientRepository clientRepository;
 
+    @Autowired
+    private BankAccountRepository bankAccountRepository;
+
     @GetMapping("/")
     public String doIndex(Model model, HttpSession session) {
         ClientEntity client = (ClientEntity) session.getAttribute("client");
         if (client == null) {
             return "atm/index";
         }else {
-            model.addAttribute("client", client);
+            List<BankAccountEntity> bankAccounts = bankAccountRepository.findByClientByClientId(client);
+            model.addAttribute("bankAccounts", bankAccounts);
             return "atm/user_data";
         }
     }

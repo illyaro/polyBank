@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface ClientRepository extends JpaRepository<ClientEntity, Integer> {
     @Query("select c from ClientEntity c where c.dni = :user and c.password = :password")
     ClientEntity autenticar(@Param("user") String user, @Param("password") String password);
+
 }
