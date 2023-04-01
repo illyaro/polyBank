@@ -18,12 +18,6 @@ public class CurrencyExchangeEntity {
     @Basic
     @Column(name = "finalAmount")
     private double finalAmount;
-    @Basic
-    @Column(name = "initialBadge_id")
-    private int initialBadgeId;
-    @Basic
-    @Column(name = "finalBadge_id")
-    private int finalBadgeId;
     @ManyToOne
     @JoinColumn(name = "initialBadge_id", referencedColumnName = "id", nullable = false)
     private BadgeEntity badgeByInitialBadgeId;
@@ -59,33 +53,17 @@ public class CurrencyExchangeEntity {
         this.finalAmount = finalAmount;
     }
 
-    public int getInitialBadgeId() {
-        return initialBadgeId;
-    }
-
-    public void setInitialBadgeId(int initialBadgeId) {
-        this.initialBadgeId = initialBadgeId;
-    }
-
-    public int getFinalBadgeId() {
-        return finalBadgeId;
-    }
-
-    public void setFinalBadgeId(int finalBadgeId) {
-        this.finalBadgeId = finalBadgeId;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CurrencyExchangeEntity that = (CurrencyExchangeEntity) o;
-        return id == that.id && Double.compare(that.initialAmount, initialAmount) == 0 && Double.compare(that.finalAmount, finalAmount) == 0 && initialBadgeId == that.initialBadgeId && finalBadgeId == that.finalBadgeId;
+        return id == that.id && Double.compare(that.initialAmount, initialAmount) == 0 && Double.compare(that.finalAmount, finalAmount) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, initialAmount, finalAmount, initialBadgeId, finalBadgeId);
+        return Objects.hash(id, initialAmount, finalAmount);
     }
 
     public BadgeEntity getBadgeByInitialBadgeId() {

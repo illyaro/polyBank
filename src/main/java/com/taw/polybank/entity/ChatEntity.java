@@ -13,12 +13,6 @@ public class ChatEntity {
     @Column(name = "id")
     private int id;
     @Basic
-    @Column(name = "Client_id")
-    private int clientId;
-    @Basic
-    @Column(name = "Assistant_id")
-    private int assistantId;
-    @Basic
     @Column(name = "closed")
     private byte closed;
     @ManyToOne
@@ -38,22 +32,6 @@ public class ChatEntity {
         this.id = id;
     }
 
-    public int getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(int clientId) {
-        this.clientId = clientId;
-    }
-
-    public int getAssistantId() {
-        return assistantId;
-    }
-
-    public void setAssistantId(int assistantId) {
-        this.assistantId = assistantId;
-    }
-
     public byte getClosed() {
         return closed;
     }
@@ -67,12 +45,12 @@ public class ChatEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChatEntity that = (ChatEntity) o;
-        return id == that.id && clientId == that.clientId && assistantId == that.assistantId && closed == that.closed;
+        return id == that.id && closed == that.closed;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, clientId, assistantId, closed);
+        return Objects.hash(id, closed);
     }
 
     public ClientEntity getClientByClientId() {
