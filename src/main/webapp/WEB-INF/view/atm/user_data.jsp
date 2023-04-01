@@ -1,3 +1,4 @@
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page import="com.taw.polybank.entity.ClientEntity" %>
 <%@ page import="com.taw.polybank.entity.BankAccountEntity" %>
 <%@ page import="java.util.List" %><%--
@@ -20,10 +21,10 @@
 <h1>Welcome, <%=cliente.getName()%> <%=cliente.getSurname()%>
 </h1>
 <h3>What do you want to do?</h3>
-<form action="#">
+<form action="/atm/editarDatos" method="get">
     <button type="submit">Modify my data</button> <br>
 </form>
-<form action="#">
+<form action="/atm/enumerarTransacciones">
     <label for="bankAccount">Select a bank account:</label>
     <select id="bankAccount" name="bankAccount">
         <%
