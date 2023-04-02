@@ -150,17 +150,7 @@ public class ATMController {
 
     private void makeTransaction(double amount, HttpSession session, String ibanReceptor, String nameReceptor, BadgeEntity finalBadge) {
 
-        //Find or make the Beneficiary
-        BenficiaryEntity beneficiary = beneficiaryRepository.findByIban(ibanReceptor).orElse(null);
-        if (beneficiary == null) {
-            beneficiary = new BenficiaryEntity();
-            beneficiary.setName(nameReceptor);
-            beneficiary.setIban(ibanReceptor);
-            beneficiary.setBadge(finalBadge.getName());
-            beneficiary.setSwift("");
-
-            beneficiaryRepository.save(beneficiary);
-        }
+        BenficiaryEntity beneficiary = getOrMakeBeneficiaryEntity(ibanReceptor, nameReceptor, finalBadge);
 
         //Make (if neccessary) a currency exchange
         CurrencyExchangeEntity currencyExchange = null;
@@ -180,6 +170,37 @@ public class ATMController {
 
         //Update the bank account(s)
         BankAccountEntity bankAccountEmisor = (BankAccountEntity) session.getAttribute("bankAccount");
+        updateBankAccounts(amount, session, ibanReceptor, finalBadge, finalAmount, emisorBadge, bankAccountEmisor);
+
+        //Make the payment
+        PaymentEntity payment = makePayment(amount, beneficiary, currencyExchange);
+
+        //Make the transaction
+        makeTransaction(session, payment);
+
+    }
+
+    private void makeTransaction(HttpSession session, PaymentEntity payment) {
+        TransactionEntity transaction = new TransactionEntity();
+        transaction.setBankAccountByBankAccountId((BankAccountEntity) session.getAttribute("bankAccount"));
+        transaction.setClientByClientId((ClientEntity) session.getAttribute("client"));
+        transaction.setPaymentByPaymentId(payment);
+        transaction.setTimestamp(Timestamp.valueOf(LocalDateTime.now()));
+        transactionRepository.save(transaction);
+    }
+
+    private PaymentEntity makePayment(double amount, BenficiaryEntity beneficiary, CurrencyExchangeEntity currencyExchange) {
+        PaymentEntity payment = new PaymentEntity();
+        payment.setAmount(amount);
+        if (currencyExchange != null) {
+            payment.setCurrencyExchangeByCurrencyExchangeId(currencyExchange);
+        }
+        payment.setBenficiaryByBenficiaryId(beneficiary);
+        paymentRepository.save(payment);
+        return payment;
+    }
+
+    private void updateBankAccounts(double amount, HttpSession session, String ibanReceptor, BadgeEntity finalBadge, double finalAmount, BadgeEntity emisorBadge, BankAccountEntity bankAccountEmisor) {
         if (!ibanReceptor.equals(bankAccountEmisor.getIban())) {
             //Es una transferencia, se actualiza el dinero de ambas partes
             BankAccountEntity bankAccountReceptor = bankAccountRepository.findByIban(ibanReceptor).orElse(null);
@@ -194,24 +215,21 @@ public class ATMController {
         }
         bankAccountRepository.save(bankAccountEmisor);
         session.setAttribute("bankAccount", bankAccountEmisor);
+    }
 
-        //Make the payment
-        PaymentEntity payment = new PaymentEntity();
-        payment.setAmount(amount);
-        if (currencyExchange != null) {
-            payment.setCurrencyExchangeByCurrencyExchangeId(currencyExchange);
+    private BenficiaryEntity getOrMakeBeneficiaryEntity(String ibanReceptor, String nameReceptor, BadgeEntity finalBadge) {
+        //Find or make the Beneficiary
+        BenficiaryEntity beneficiary = beneficiaryRepository.findByIban(ibanReceptor).orElse(null);
+        if (beneficiary == null) {
+            beneficiary = new BenficiaryEntity();
+            beneficiary.setName(nameReceptor);
+            beneficiary.setIban(ibanReceptor);
+            beneficiary.setBadge(finalBadge.getName());
+            beneficiary.setSwift("");
+
+            beneficiaryRepository.save(beneficiary);
         }
-        payment.setBenficiaryByBenficiaryId(beneficiary);
-        paymentRepository.save(payment);
-
-        //Make the transaction
-        TransactionEntity transaction = new TransactionEntity();
-        transaction.setBankAccountByBankAccountId((BankAccountEntity) session.getAttribute("bankAccount"));
-        transaction.setClientByClientId((ClientEntity) session.getAttribute("client"));
-        transaction.setPaymentByPaymentId(payment);
-        transaction.setTimestamp(Timestamp.valueOf(LocalDateTime.now()));
-        transactionRepository.save(transaction);
-
+        return beneficiary;
     }
 
 

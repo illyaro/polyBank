@@ -21,7 +21,7 @@
     <form method="post">
         <button type="submit" formaction="/atm/makeTransfer" formmethod="get">Transfer money</button> <br>
         <button type="submit" formaction="/atm/takeOut" formmethod="get">Take out money</button> <br>
-        <button type="submit" formaction="#">Check previous transactions</button> <br>
+        <button type="submit" formaction="/atm/takeOut">Check previous transactions</button> <br>
         <button type="submit" formaction="#">Request unban</button> <br>
     </form>
 </body>
