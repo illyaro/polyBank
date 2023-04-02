@@ -1,4 +1,5 @@
-<%@ page import="com.taw.polybank.entity.BankAccountEntity" %><%--
+<%@ page import="com.taw.polybank.entity.BankAccountEntity" %>
+<%@ page import="com.taw.polybank.entity.BadgeEntity" %><%--
   Created by IntelliJ IDEA.
   User: lucia
   Date: 01/04/2023
@@ -7,7 +8,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    BankAccountEntity bankAccount = (BankAccountEntity) request.getAttribute("bankAccount");
+    BankAccountEntity bankAccount = (BankAccountEntity) session.getAttribute("bankAccount");
+    BadgeEntity badge = (BadgeEntity) session.getAttribute("badge");
 %>
 <html>
 <head>
@@ -15,10 +17,10 @@
 </head>
 <body>
 <h1>Account actions</h1>
+<h3>Balance: <%= bankAccount.getBalance()%> <%=badge.getName()%></h3>
     <form method="post">
-        <input type="hidden" name="bankAccount" id="bankAccount" value="<%=bankAccount.getId()%>">
-        <button type="submit" formaction="/atm/makeTransfer">Transfer money</button> <br>
-        <button type="submit" formaction="#">Take out money</button> <br>
+        <button type="submit" formaction="/atm/makeTransfer" formmethod="get">Transfer money</button> <br>
+        <button type="submit" formaction="/atm/takeOut" formmethod="get">Take out money</button> <br>
         <button type="submit" formaction="#">Check previous transactions</button> <br>
         <button type="submit" formaction="#">Request unban</button> <br>
     </form>

@@ -1,15 +1,15 @@
 package com.taw.polybank.controller;
 
-import com.taw.polybank.dao.BankAccountRepository;
-import com.taw.polybank.dao.ClientRepository;
-import com.taw.polybank.entity.BankAccountEntity;
-import com.taw.polybank.entity.ClientEntity;
+import com.taw.polybank.dao.*;
+import com.taw.polybank.entity.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -22,12 +22,28 @@ public class ATMController {
     @Autowired
     private BankAccountRepository bankAccountRepository;
 
+    @Autowired
+    private BadgeRepository badgeRepository;
+
+    @Autowired
+    private CurrencyExchangeRepository currencyExchangeRepository;
+
+    @Autowired
+    private PaymentRepository paymentRepository;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
+
+    @Autowired
+    private BeneficiaryRepository beneficiaryRepository;
+
+
     @GetMapping("/")
     public String doIndex(Model model, HttpSession session) {
         ClientEntity client = (ClientEntity) session.getAttribute("client");
         if (client == null) {
             return "atm/index";
-        }else {
+        } else {
             List<BankAccountEntity> bankAccounts = bankAccountRepository.findByClientByClientId(client);
             model.addAttribute("bankAccounts", bankAccounts);
             return "atm/user_data";
@@ -46,18 +62,18 @@ public class ATMController {
     }
 
     @GetMapping("/editarDatos")
-    public String gotoEditarDatos(Model model, HttpSession session){
+    public String gotoEditarDatos(Model model, HttpSession session) {
         ClientEntity client = (ClientEntity) session.getAttribute("client");
         if (client == null) {
             return "atm/index";
-        }else {
+        } else {
             model.addAttribute("client", client);
             return "atm/user_edit";
         }
     }
 
     @PostMapping("/editarDatos")
-    public String doEditarDatos(@ModelAttribute("client") ClientEntity client, Model model, HttpSession session){
+    public String doEditarDatos(@ModelAttribute("client") ClientEntity client, Model model, HttpSession session) {
         if (session.getAttribute("client") == null)
             return "atm/index";
         clientRepository.save(client);
@@ -67,23 +83,136 @@ public class ATMController {
     }
 
     @PostMapping("/enumerarAcciones")
-    public String doListarAcciones(@RequestParam("bankAccount") int bankAccountId, HttpSession session, Model model){
+    public String doListarAcciones(@RequestParam("bankAccount") int bankAccountId, HttpSession session, Model model) {
         BankAccountEntity bankAccount = bankAccountRepository.findById(bankAccountId).orElse(null);
         ClientEntity client = (ClientEntity) session.getAttribute("client");
         if (client == null)
             return "atm/index";
-        if(bankAccount == null)
+        if (bankAccount == null)
             return "atm/user_data";
+        session.setAttribute("bankAccount", bankAccount);
+        BadgeEntity badge = badgeRepository.findByBankAccountsById(bankAccount);
+        session.setAttribute("badge", badge);
+        return "atm/bankAccount_actions";
+    }
 
-        model.addAttribute("bankAccount", bankAccount);
+    @GetMapping("/makeTransfer")
+    public String doMenuTransfer(HttpSession session, Model model) {
+        if (session.getAttribute("client") == null || session.getAttribute("bankAccount") == null)
+            return "atm/index";
+        List<BadgeEntity> badges = badgeRepository.findAll();
+        model.addAttribute("badges", badges);
+        return "atm/bankAccount_transferMenu";
+    }
+
+    @PostMapping("/makeTransfer")
+    public String doMakeTransfer(@RequestParam("amount") double amount, @RequestParam("receiver") String receiverIBAN, @RequestParam("receiverName") String receiverName, HttpSession session) {
+        if (session.getAttribute("client") == null || session.getAttribute("bankAccount") == null)
+            return "atm/index";
+
+        BankAccountEntity bankAccountReceiver = bankAccountRepository.findByIban(receiverIBAN).orElse(null);
+        BadgeEntity badgeReceiver;
+        if(bankAccountReceiver != null) {
+            badgeReceiver = badgeRepository.findByBankAccountsById(bankAccountReceiver);
+        }else{
+            badgeReceiver = (BadgeEntity) session.getAttribute("badge");
+        }
+        makeTransaction(amount, session, receiverIBAN, receiverName, badgeReceiver);
 
         return "atm/bankAccount_actions";
     }
 
-    @PostMapping("/makeTransfer")
-    public String doMakeTransfer(@RequestParam("bankAccount") int bankAccountId, HttpSession session, Model model){
-        BankAccountEntity bankAccount = bankAccountRepository.findById(bankAccountId).orElse(null);
-        return "atm/bankAccount_transferMenu";
+
+    @GetMapping("/takeOut")
+    public String menuTakeOut(Model model, HttpSession session) {
+        if (session.getAttribute("client") == null || session.getAttribute("bankAccount") == null)
+            return "atm/index";
+
+        List<BadgeEntity> badges = badgeRepository.findAll();
+        model.addAttribute("badges", badges);
+        return "atm/bankAccount_takeOut";
     }
+
+    @PostMapping("/takeOut")
+    public String doTakeOut(@RequestParam("amount") double amount, @RequestParam("badge") int badgeId, HttpSession session, Model model) {
+        if (session.getAttribute("client") == null || session.getAttribute("bankAccount") == null)
+            return "atm/index";
+
+        BankAccountEntity bankAccount = (BankAccountEntity) session.getAttribute("bankAccount");
+        ClientEntity client = (ClientEntity) session.getAttribute("client");
+        BadgeEntity badge = badgeRepository.findById(badgeId).orElse(null);
+
+        makeTransaction(amount, session, bankAccount.getIban(), client.getName(), badge);
+
+        return "atm/bankAccount_actions";
+    }
+
+
+    private void makeTransaction(double amount, HttpSession session, String ibanReceptor, String nameReceptor, BadgeEntity finalBadge) {
+
+        //Find or make the Beneficiary
+        BenficiaryEntity beneficiary = beneficiaryRepository.findByIban(ibanReceptor).orElse(null);
+        if (beneficiary == null) {
+            beneficiary = new BenficiaryEntity();
+            beneficiary.setName(nameReceptor);
+            beneficiary.setIban(ibanReceptor);
+            beneficiary.setBadge(finalBadge.getName());
+            beneficiary.setSwift("");
+
+            beneficiaryRepository.save(beneficiary);
+        }
+
+        //Make (if neccessary) a currency exchange
+        CurrencyExchangeEntity currencyExchange = null;
+        double finalAmount = amount;
+        BadgeEntity emisorBadge = (BadgeEntity) session.getAttribute("badge");
+        if (emisorBadge.getId() != finalBadge.getId()) {
+            //There exists a currency exchange
+            currencyExchange = new CurrencyExchangeEntity();
+            currencyExchange.setBadgeByFinalBadgeId(finalBadge);
+            currencyExchange.setBadgeByInitialBadgeId(emisorBadge);
+            currencyExchange.setInitialAmount(amount);
+            finalAmount = amount * emisorBadge.getValue() / finalBadge.getValue();
+            currencyExchange.setFinalAmount(finalAmount);
+
+            currencyExchangeRepository.save(currencyExchange);
+        }
+
+        //Update the bank account(s)
+        BankAccountEntity bankAccountEmisor = (BankAccountEntity) session.getAttribute("bankAccount");
+        if (!ibanReceptor.equals(bankAccountEmisor.getIban())) {
+            //Es una transferencia, se actualiza el dinero de ambas partes
+            BankAccountEntity bankAccountReceptor = bankAccountRepository.findByIban(ibanReceptor).orElse(null);
+            if (bankAccountReceptor != null) {
+                bankAccountReceptor.setBalance(bankAccountReceptor.getBalance() + finalAmount);
+                bankAccountRepository.save(bankAccountReceptor);
+            }
+            bankAccountEmisor.setBalance(bankAccountEmisor.getBalance() - amount);
+        } else {
+            //Está sacando dinero (ya sea de la misma o distinta moneda), por lo que hay que sacar el dinero final de la cuenta bancaria.
+            bankAccountEmisor.setBalance(bankAccountEmisor.getBalance() - (amount * finalBadge.getValue() / emisorBadge.getValue()));
+        }
+        bankAccountRepository.save(bankAccountEmisor);
+        session.setAttribute("bankAccount", bankAccountEmisor);
+
+        //Make the payment
+        PaymentEntity payment = new PaymentEntity();
+        payment.setAmount(amount);
+        if (currencyExchange != null) {
+            payment.setCurrencyExchangeByCurrencyExchangeId(currencyExchange);
+        }
+        payment.setBenficiaryByBenficiaryId(beneficiary);
+        paymentRepository.save(payment);
+
+        //Make the transaction
+        TransactionEntity transaction = new TransactionEntity();
+        transaction.setBankAccountByBankAccountId((BankAccountEntity) session.getAttribute("bankAccount"));
+        transaction.setClientByClientId((ClientEntity) session.getAttribute("client"));
+        transaction.setPaymentByPaymentId(payment);
+        transaction.setTimestamp(Timestamp.valueOf(LocalDateTime.now()));
+        transactionRepository.save(transaction);
+
+    }
+
 
 }
