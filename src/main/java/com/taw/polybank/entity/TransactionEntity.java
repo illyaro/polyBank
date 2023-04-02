@@ -22,10 +22,10 @@ public class TransactionEntity {
     @JoinColumn(name = "BankAccount_id", referencedColumnName = "id", nullable = false)
     private BankAccountEntity bankAccountByBankAccountId;
     @ManyToOne
-    @JoinColumn(name = "CurrencyExchange_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "CurrencyExchange_id", referencedColumnName = "id", nullable = true)
     private CurrencyExchangeEntity currencyExchangeByCurrencyExchangeId;
     @ManyToOne
-    @JoinColumn(name = "Payment_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "Payment_id", referencedColumnName = "id", nullable = true)
     private PaymentEntity paymentByPaymentId;
 
     public int getId() {
