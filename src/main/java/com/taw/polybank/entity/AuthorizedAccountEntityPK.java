@@ -1,21 +1,15 @@
 package com.taw.polybank.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Objects;
 
+@Embeddable
 public class AuthorizedAccountEntityPK implements Serializable {
     @Column(name = "Client_id")
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int clientId;
     @Column(name = "BankAccount_id")
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int bankAccountId;
 
     public int getClientId() {
