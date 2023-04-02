@@ -12,11 +12,11 @@ public class CompanyEntity {
     @Column(name = "id")
     private int id;
     @Basic
-    @Column(name = "BankAccount_id")
-    private int bankAccountId;
-    @Basic
     @Column(name = "name")
     private String name;
+    @ManyToOne
+    @JoinColumn(name = "BankAccount_id", referencedColumnName = "id", nullable = false)
+    private BankAccountEntity bankAccountByBankAccountId;
 
     public int getId() {
         return id;
@@ -24,14 +24,6 @@ public class CompanyEntity {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getBankAccountId() {
-        return bankAccountId;
-    }
-
-    public void setBankAccountId(int bankAccountId) {
-        this.bankAccountId = bankAccountId;
     }
 
     public String getName() {
@@ -47,11 +39,19 @@ public class CompanyEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CompanyEntity that = (CompanyEntity) o;
-        return id == that.id && bankAccountId == that.bankAccountId && Objects.equals(name, that.name);
+        return id == that.id && Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, bankAccountId, name);
+        return Objects.hash(id, name);
+    }
+
+    public BankAccountEntity getBankAccountByBankAccountId() {
+        return bankAccountByBankAccountId;
+    }
+
+    public void setBankAccountByBankAccountId(BankAccountEntity bankAccountByBankAccountId) {
+        this.bankAccountByBankAccountId = bankAccountByBankAccountId;
     }
 }

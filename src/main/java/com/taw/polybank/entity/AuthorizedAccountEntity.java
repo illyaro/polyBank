@@ -19,6 +19,12 @@ public class AuthorizedAccountEntity {
     @Basic
     @Column(name = "blocked")
     private byte blocked;
+    @ManyToOne
+    @JoinColumn(name = "Client_id", referencedColumnName = "id", nullable = false, insertable=false, updatable=false)
+    private ClientEntity clientByClientId;
+    @ManyToOne
+    @JoinColumn(name = "BankAccount_id", referencedColumnName = "id", nullable = false, insertable=false, updatable=false)
+    private BankAccountEntity bankAccountByBankAccountId;
 
     public int getClientId() {
         return clientId;
@@ -36,24 +42,40 @@ public class AuthorizedAccountEntity {
         this.bankAccountId = bankAccountId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AuthorizedAccountEntity that = (AuthorizedAccountEntity) o;
-        return clientId == that.clientId && bankAccountId == that.bankAccountId;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(clientId, bankAccountId);
-    }
-
     public byte getBlocked() {
         return blocked;
     }
 
     public void setBlocked(byte blocked) {
         this.blocked = blocked;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AuthorizedAccountEntity that = (AuthorizedAccountEntity) o;
+        return clientId == that.clientId && bankAccountId == that.bankAccountId && blocked == that.blocked;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(clientId, bankAccountId, blocked);
+    }
+
+    public ClientEntity getClientByClientId() {
+        return clientByClientId;
+    }
+
+    public void setClientByClientId(ClientEntity clientByClientId) {
+        this.clientByClientId = clientByClientId;
+    }
+
+    public BankAccountEntity getBankAccountByBankAccountId() {
+        return bankAccountByBankAccountId;
+    }
+
+    public void setBankAccountByBankAccountId(BankAccountEntity bankAccountByBankAccountId) {
+        this.bankAccountByBankAccountId = bankAccountByBankAccountId;
     }
 }

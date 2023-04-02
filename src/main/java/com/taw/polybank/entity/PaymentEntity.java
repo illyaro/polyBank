@@ -2,6 +2,7 @@ package com.taw.polybank.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -12,14 +13,16 @@ public class PaymentEntity {
     @Column(name = "id")
     private int id;
     @Basic
-    @Column(name = "Benficiary_id")
-    private int benficiaryId;
-    @Basic
-    @Column(name = "CurrencyExchange_id")
-    private Integer currencyExchangeId;
-    @Basic
     @Column(name = "amount")
     private double amount;
+    @ManyToOne
+    @JoinColumn(name = "Benficiary_id", referencedColumnName = "id", nullable = false)
+    private BenficiaryEntity benficiaryByBenficiaryId;
+    @ManyToOne
+    @JoinColumn(name = "CurrencyExchange_id", referencedColumnName = "id")
+    private CurrencyExchangeEntity currencyExchangeByCurrencyExchangeId;
+    @OneToMany(mappedBy = "paymentByPaymentId")
+    private Collection<TransactionEntity> transactionsById;
 
     public int getId() {
         return id;
@@ -27,22 +30,6 @@ public class PaymentEntity {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getBenficiaryId() {
-        return benficiaryId;
-    }
-
-    public void setBenficiaryId(int benficiaryId) {
-        this.benficiaryId = benficiaryId;
-    }
-
-    public Integer getCurrencyExchangeId() {
-        return currencyExchangeId;
-    }
-
-    public void setCurrencyExchangeId(Integer currencyExchangeId) {
-        this.currencyExchangeId = currencyExchangeId;
     }
 
     public double getAmount() {
@@ -58,11 +45,35 @@ public class PaymentEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PaymentEntity that = (PaymentEntity) o;
-        return id == that.id && benficiaryId == that.benficiaryId && Double.compare(that.amount, amount) == 0 && Objects.equals(currencyExchangeId, that.currencyExchangeId);
+        return id == that.id && Double.compare(that.amount, amount) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, benficiaryId, currencyExchangeId, amount);
+        return Objects.hash(id, amount);
+    }
+
+    public BenficiaryEntity getBenficiaryByBenficiaryId() {
+        return benficiaryByBenficiaryId;
+    }
+
+    public void setBenficiaryByBenficiaryId(BenficiaryEntity benficiaryByBenficiaryId) {
+        this.benficiaryByBenficiaryId = benficiaryByBenficiaryId;
+    }
+
+    public CurrencyExchangeEntity getCurrencyExchangeByCurrencyExchangeId() {
+        return currencyExchangeByCurrencyExchangeId;
+    }
+
+    public void setCurrencyExchangeByCurrencyExchangeId(CurrencyExchangeEntity currencyExchangeByCurrencyExchangeId) {
+        this.currencyExchangeByCurrencyExchangeId = currencyExchangeByCurrencyExchangeId;
+    }
+
+    public Collection<TransactionEntity> getTransactionsById() {
+        return transactionsById;
+    }
+
+    public void setTransactionsById(Collection<TransactionEntity> transactionsById) {
+        this.transactionsById = transactionsById;
     }
 }
