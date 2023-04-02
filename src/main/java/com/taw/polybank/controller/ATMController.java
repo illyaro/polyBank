@@ -147,6 +147,14 @@ public class ATMController {
         return "atm/bankAccount_actions";
     }
 
+    @GetMapping("/checkTransactions")
+    public String listTransactions(HttpSession session, Model model){
+        BankAccountEntity bankAccount = (BankAccountEntity) session.getAttribute("bankAccount");
+        List<TransactionEntity> transactions = transactionRepository.findByBankAccountByBankAccountId(bankAccount);
+        model.addAttribute("transactions", transactions);
+        return "atm/bankAccount_transactions";
+    }
+
 
     private void makeTransaction(double amount, HttpSession session, String ibanReceptor, String nameReceptor, BadgeEntity finalBadge) {
 
