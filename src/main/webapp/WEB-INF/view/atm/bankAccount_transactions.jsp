@@ -31,6 +31,9 @@
     <form:input type="number" path="amount" id="amount" name="amount"></form:input> <br>
     <form:button type="submit">Filter</form:button>
 </form:form>
+<form action="/atm/enumerarAcciones" method="post">
+    <button>Go back</button>
+</form>
 <table style="border-collapse: collapse; border: 1px solid">
     <tr style="border: 1px solid">
         <th rowspan="3" style="border: 1px solid">Timestamp</th>

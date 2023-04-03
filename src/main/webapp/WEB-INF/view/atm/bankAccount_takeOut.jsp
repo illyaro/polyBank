@@ -34,5 +34,8 @@
   </select> <br>
   <button type="submit">TakeOut</button>
 </form>
+<form action="/atm/enumerarAcciones" method="post">
+  <button>Go back</button>
+</form>
 </body>
 </html>
