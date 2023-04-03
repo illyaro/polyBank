@@ -1,5 +1,6 @@
 package com.taw.polybank.controller;
 
+import com.taw.polybank.controller.atm.TransactionFilter;
 import com.taw.polybank.dao.*;
 import com.taw.polybank.entity.*;
 import jakarta.servlet.http.HttpSession;
@@ -8,7 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -149,8 +152,42 @@ public class ATMController {
 
     @GetMapping("/checkTransactions")
     public String listTransactions(HttpSession session, Model model){
+        if (session.getAttribute("client") == null || session.getAttribute("bankAccount") == null)
+            return "atm/index";
+
         BankAccountEntity bankAccount = (BankAccountEntity) session.getAttribute("bankAccount");
         List<TransactionEntity> transactions = transactionRepository.findByBankAccountByBankAccountId(bankAccount);
+        model.addAttribute("transactions", transactions);
+        TransactionFilter filter = new TransactionFilter(Date.valueOf(LocalDate.now()), Date.valueOf(LocalDate.now()), "", "", 0);
+        model.addAttribute("filter", filter);
+        return "atm/bankAccount_transactions";
+    }
+
+    @PostMapping("/checkTransactions")
+    public String filterTransactions(HttpSession session, Model model, @ModelAttribute("filter")TransactionFilter filter){
+        if (session.getAttribute("client") == null || session.getAttribute("bankAccount") == null)
+            return "atm/index";
+
+        BankAccountEntity bankAccount = (BankAccountEntity) session.getAttribute("bankAccount");
+        Timestamp begin = Timestamp.valueOf(filter.getTimestampBegin().toLocalDate().atTime(0,0));
+        Timestamp end = Timestamp.valueOf(filter.getTimestampEnd().toLocalDate().atTime(23,59));
+        List<ClientEntity> clients = clientRepository.findByNameOrSurname(filter.getTransactionOwner());
+        BenficiaryEntity beneficiary = beneficiaryRepository.findByIban(filter.getBeneficiaryIban()).orElse(null);
+        List<TransactionEntity> transactions;
+        if(filter.getTransactionOwner().isBlank() || filter.getBeneficiaryIban().isBlank()){
+            if(filter.getTransactionOwner().isBlank()){
+                if(filter.getBeneficiaryIban().isBlank()){
+                    transactions = transactionRepository.filterByBankAccount_TimestampRange_Amount(bankAccount,begin,end, filter.getAmount());
+                }else {
+                    transactions = transactionRepository.filterByBankAccount_TimestampRange_beneficiaryIBAN_Amount(bankAccount,begin,end,beneficiary, filter.getAmount());
+                }
+            }else{
+                transactions = transactionRepository.filterByBankAccount_TimestampRange_TransactionOwner_Amount(bankAccount,begin,end,clients, filter.getAmount());
+            }
+        }else{
+            transactions = transactionRepository.filterByBankAccount_TimestampRange_TransactionOwner_beneficiaryIBAN_Amount(bankAccount, begin, end, clients, beneficiary, filter.getAmount());
+        }
+
         model.addAttribute("transactions", transactions);
         return "atm/bankAccount_transactions";
     }
