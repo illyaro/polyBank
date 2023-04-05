@@ -13,6 +13,6 @@ public interface EmployeeRepository extends JpaRepository<EmployeeEntity, Intege
 
     @Query("select e from EmployeeEntity e where e.type = 'manager'")
     public List<EmployeeEntity> findAllManagers();
-    @Query("select employee from EmployeeEntity employee where employee.dni = :dni")
+    @Query("select employee from EmployeeEntity employee where employee.dni like :dni")
     Optional<EmployeeEntity> findByDNI(@Param("dni") String dni);
 }
