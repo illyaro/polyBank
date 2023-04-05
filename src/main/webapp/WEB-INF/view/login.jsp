@@ -10,25 +10,21 @@
 <html>
 <head>
     <title>Polybank - Login</title>
-    <style>
-        .prettyButton {
-            margin-right: 1rem;
-            padding: 0.2rem;
-            width: fit-content;
-            height: 1.5rem;
-            border: solid 1px black;
-            border-radius: 5px;
-            background-color: #ecffa8;
-            text-decoration:none;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="../../commonStyle.css">
 </head>
 <body>
 <h1>Insert your id and password:</h1>
 
+<c:if test="${error != null}" >
+    <p style="color:red;">
+            ${error}
+    </p>
+</c:if>
+
 <form id="someForm" action="" method="POST">
     <label for="dni">ID: </label>
     <input type="text" id="dni" name="dni"><br>
+    
     <label for="password">Password: </label>
     <input type="password" id="password" name="password"><br>
 

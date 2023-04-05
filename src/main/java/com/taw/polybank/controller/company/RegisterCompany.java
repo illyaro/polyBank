@@ -4,8 +4,7 @@ import com.taw.polybank.dao.*;
 import com.taw.polybank.entity.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,8 +12,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.nio.charset.StandardCharsets;
-import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
@@ -32,9 +29,6 @@ public class RegisterCompany {
 
     @Autowired
     protected ClientRepository clientRepository;
-
-    @Autowired
-    protected AuthorizedAccountRepository authorizedAccountRepository;
 
     @Autowired
     protected CompanyRepository companyRepository;
@@ -56,82 +50,51 @@ public class RegisterCompany {
         return "/company/registerCompany";
     }
 
-    @PostMapping("/registerCompanyRepresentative")
+
+    @PostMapping("/registerCompanyOwner")
     public String doRegisterCompanyRepresentative(@ModelAttribute("company") CompanyEntity company,
                                                   Model model,
                                                   HttpSession session){
         updateBankAccount(company);
-
-        AuthorizedAccountEntity authorizedAccount = new AuthorizedAccountEntity();
-
-        authorizedAccount.setClientByClientId(new ClientEntity());
-
-        authorizedAccount.setBankAccountByBankAccountId(company.getBankAccountByBankAccountId());
-
-        authorizedAccount.setBlocked((byte) 0); // active
-        model.addAttribute("authorizedAccount", authorizedAccount);
+        ClientEntity client = new ClientEntity();
+        model.addAttribute("client", client);
         session.setAttribute("bankAccount", company.getBankAccountByBankAccountId());
         session.setAttribute("company", company);
         return "/company/registerRepresentative";
     }
 
     @PostMapping("/saveNewCompany")
-    public String doSaveNewCompany(@ModelAttribute("authorizedAccount") AuthorizedAccountEntity authorizedAccount,
+    public String doSaveNewCompany(@ModelAttribute("client") ClientEntity client,
                                    Model model,
                                    HttpSession session){
         BankAccountEntity bankAccount = (BankAccountEntity) session.getAttribute("bankAccount");
         CompanyEntity company = (CompanyEntity) session.getAttribute("company");
-        ClientEntity client = authorizedAccount.getClientByClientId();
         RequestEntity request = new RequestEntity();
 
         // filling up bank account fields
-        bankAccount.setAuthorizedAccountsById(List.of(authorizedAccount));
-        bankAccount.setClientByClientId(authorizedAccount.getClientByClientId());
+        bankAccount.setClientByClientId(client);
         bankAccount.setRequestsById(List.of(request));
 
         // filling up Client fields
         client.setCreationDate(Timestamp.from(Instant.now()));
-        client.setAuthorizedAccountsById(List.of(authorizedAccount));
         client.setBankAccountsById(List.of(bankAccount));
         client.setRequestsById(List.of(request));
-        generatePassword(client);
 
-        // filling up Authorized Account fields
-        authorizedAccount.setBankAccountByBankAccountId(bankAccount);
+        PasswordManager passwordManager = new PasswordManager();
+        passwordManager.savePassword(client);
+
+        // creating activation request
+        defineActivationRequest(client, bankAccount, request);
 
         // saving Entities
         clientRepository.save(client);
         bankAccountRepository.save(bankAccount);
         companyRepository.save(company);
-        authorizedAccountRepository.save(authorizedAccount);
-
-        // TODO create ticket for accountant
-
-        request.setSolved((byte) 0);
-        request.setTimestamp(Timestamp.from(Instant.now()));
-        request.setType("activation");
-        request.setDescription("Activate company bank Account");
-        request.setApproved((byte) 0);
-        request.setBankAccountByBankAccountId(bankAccount);
-        List<EmployeeEntity> allManagers = employeeRepository.findAllManagers();
-        request.setEmployeeByEmployeeId(allManagers.get(new Random().nextInt(allManagers.size())));
-        request.setClientByClientId(client);
         requestRepository.save(request);
+
         session.invalidate();
 
         return "redirect:/";
-    }
-
-    private void generatePassword(ClientEntity client) {
-        byte[] bytes = new byte[32];
-        Random random = new Random();
-        random.nextBytes(bytes);
-        SecureRandom secureRandom = new SecureRandom();
-        secureRandom.setSeed(bytes);
-        String salt = BCrypt.gensalt("$2b", 15, secureRandom);
-        client.setSalt(new String(bytes, StandardCharsets.UTF_8));
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2B, 15, secureRandom);
-        client.setPassword(encoder.encode(client.getPassword()));
     }
 
     private void updateBankAccount(CompanyEntity company) {
@@ -146,6 +109,18 @@ public class RegisterCompany {
         }
         bankAccount.setBalance(0.0);
         bankAccount.setIban(iban.toString());
+    }
+
+    private void defineActivationRequest(ClientEntity client, BankAccountEntity bankAccount, RequestEntity request) {
+        request.setSolved((byte) 0);
+        request.setTimestamp(Timestamp.from(Instant.now()));
+        request.setType("activation");
+        request.setDescription("Activate company bank Account");
+        request.setApproved((byte) 0);
+        request.setBankAccountByBankAccountId(bankAccount);
+        List<EmployeeEntity> allManagers = employeeRepository.findAllManagers();
+        request.setEmployeeByEmployeeId(allManagers.get(new Random().nextInt(allManagers.size())));
+        request.setClientByClientId(client);
     }
 }
 
