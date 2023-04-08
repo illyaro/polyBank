@@ -8,15 +8,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Polybank - Manager Login</title>
+    <title>Polybank - Employee Login</title>
 </head>
 <body>
-<h1>Inicia sesión como manager:</h1>
-<form action="/">
-    <label for="name">Nombre: </label>
-    <input type="text" id="name"><br>
+<h1>Inicia sesión como empleado:</h1>
+<form action="/employee/login" method="post">
+    <label for="username">Nombre: </label>
+    <input type="text" id="username" name="DNI"><br>
     <label for="password">Contraseña: </label>
-    <input type="password" id="password"><br>
+    <input type="password" id="password" name="password"><br>
     <input type="submit">
 </form>
 </body>

@@ -2,24 +2,26 @@ package com.taw.polybank.entity;
 
 import jakarta.persistence.*;
 
-import java.util.Objects;
+import java.util.Collection;
 
 @Entity
 @Table(name = "Chat", schema = "polyBank", catalog = "")
 public class ChatEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private int id;
     @Basic
-    @Column(name = "Client_id")
-    private int clientId;
-    @Basic
-    @Column(name = "Assistant_id")
-    private int assistantId;
-    @Basic
-    @Column(name = "closed")
+    @Column(name = "closed", nullable = false)
     private byte closed;
+    @ManyToOne
+    @JoinColumn(name = "Client_id", referencedColumnName = "id", nullable = false)
+    private ClientEntity clientByClientId;
+    @ManyToOne
+    @JoinColumn(name = "Assistant_id", referencedColumnName = "id", nullable = false)
+    private EmployeeEntity employeeByAssistantId;
+    @OneToMany(mappedBy = "chatByChatId")
+    private Collection<MessageEntity> messagesById;
 
     public int getId() {
         return id;
@@ -27,22 +29,6 @@ public class ChatEntity {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(int clientId) {
-        this.clientId = clientId;
-    }
-
-    public int getAssistantId() {
-        return assistantId;
-    }
-
-    public void setAssistantId(int assistantId) {
-        this.assistantId = assistantId;
     }
 
     public byte getClosed() {
@@ -57,12 +43,43 @@ public class ChatEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         ChatEntity that = (ChatEntity) o;
-        return id == that.id && clientId == that.clientId && assistantId == that.assistantId && closed == that.closed;
+
+        if (id != that.id) return false;
+        if (closed != that.closed) return false;
+
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, clientId, assistantId, closed);
+        int result = id;
+        result = 31 * result + (int) closed;
+        return result;
+    }
+
+    public ClientEntity getClientByClientId() {
+        return clientByClientId;
+    }
+
+    public void setClientByClientId(ClientEntity clientByClientId) {
+        this.clientByClientId = clientByClientId;
+    }
+
+    public EmployeeEntity getEmployeeByAssistantId() {
+        return employeeByAssistantId;
+    }
+
+    public void setEmployeeByAssistantId(EmployeeEntity employeeByAssistantId) {
+        this.employeeByAssistantId = employeeByAssistantId;
+    }
+
+    public Collection<MessageEntity> getMessagesById() {
+        return messagesById;
+    }
+
+    public void setMessagesById(Collection<MessageEntity> messagesById) {
+        this.messagesById = messagesById;
     }
 }

@@ -2,52 +2,22 @@ package com.taw.polybank.entity;
 
 import jakarta.persistence.*;
 
-import java.util.Objects;
-
 @Entity
 @Table(name = "AuthorizedAccount", schema = "polyBank", catalog = "")
-@IdClass(AuthorizedAccountEntityPK.class)
 public class AuthorizedAccountEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "Client_id")
-    private int clientId;
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "BankAccount_id")
-    private int bankAccountId;
     @Basic
-    @Column(name = "blocked")
+    @Column(name = "blocked", nullable = false)
     private byte blocked;
-
-    public int getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(int clientId) {
-        this.clientId = clientId;
-    }
-
-    public int getBankAccountId() {
-        return bankAccountId;
-    }
-
-    public void setBankAccountId(int bankAccountId) {
-        this.bankAccountId = bankAccountId;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AuthorizedAccountEntity that = (AuthorizedAccountEntity) o;
-        return clientId == that.clientId && bankAccountId == that.bankAccountId;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(clientId, bankAccountId);
-    }
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @Column(name = "AuthorizedAccount_id", nullable = false)
+    private int authorizedAccountId;
+    @ManyToOne
+    @JoinColumn(name = "Client_id", referencedColumnName = "id", nullable = false)
+    private ClientEntity clientByClientId;
+    @ManyToOne
+    @JoinColumn(name = "BankAccount_id", referencedColumnName = "id", nullable = false)
+    private BankAccountEntity bankAccountByBankAccountId;
 
     public byte getBlocked() {
         return blocked;
@@ -55,5 +25,49 @@ public class AuthorizedAccountEntity {
 
     public void setBlocked(byte blocked) {
         this.blocked = blocked;
+    }
+
+    public int getAuthorizedAccountId() {
+        return authorizedAccountId;
+    }
+
+    public void setAuthorizedAccountId(int authorizedAccountId) {
+        this.authorizedAccountId = authorizedAccountId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AuthorizedAccountEntity that = (AuthorizedAccountEntity) o;
+
+        if (blocked != that.blocked) return false;
+        if (authorizedAccountId != that.authorizedAccountId) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) blocked;
+        result = 31 * result + authorizedAccountId;
+        return result;
+    }
+
+    public ClientEntity getClientByClientId() {
+        return clientByClientId;
+    }
+
+    public void setClientByClientId(ClientEntity clientByClientId) {
+        this.clientByClientId = clientByClientId;
+    }
+
+    public BankAccountEntity getBankAccountByBankAccountId() {
+        return bankAccountByBankAccountId;
+    }
+
+    public void setBankAccountByBankAccountId(BankAccountEntity bankAccountByBankAccountId) {
+        this.bankAccountByBankAccountId = bankAccountByBankAccountId;
     }
 }

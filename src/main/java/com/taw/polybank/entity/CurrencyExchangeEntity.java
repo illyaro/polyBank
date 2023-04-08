@@ -2,27 +2,31 @@ package com.taw.polybank.entity;
 
 import jakarta.persistence.*;
 
-import java.util.Objects;
+import java.util.Collection;
 
 @Entity
 @Table(name = "CurrencyExchange", schema = "polyBank", catalog = "")
 public class CurrencyExchangeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private int id;
     @Basic
-    @Column(name = "initialAmount")
+    @Column(name = "initialAmount", nullable = false, precision = 0)
     private double initialAmount;
     @Basic
-    @Column(name = "finalAmount")
+    @Column(name = "finalAmount", nullable = false, precision = 0)
     private double finalAmount;
-    @Basic
-    @Column(name = "initialBadge_id")
-    private int initialBadgeId;
-    @Basic
-    @Column(name = "finalBadge_id")
-    private int finalBadgeId;
+    @ManyToOne
+    @JoinColumn(name = "initialBadge_id", referencedColumnName = "id", nullable = false)
+    private BadgeEntity badgeByInitialBadgeId;
+    @ManyToOne
+    @JoinColumn(name = "finalBadge_id", referencedColumnName = "id", nullable = false)
+    private BadgeEntity badgeByFinalBadgeId;
+    @OneToMany(mappedBy = "currencyExchangeByCurrencyExchangeId")
+    private Collection<PaymentEntity> paymentsById;
+    @OneToMany(mappedBy = "currencyExchangeByCurrencyExchangeId")
+    private Collection<TransactionEntity> transactionsById;
 
     public int getId() {
         return id;
@@ -48,32 +52,61 @@ public class CurrencyExchangeEntity {
         this.finalAmount = finalAmount;
     }
 
-    public int getInitialBadgeId() {
-        return initialBadgeId;
-    }
-
-    public void setInitialBadgeId(int initialBadgeId) {
-        this.initialBadgeId = initialBadgeId;
-    }
-
-    public int getFinalBadgeId() {
-        return finalBadgeId;
-    }
-
-    public void setFinalBadgeId(int finalBadgeId) {
-        this.finalBadgeId = finalBadgeId;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         CurrencyExchangeEntity that = (CurrencyExchangeEntity) o;
-        return id == that.id && Double.compare(that.initialAmount, initialAmount) == 0 && Double.compare(that.finalAmount, finalAmount) == 0 && initialBadgeId == that.initialBadgeId && finalBadgeId == that.finalBadgeId;
+
+        if (id != that.id) return false;
+        if (Double.compare(that.initialAmount, initialAmount) != 0) return false;
+        if (Double.compare(that.finalAmount, finalAmount) != 0) return false;
+
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, initialAmount, finalAmount, initialBadgeId, finalBadgeId);
+        int result;
+        long temp;
+        result = id;
+        temp = Double.doubleToLongBits(initialAmount);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(finalAmount);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    public BadgeEntity getBadgeByInitialBadgeId() {
+        return badgeByInitialBadgeId;
+    }
+
+    public void setBadgeByInitialBadgeId(BadgeEntity badgeByInitialBadgeId) {
+        this.badgeByInitialBadgeId = badgeByInitialBadgeId;
+    }
+
+    public BadgeEntity getBadgeByFinalBadgeId() {
+        return badgeByFinalBadgeId;
+    }
+
+    public void setBadgeByFinalBadgeId(BadgeEntity badgeByFinalBadgeId) {
+        this.badgeByFinalBadgeId = badgeByFinalBadgeId;
+    }
+
+    public Collection<PaymentEntity> getPaymentsById() {
+        return paymentsById;
+    }
+
+    public void setPaymentsById(Collection<PaymentEntity> paymentsById) {
+        this.paymentsById = paymentsById;
+    }
+
+    public Collection<TransactionEntity> getTransactionsById() {
+        return transactionsById;
+    }
+
+    public void setTransactionsById(Collection<TransactionEntity> transactionsById) {
+        this.transactionsById = transactionsById;
     }
 }
