@@ -32,7 +32,7 @@ public class AssistantController {
     @GetMapping("/")
     public String doListChats(Model model, HttpSession session) {
         EmployeeEntity employee = this.employeeRepository.findById((Integer) session.getAttribute("employeeId")).orElse(null);
-        List<ChatEntity> chatList = this.chatRepository.searchByAssistant(employee.getId());
+        List<ChatEntity> chatList = (List<ChatEntity>) employee.getChatsById();
         model.addAttribute("chatList", chatList);
 
         return "assistantChatList";
@@ -43,7 +43,7 @@ public class AssistantController {
         ChatEntity chat = this.chatRepository.findById(idChat).orElse(null);
         model.addAttribute("chat", chat);
 
-        List<MessageEntity> messageList = this.messageRepository.searchByChat(chat.getId());
+        List<MessageEntity> messageList = (List<MessageEntity>) chat.getMessagesById();
         model.addAttribute("messageList", messageList);
 
         return "assistantChat";
@@ -53,11 +53,11 @@ public class AssistantController {
     public String doSend (@RequestParam("content") String content, @RequestParam("chatId") Integer chatId) {
         ChatEntity chat = chatRepository.findById(chatId).orElse(null);
         MessageEntity message = new MessageEntity();
-        message.setChatId(chatId);
+        message.setChatByChatId(chat);
         message.setContent(content);
         message.setTimestamp(Timestamp.from(Instant.now()));
-        message.setEmployeeId(chat.getAssistantId());
-        message.setClientId(-1);
+        message.setEmployeeByEmployeeId(chat.getEmployeeByAssistantId());
+        message.setClientByClientId(null);
         this.messageRepository.save(message);
         return "redirect:/employee/assistence/chat?id=" + chatId + "/";
     }

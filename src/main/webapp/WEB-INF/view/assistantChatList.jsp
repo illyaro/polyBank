@@ -30,7 +30,7 @@
     %>
     <tr>
         <td><%= chat.getId() %></td>
-        <td><%= chat.getClientId() %></td>
+        <td><%= chat.getClientByClientId().getName() %></td>
         <td><%= chat.getClosed() %></td>
         <td><a href="employee/assistence/chat?id=<%= chat.getId() %>">Open</a></td>
     </tr>

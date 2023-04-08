@@ -22,7 +22,7 @@
     <title>Polybank - Assistence - Chat</title>
 </head>
 <body>
-<h1>Assistence Chat -> Assistant <%= chat.getAssistantId() %></h1>
+<h1>Assistence Chat -> Assistant <%= chat.getEmployeeByAssistantId().getName() %></h1>
 <table border="1">
     <tr>
         <th>ME</th>
@@ -30,7 +30,7 @@
     </tr>
         <%
             for (MessageEntity message : messageList) {
-                if (message.getClientId() > 0) {
+                if (message.getClientByClientId() != null) {
         %>
     <tr>
         <td><%= message.getContent()%></td>

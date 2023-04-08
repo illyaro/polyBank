@@ -8,9 +8,4 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ChatRepository extends JpaRepository<ChatEntity, Integer> {
-    @Query("select c from ChatEntity c where c.assistantId = :employeeId")
-    public List<ChatEntity> searchByAssistant (@Param("employeeId") Integer employeeId);
-
-    @Query("select c from ChatEntity c where c.assistantId = :clientId")
-    public List<ChatEntity> searchByClient (@Param("clientId") Integer clientId);
 }

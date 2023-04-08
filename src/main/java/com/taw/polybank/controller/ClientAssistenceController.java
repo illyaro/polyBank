@@ -32,7 +32,7 @@ public class ClientAssistenceController {
     @GetMapping("/")
     public String doListChats(Model model, HttpSession session) {
         ClientEntity client = this.clientRepository.findById((Integer) session.getAttribute("clientId")).orElse(null);
-        List<ChatEntity> chatList = this.chatRepository.searchByClient(client.getId());
+        List<ChatEntity> chatList = (List<ChatEntity>) client.getChatsById();
         model.addAttribute("chatList", chatList);
 
         return "clientChatList";
@@ -43,21 +43,21 @@ public class ClientAssistenceController {
         ChatEntity chat = this.chatRepository.findById(idChat).orElse(null);
         model.addAttribute("chat", chat);
 
-        List<MessageEntity> messageList = this.messageRepository.searchByChat(chat.getId());
+        List<MessageEntity> messageList = (List<MessageEntity>) chat.getMessagesById();
         model.addAttribute("messageList", messageList);
 
-        return "assistantChat";
+        return "clientChat";
     }
 
     @PostMapping("/send")
     public String doSend (@RequestParam("content") String content, @RequestParam("chatId") Integer chatId) {
         ChatEntity chat = chatRepository.findById(chatId).orElse(null);
         MessageEntity message = new MessageEntity();
-        message.setChatId(chatId);
+        message.setChatByChatId(chat);
         message.setContent(content);
         message.setTimestamp(Timestamp.from(Instant.now()));
-        message.setEmployeeId(-1);
-        message.setClientId(chat.getClientId());
+        message.setEmployeeByEmployeeId(null);
+        message.setClientByClientId(chat.getClientByClientId());
         this.messageRepository.save(message);
         return "redirect:/client/assistence/chat?id=" + chatId + "/";
     }
