@@ -29,16 +29,20 @@ public class LoginCompany {
                                  @RequestParam("password") String password,
                                  Model model,
                                  HttpSession session) {
-        ClientEntity client = clientRepository.findByDNI(dni);
-        if (client != null) {
+        ClientEntity clientEntity = clientRepository.findByDNI(dni);
+        if (clientEntity != null) {
             PasswordManager passwordManager = new PasswordManager();
-            if (passwordManager.verifyPassword(client, password)) {
+            if (passwordManager.verifyPassword(clientEntity, password)) {
+                Client client = new Client(clientEntity, false);
                 session.setAttribute("client", client);
                 CompanyEntity company = companyRepository.findCompanyRepresentedByClient(client.getId());
-                if(company == null){
+                if (company == null) {
                     company = companyRepository.findCompanyRepresentedByClientUsingAuthAcc(client.getId());
                 }
                 session.setAttribute("company", company);
+                if (client.getAuthorizedAccountsById().size() >= 1 && client.getAuthorizedAccountsById().stream().reduce((a, b) -> a).orElse(null).getBlocked() == (byte) 1) {
+                    return "redirect:/company/user/blockedUser";
+                }
                 return "redirect:/company/user/";
             }
         }

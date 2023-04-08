@@ -29,7 +29,7 @@
     <input type="password" id="password" name="password"><br>
 
     <input class="prettyButton" type="button" value="I am client" name="save" onclick="asClient()" />    <%-- // Insert your link in the below <script> --%>
-    <input class="prettyButton" type="button" value="I am Company Representative" name="finished" onclick="asRepresentative()" />
+    <input class="prettyButton" type="button" value="I am Company Representative" name="representative" onclick="asRepresentative()" />
 </form>
 
 <script>
@@ -39,9 +39,11 @@
         form.submit();
     }
     function asRepresentative() {
-        form.action="/employee/login";
+        form.action="/company/login"; //TODO Add for your f#king employee another button DO NOT REMOVE COMPANY LOGIN!!!!!!!!!!!!
         form.submit();
     }
+
+
 </script>
 
 </body>

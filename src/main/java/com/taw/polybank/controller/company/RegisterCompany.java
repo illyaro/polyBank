@@ -40,7 +40,7 @@ public class RegisterCompany {
     protected EmployeeRepository employeeRepository;
 
     @GetMapping("/registerCompany")
-    public String doRegister(Model model){
+    public String doRegister(Model model) {
         CompanyEntity company = new CompanyEntity();
         model.addAttribute("company", company);
 
@@ -52,21 +52,21 @@ public class RegisterCompany {
 
 
     @PostMapping("/registerCompanyOwner")
-    public String doRegisterCompanyRepresentative(@ModelAttribute("company") CompanyEntity company,
-                                                  Model model,
-                                                  HttpSession session){
+    public String doRegisterCompanyOwner(@ModelAttribute("company") CompanyEntity company,
+                                         Model model,
+                                         HttpSession session) {
         updateBankAccount(company);
         ClientEntity client = new ClientEntity();
         model.addAttribute("client", client);
         session.setAttribute("bankAccount", company.getBankAccountByBankAccountId());
         session.setAttribute("company", company);
-        return "/company/registerRepresentative";
+        return "/company/registerOwner";
     }
 
     @PostMapping("/saveNewCompany")
     public String doSaveNewCompany(@ModelAttribute("client") ClientEntity client,
                                    Model model,
-                                   HttpSession session){
+                                   HttpSession session) {
         BankAccountEntity bankAccount = (BankAccountEntity) session.getAttribute("bankAccount");
         CompanyEntity company = (CompanyEntity) session.getAttribute("company");
         RequestEntity request = new RequestEntity();
@@ -104,7 +104,7 @@ public class RegisterCompany {
         Random random = new Random();
         StringBuilder iban = new StringBuilder();
         iban.append("ES44 5268 3000 ");
-        for(int i = 0; i < 12; i++){
+        for (int i = 0; i < 12; i++) {
             iban.append(random.nextInt(10));
         }
         bankAccount.setBalance(0.0);

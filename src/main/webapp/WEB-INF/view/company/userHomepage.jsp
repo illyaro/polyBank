@@ -1,4 +1,4 @@
-<%@ page import="com.taw.polybank.entity.ClientEntity" %>
+<%@ page import="com.taw.polybank.controller.company.Client" %>
 <%@ page import="com.taw.polybank.entity.BankAccountEntity" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Collection" %>
@@ -20,14 +20,21 @@
 
 <jsp:include page="corporateHeader.jsp" />
 
+<c:if test="${message != null}" >
+    <h4 style="color:red;">
+            ${message}
+    </h4>
+</c:if>
+
 <h2>Available actions:</h2>
 
-<a class="prettyButton" href="/company/addRepresentative">Add representative</a>
-<a class="prettyButton" href="/company/editMyData">Modify my data</a>
-<a class="prettyButton" href="/company/listAllRepresentatives">Show all representatives</a>
-<a class="prettyButton" href="/company/newTransfer">New Transfer</a>
-<a class="prettyButton" href="/company/moneyExchange">Exchange money</a>
-<a class="prettyButton" href="/company/operationHistory">Operation history</a>
+<a class="prettyButton" href="/company/user/addRepresentative">Add representative</a>
+<a class="prettyButton" href="/company/user/editMyData">Modify my data</a>
+<a class="prettyButton" href="/company/user/editCompanyData">Modify company data</a>
+<a class="prettyButton" href="/company/user/listAllRepresentatives">Show all representatives</a>
+<a class="prettyButton" href="/company/user/newTransfer">New Transfer</a>
+<a class="prettyButton" href="/company/user/moneyExchange">Exchange money</a>
+<a class="prettyButton" href="/company/user/operationHistory">Operation history</a>
 
 
 </body>
