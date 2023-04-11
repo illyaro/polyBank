@@ -11,7 +11,6 @@
 <%
     BankAccountEntity bankAccount = (BankAccountEntity) session.getAttribute("bankAccount");
     BadgeEntity actualBadge = (BadgeEntity) session.getAttribute("badge");
-    List<BadgeEntity> badges = (List<BadgeEntity>) request.getAttribute("badges");
 %>
 <html>
 <head>

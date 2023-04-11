@@ -107,8 +107,6 @@ public class ATMController {
     public String doMenuTransfer(HttpSession session, Model model) {
         if (session.getAttribute("client") == null || session.getAttribute("bankAccount") == null)
             return "atm/index";
-        List<BadgeEntity> badges = badgeRepository.findAll();
-        model.addAttribute("badges", badges);
         return "atm/bankAccount_transferMenu";
     }
 
