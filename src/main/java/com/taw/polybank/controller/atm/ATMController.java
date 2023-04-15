@@ -5,6 +5,7 @@ import com.taw.polybank.dao.*;
 import com.taw.polybank.entity.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,6 +41,12 @@ public class ATMController {
 
     @Autowired
     private BeneficiaryRepository beneficiaryRepository;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private RequestRepository requestRepository;
 
 
     @GetMapping("/")
@@ -82,6 +89,7 @@ public class ATMController {
             return "atm/index";
         clientRepository.save(client);
         session.setAttribute("client", client);
+        //BenficiaryEntity beneficiary = beneficiaryRepository.
         model.addAttribute("bankAccounts", bankAccountRepository.findByClientByClientId(client));
         return "atm/user_data";
     }
@@ -160,7 +168,7 @@ public class ATMController {
         BankAccountEntity bankAccount = (BankAccountEntity) session.getAttribute("bankAccount");
         List<TransactionEntity> transactions = transactionRepository.findByBankAccountByBankAccountId(bankAccount);
         model.addAttribute("transactions", transactions);
-        TransactionFilter filter = new TransactionFilter(Date.valueOf(LocalDate.now()), Date.valueOf(LocalDate.now()), "", "", 0);
+        TransactionFilter filter = new TransactionFilter(Date.valueOf(LocalDate.now()), Date.valueOf(LocalDate.now()), "", "", 0.0);
         model.addAttribute("filter", filter);
         return "atm/bankAccount_transactions";
     }
@@ -277,6 +285,48 @@ public class ATMController {
             beneficiaryRepository.save(beneficiary);
         }
         return beneficiary;
+    }
+
+    @GetMapping("/requestUnban")
+    public String doRequestUnban(HttpSession session, Model model){
+        ClientEntity client = (ClientEntity) session.getAttribute("client");
+        BankAccountEntity bankAccount = (BankAccountEntity) session.getAttribute("bankAccount");
+        if(client == null || bankAccount == null){
+            return "atm/index";
+        }
+
+        List<RequestEntity> requestsNotSolved = requestRepository.findByBankAccountByBankAccountIdAndAndSolved(bankAccount, (byte) 0);
+
+        if(requestsNotSolved.size()== 0){
+            return "atm/requestUnban";
+        }
+
+        model.addAttribute("requests", requestsNotSolved);
+
+        return "atm/showRequest";
+    }
+
+    @GetMapping("/makeUnbanPetition")
+    public String doMakeUnbanPetition(HttpSession session, @RequestParam("description") String description){
+        ClientEntity client = (ClientEntity) session.getAttribute("client");
+        BankAccountEntity bankAccount = (BankAccountEntity) session.getAttribute("bankAccount");
+        if(client == null || bankAccount == null){
+            return "atm/index";
+        }
+            List<EmployeeEntity> employees = employeeRepository.findEmployeeWithMinimmumRequests();
+
+            RequestEntity request = new RequestEntity();
+            request.setClientByClientId(client);
+            request.setBankAccountByBankAccountId(bankAccount);
+            request.setEmployeeByEmployeeId(employees.get(0));
+            request.setSolved((byte) 0);
+            request.setTimestamp(Timestamp.valueOf(LocalDateTime.now()));
+            request.setType("activation");
+            request.setDescription(description == null ? "" : description);
+
+            requestRepository.save(request);
+
+        return "redirect:/atm/requestUnban";
     }
 
 

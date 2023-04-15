@@ -17,4 +17,8 @@ public interface EmployeeRepository extends JpaRepository<EmployeeEntity, Intege
 
     @Query("select employee from EmployeeEntity employee where employee.dni like :dni")
     Optional<EmployeeEntity> findByDNI(@Param("dni") String dni);
+
+    @Query("select employee from EmployeeEntity employee order by (select count(r) from RequestEntity r where r.employeeByEmployeeId = employee) asc")
+    List<EmployeeEntity> findEmployeeWithMinimmumRequests();
+
 }

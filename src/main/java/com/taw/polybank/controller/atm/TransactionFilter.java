@@ -8,9 +8,9 @@ public class TransactionFilter {
     private Date timestampEnd;
     private String transactionOwner;
     private String beneficiaryIban;
-    private int amount;
+    private double amount;
 
-    public TransactionFilter(Date timestampBegin, Date timestampEnd, String transactionOwner, String beneficiaryIban, int amount){
+    public TransactionFilter(Date timestampBegin, Date timestampEnd, String transactionOwner, String beneficiaryIban, double amount){
         this.timestampBegin = timestampBegin;
         this.timestampEnd = timestampEnd;
         this.transactionOwner = transactionOwner;
@@ -35,7 +35,7 @@ public class TransactionFilter {
         return beneficiaryIban;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return amount;
     }
 
@@ -55,7 +55,7 @@ public class TransactionFilter {
         this.beneficiaryIban = beneficiaryIban;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 }

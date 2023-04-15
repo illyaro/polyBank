@@ -20,14 +20,23 @@
 <h3>Balance: <%= bankAccount.getBalance()%> <%=badge.getName()%>
 </h3>
 <form method="post">
+    <%
+        if (bankAccount.getActive() != (byte) 1) {
+    %>
     <button type="submit" formaction="/atm/makeTransfer" formmethod="get">Transfer money</button>
     <br>
     <button type="submit" formaction="/atm/takeOut" formmethod="get">Take out money</button>
     <br>
     <button type="submit" formaction="/atm/checkTransactions" formmethod="get">Check previous transactions</button>
     <br>
-    <button type="submit" formaction="#">Request unban</button>
+    <%
+        } else{
+    %>
+    <button type="submit" formaction="/atm/requestUnban" formmethod="get">See/Make unban petitions</button>
     <br>
+    <%
+        }
+    %>
 </form>
 <form action="/atm/" method="get">
     <button>Go back</button>
