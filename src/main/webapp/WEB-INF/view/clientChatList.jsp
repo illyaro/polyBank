@@ -55,5 +55,9 @@
         }
     %>
 </table border="1">
+<br>
+<form action="/client/assistence/newChat" method="post">
+    <button>New Chat</button>
+</form>
 </body>
 </html>

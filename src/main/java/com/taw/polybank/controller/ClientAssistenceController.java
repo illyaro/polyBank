@@ -2,6 +2,7 @@ package com.taw.polybank.controller;
 
 import com.taw.polybank.dao.ChatRepository;
 import com.taw.polybank.dao.ClientRepository;
+import com.taw.polybank.dao.EmployeeRepository;
 import com.taw.polybank.dao.MessageRepository;
 import com.taw.polybank.entity.ChatEntity;
 import com.taw.polybank.entity.ClientEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -28,6 +30,9 @@ public class ClientAssistenceController {
 
     @Autowired
     protected MessageRepository messageRepository;
+
+    @Autowired
+    protected EmployeeRepository employeeRepository;
 
     @GetMapping("/")
     public String doListChats(Model model, HttpSession session) {
@@ -45,6 +50,22 @@ public class ClientAssistenceController {
 
         List<MessageEntity> messageList = (List<MessageEntity>) chat.getMessagesById();
         model.addAttribute("messageList", messageList);
+
+        return "clientChat";
+    }
+
+    @PostMapping("/newChat")
+    public String doNewChat (Model model, HttpSession session) {
+        ClientEntity client = this.clientRepository.findById((Integer) session.getAttribute("clientId")).orElse(null);
+        ChatEntity chat = new ChatEntity();
+        chat.setClientByClientId(client);
+        chat.setEmployeeByAssistantId(employeeRepository.);
+        chat.setClosed((byte) 0);
+
+        model.addAttribute("chat", chat);
+        model.addAttribute("messageList", new ArrayList<MessageEntity>());
+
+        this.chatRepository.save(chat);
 
         return "clientChat";
     }
