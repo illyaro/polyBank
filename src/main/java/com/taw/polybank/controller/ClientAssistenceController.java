@@ -48,9 +48,6 @@ public class ClientAssistenceController {
         ChatEntity chat = this.chatRepository.findById(idChat).orElse(null);
         model.addAttribute("chat", chat);
 
-        List<MessageEntity> messageList = (List<MessageEntity>) chat.getMessagesById();
-        model.addAttribute("messageList", messageList);
-
         return "clientChat";
     }
 
@@ -59,11 +56,11 @@ public class ClientAssistenceController {
         ClientEntity client = this.clientRepository.findById((Integer) session.getAttribute("clientId")).orElse(null);
         ChatEntity chat = new ChatEntity();
         chat.setClientByClientId(client);
-        chat.setEmployeeByAssistantId(employeeRepository.);
+        chat.setEmployeeByAssistantId(employeeRepository.findEmployeeWithMinimumChats().get(0));
+        chat.setMessagesById(new ArrayList<>());
         chat.setClosed((byte) 0);
 
         model.addAttribute("chat", chat);
-        model.addAttribute("messageList", new ArrayList<MessageEntity>());
 
         this.chatRepository.save(chat);
 

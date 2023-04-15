@@ -15,4 +15,10 @@ public interface EmployeeRepository extends JpaRepository<EmployeeEntity, Intege
     public List<EmployeeEntity> findAllManagers();
     @Query("select employee from EmployeeEntity employee where employee.dni like :dni")
     Optional<EmployeeEntity> findByDNI(@Param("dni") String dni);
+
+    @Query("select employee from EmployeeEntity employee order by (select count(r) from RequestEntity r where r.employeeByEmployeeId = employee) asc")
+    List<EmployeeEntity> findEmployeeWithMinimmumRequests();
+
+    @Query("select employee from EmployeeEntity employee order by (select count(c) from ChatEntity c where c.employeeByAssistantId = employee) asc")
+    List<EmployeeEntity> findEmployeeWithMinimumChats();
 }

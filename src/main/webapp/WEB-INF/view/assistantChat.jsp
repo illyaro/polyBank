@@ -1,6 +1,7 @@
 <%@ page import="com.taw.polybank.entity.MessageEntity" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.taw.polybank.entity.ChatEntity" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="input" uri="http://www.springframework.org/tags/form" %>
 <%--
@@ -14,7 +15,7 @@
 
 <%
     ChatEntity chat = (ChatEntity) request.getAttribute("chat");
-    List<MessageEntity> messageList = (List<MessageEntity>) request.getAttribute("messageList");
+    List<MessageEntity> messageList = new ArrayList<>(chat.getMessagesById());
 %>
 
 <html>
@@ -56,5 +57,9 @@
         <%
             }
         %>
+    <br>
+    <form action="/employee/assistence/" method="get">
+        <button>Back</button>
+    </form>
 </body>
 </html>

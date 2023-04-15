@@ -43,9 +43,6 @@ public class AssistantController {
         ChatEntity chat = this.chatRepository.findById(idChat).orElse(null);
         model.addAttribute("chat", chat);
 
-        List<MessageEntity> messageList = (List<MessageEntity>) chat.getMessagesById();
-        model.addAttribute("messageList", messageList);
-
         return "assistantChat";
     }
 
