@@ -40,7 +40,7 @@ public class ClientAssistenceController {
         List<ChatEntity> chatList = (List<ChatEntity>) client.getChatsById();
         model.addAttribute("chatList", chatList);
 
-        return "clientChatList";
+        return "assistence/clientChatList";
     }
 
     @GetMapping("/chat")
@@ -48,7 +48,7 @@ public class ClientAssistenceController {
         ChatEntity chat = this.chatRepository.findById(idChat).orElse(null);
         model.addAttribute("chat", chat);
 
-        return "clientChat";
+        return "assistence/clientChat";
     }
 
     @PostMapping("/newChat")
@@ -64,7 +64,7 @@ public class ClientAssistenceController {
 
         this.chatRepository.save(chat);
 
-        return "clientChat";
+        return "assistence/clientChat";
     }
 
     @PostMapping("/send")

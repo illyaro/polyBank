@@ -35,7 +35,7 @@ public class AssistantController {
         List<ChatEntity> chatList = (List<ChatEntity>) employee.getChatsById();
         model.addAttribute("chatList", chatList);
 
-        return "assistantChatList";
+        return "assistence/assistantChatList";
     }
 
     @GetMapping("/chat")
@@ -43,7 +43,7 @@ public class AssistantController {
         ChatEntity chat = this.chatRepository.findById(idChat).orElse(null);
         model.addAttribute("chat", chat);
 
-        return "assistantChat";
+        return "assistence/assistantChat";
     }
 
     @PostMapping("/send")
