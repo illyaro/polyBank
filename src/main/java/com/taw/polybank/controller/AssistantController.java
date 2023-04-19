@@ -31,7 +31,7 @@ public class AssistantController {
 
     @GetMapping("/")
     public String doListChats(Model model, HttpSession session) {
-        EmployeeEntity employee = this.employeeRepository.findById((Integer) session.getAttribute("employeeId")).orElse(null);
+        EmployeeEntity employee = this.employeeRepository.findById((Integer) session.getAttribute("employeeID")).orElse(null);
         List<ChatEntity> chatList = (List<ChatEntity>) employee.getChatsById();
         model.addAttribute("chatList", chatList);
 
@@ -56,6 +56,6 @@ public class AssistantController {
         message.setEmployeeByEmployeeId(chat.getEmployeeByAssistantId());
         message.setClientByClientId(null);
         this.messageRepository.save(message);
-        return "redirect:/employee/assistence/chat?id=" + chatId + "/";
+        return "redirect:/employee/assistence/chat?id=" + chatId;
     }
 }

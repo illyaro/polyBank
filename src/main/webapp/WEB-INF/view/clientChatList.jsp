@@ -32,8 +32,20 @@
     <tr>
         <td><%= chat.getId() %></td>
         <td><%= chat.getEmployeeByAssistantId().getName() %></td>
-        <td><%= chat.getClosed() %></td>
-        <td><a href="client/assistence/chat?id=<%= chat.getId() %>">Open</a></td>
+        <td>
+            <%
+                if (chat.getClosed() == 1) {
+            %>
+            Yes
+            <%
+                } else {
+            %>
+            No
+            <%
+                }
+            %>
+        </td>
+        <td><a href="/client/assistence/chat?id=<%= chat.getId() %>">Open</a></td>
         <%
             if (chat.getClosed() == 0) {
         %>
@@ -54,7 +66,7 @@
     <%
         }
     %>
-</table border="1">
+</table>
 <br>
 <form action="/client/assistence/newChat" method="post">
     <button>New Chat</button>

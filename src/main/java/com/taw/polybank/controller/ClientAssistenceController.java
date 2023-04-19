@@ -36,7 +36,7 @@ public class ClientAssistenceController {
 
     @GetMapping("/")
     public String doListChats(Model model, HttpSession session) {
-        ClientEntity client = this.clientRepository.findById((Integer) session.getAttribute("clientId")).orElse(null);
+        ClientEntity client = this.clientRepository.findById((Integer) session.getAttribute("clientID")).orElse(null);
         List<ChatEntity> chatList = (List<ChatEntity>) client.getChatsById();
         model.addAttribute("chatList", chatList);
 
@@ -53,7 +53,7 @@ public class ClientAssistenceController {
 
     @PostMapping("/newChat")
     public String doNewChat (Model model, HttpSession session) {
-        ClientEntity client = this.clientRepository.findById((Integer) session.getAttribute("clientId")).orElse(null);
+        ClientEntity client = this.clientRepository.findById((Integer) session.getAttribute("clientID")).orElse(null);
         ChatEntity chat = new ChatEntity();
         chat.setClientByClientId(client);
         chat.setEmployeeByAssistantId(employeeRepository.findEmployeeWithMinimumChats().get(0));
@@ -77,7 +77,7 @@ public class ClientAssistenceController {
         message.setEmployeeByEmployeeId(null);
         message.setClientByClientId(chat.getClientByClientId());
         this.messageRepository.save(message);
-        return "redirect:/client/assistence/chat?id=" + chatId + "/";
+        return "redirect:/client/assistence/chat?id=" + chatId;
     }
 
     @PostMapping("/close")

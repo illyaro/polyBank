@@ -23,7 +23,7 @@
     <title>Polybank - Assistence - Chat</title>
 </head>
 <body>
-<h1>Assistence Chat -> Assistant <%= chat.getEmployeeByAssistantId().getName() %></h1>
+<h1>Assistence Chat (Assistant <%= chat.getEmployeeByAssistantId().getName() %>)</h1>
 <table border="1">
     <tr>
         <th>ME</th>
@@ -34,7 +34,7 @@
                 if (message.getClientByClientId() != null) {
         %>
     <tr>
-        <td><%= message.getContent()%></td>
+        <td><%= message.getContent()%> (<%= message.getDate() %>)</td>
         <td></td>
     </tr>
         <%
@@ -42,22 +42,26 @@
         %>
     <tr>
         <td></td>
-        <td><%= message.getContent()%></td>
+        <td><%= message.getContent()%> (<%= message.getDate() %>)</td>
     </tr>
         <%
                 }
             }
+        %>
+</table>
+<br>
+        <%
             if (chat.getClosed() == 0) {
         %>
     <form action="/client/assistence/send" method="post">
         <input hidden="true" name="chatId" value="<%= chat.getId() %>">
-        <textarea name="content" cols="50" rows="50" maxlength="1000"/><br/>
+        <textarea name="content" cols="50" rows="5" maxlength="1000"></textarea>
+        <br>
         <button>Send</button>
     </form>
         <%
             }
         %>
-    <br>
     <form action="/client/assistence/" method="get">
         <button>Back</button>
     </form>

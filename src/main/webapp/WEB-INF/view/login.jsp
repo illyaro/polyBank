@@ -35,10 +35,14 @@
 <script>
     form=document.getElementById("someForm");
     function asClient() {
-        form.action="/"; // TODO Insert your login link
+        form.action="/client/login"; // TODO Insert your login link
         form.submit();
     }
     function asRepresentative() {
+        form.action="/employee/login";
+        form.submit();
+    }
+    function asEmployeeAssistant() {
         form.action="/employee/login";
         form.submit();
     }

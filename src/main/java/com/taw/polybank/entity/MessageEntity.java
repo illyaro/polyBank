@@ -2,7 +2,9 @@ package com.taw.polybank.entity;
 
 import jakarta.persistence.*;
 
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 @Entity
 @Table(name = "Message", schema = "polyBank", catalog = "")
@@ -95,5 +97,11 @@ public class MessageEntity {
 
     public void setClientByClientId(ClientEntity clientByClientId) {
         this.clientByClientId = clientByClientId;
+    }
+
+    public String getDate() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = dateFormat.format(new Date(this.timestamp.getTime()));
+        return formattedDate;
     }
 }
