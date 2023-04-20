@@ -23,10 +23,10 @@ public class MessageEntity {
     @JoinColumn(name = "Chat_id", referencedColumnName = "id", nullable = false)
     private ChatEntity chatByChatId;
     @ManyToOne
-    @JoinColumn(name = "Employee_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "Employee_id", referencedColumnName = "id", nullable = true)
     private EmployeeEntity employeeByEmployeeId;
     @ManyToOne
-    @JoinColumn(name = "Client_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "Client_id", referencedColumnName = "id", nullable = true)
     private ClientEntity clientByClientId;
 
     public int getId() {

@@ -55,7 +55,7 @@
         %>
     <form action="/employee/assistence/send" method="post">
         <input hidden="true" name="chatId" value="<%= chat.getId() %>">
-        <textarea name="content" cols="50" rows="5" maxlength="1000"/>
+        <textarea name="content" cols="50" rows="5" maxlength="1000"></textarea>
         <br>
         <button>Send</button>
     </form>
