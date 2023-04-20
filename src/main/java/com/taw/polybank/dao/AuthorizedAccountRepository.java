@@ -12,6 +12,6 @@ import java.util.List;
 @Repository
 public interface AuthorizedAccountRepository extends JpaRepository<AuthorizedAccountEntity, Integer> {
 
-    @Query("select c.authorizedAccountsById from BankAccountEntity c where c.id = :bankAccountId")
+    @Query("select c.authorizedAccountsById from BankAccountDTO c where c.id = :bankAccountId")
     List<AuthorizedAccountEntity> findAuthorizedAccountEntitiesOfGivenBankAccount(@Param("bankAccountId") Integer id);
 }
