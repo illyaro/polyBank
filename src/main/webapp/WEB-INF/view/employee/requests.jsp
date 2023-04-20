@@ -22,6 +22,7 @@
     <table>
         <thead>
             <tr>
+                <th>ID</th>
                 <th>Cuenta que solicita</th>
                 <th>Timestamp</th>
             </tr>
@@ -29,6 +30,9 @@
         <tbody>
             <% for (RequestEntity requestEntity : requests ) { %>
             <tr>
+                <td>
+                    <%= requestEntity.getId()%>
+                </td>
                 <td>
                     <%= requestEntity.getClientByClientId().getDni()%>
                 </td>
