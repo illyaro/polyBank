@@ -2,7 +2,7 @@ package com.taw.polybank.dto;
 
 import java.sql.Timestamp;
 
-public class EmployeeDTO {
+public class ClientDTO {
     // It does not provide salt and password due to security concerns
 
     private int id;

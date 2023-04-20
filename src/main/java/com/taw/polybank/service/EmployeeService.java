@@ -1,7 +1,6 @@
 package com.taw.polybank.service;
 
 import com.taw.polybank.dao.EmployeeRepository;
-import com.taw.polybank.dto.ClientDTO;
 import com.taw.polybank.dto.EmployeeDTO;
 import com.taw.polybank.entity.ClientEntity;
 import com.taw.polybank.entity.EmployeeEntity;
