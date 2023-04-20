@@ -1,4 +1,4 @@
-package com.taw.polybank.controller;
+package com.taw.polybank.controller.assistence;
 
 import com.taw.polybank.dao.ChatRepository;
 import com.taw.polybank.dao.EmployeeRepository;
@@ -6,6 +6,7 @@ import com.taw.polybank.dao.MessageRepository;
 import com.taw.polybank.entity.ChatEntity;
 import com.taw.polybank.entity.EmployeeEntity;
 import com.taw.polybank.entity.MessageEntity;
+import com.taw.polybank.ui.AssistantFilter;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,6 +36,39 @@ public class AssistantController {
         List<ChatEntity> chatList = (List<ChatEntity>) employee.getChatsById();
         model.addAttribute("chatList", chatList);
 
+        AssistantFilter filter = new AssistantFilter();
+        model.addAttribute("filter", filter);
+
+        return "assistence/assistantChatList";
+    }
+
+    @PostMapping("filter")
+    public String doFilterChats(Model model, HttpSession session, @ModelAttribute("filter")AssistantFilter filter) {
+        model.addAttribute("filter", filter);
+        EmployeeEntity employee = this.employeeRepository.findById((Integer) session.getAttribute("employeeID")).orElse(null);
+        List<ChatEntity> chatList;
+
+        if (filter.getDni() == "" && filter.getClient() == "" && filter.getRecent() == false) {
+            chatList = (List<ChatEntity>) employee.getChatsById();
+            model.addAttribute("chatList", chatList);
+        } else if (filter.getDni() == "") {
+            if (filter.getClient() != "" && filter.getRecent() == false) {
+                chatList = this.chatRepository.findByEmployeeAndClientName(employee, filter.getClient());
+            } else if (filter.getClient() == "" && filter.getRecent() == true) {
+                chatList = this.chatRepository.findByEmployeeAndRecent(employee);
+            } else {
+                chatList = this.chatRepository.findByEmployeeAndClientNameAndRecent(employee, filter.getClient());
+            }
+        } else {
+            if (filter.getClient() != "" && filter.getRecent() == false) {
+                chatList = this.chatRepository.findByEmployeeAndClientDniAndClientName(employee, filter.getDni(), filter.getClient());
+            } else if (filter.getClient() == "" && filter.getRecent() == true) {
+                chatList = this.chatRepository.findByEmployeeAndClientDniAndRecent(employee, filter.getDni());
+            } else {
+                chatList = this.chatRepository.findByEmployeeAndClientDniAndClientNameAndRecent(employee, filter.getDni(), filter.getClient());
+            }
+        }
+        model.addAttribute("chatList", chatList);
         return "assistence/assistantChatList";
     }
 

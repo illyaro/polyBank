@@ -1,3 +1,4 @@
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page import="com.taw.polybank.entity.ChatEntity" %>
 <%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
@@ -18,9 +19,21 @@
 </head>
 <body>
 <h1>Chats List</h1>
+<strong>Filter:</strong>
+<br>
+<form:form modelAttribute="filter" method="post" action="/employee/assistence/filter">
+    Client DNI: <form:input path="dni"></form:input>
+    <br>
+    Client Name: <form:input path="client"></form:input>
+   <br>
+    Order By Most Recent Messages: <form:checkbox path="recent"></form:checkbox>
+    <br>
+    <form:button>Filter</form:button>
+</form:form>
+<br>
 <table border="1">
     <tr>
-        <th>ID</th>
+        <th>DNI</th>
         <th>CLIENT</th>
         <th>CLOSED</th>
         <th></th>
@@ -29,7 +42,7 @@
         for (ChatEntity chat : chatList) {
     %>
     <tr>
-        <td><%= chat.getId() %></td>
+        <td><%= chat.getClientByClientId().getDni() %></td>
         <td><%= chat.getClientByClientId().getName() %></td>
         <td>
             <%

@@ -20,7 +20,6 @@
 <h1>Chats List</h1>
 <table border="1">
     <tr>
-        <th>ID</th>
         <th>ASSISTANT</th>
         <th>CLOSED</th>
         <th></th>
@@ -30,7 +29,6 @@
         for (ChatEntity chat : chatList) {
     %>
     <tr>
-        <td><%= chat.getId() %></td>
         <td><%= chat.getEmployeeByAssistantId().getName() %></td>
         <td>
             <%

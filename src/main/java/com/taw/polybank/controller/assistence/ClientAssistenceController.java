@@ -1,4 +1,4 @@
-package com.taw.polybank.controller;
+package com.taw.polybank.controller.assistence;
 
 import com.taw.polybank.dao.ChatRepository;
 import com.taw.polybank.dao.ClientRepository;
