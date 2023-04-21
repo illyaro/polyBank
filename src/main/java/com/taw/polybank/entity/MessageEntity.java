@@ -1,5 +1,6 @@
 package com.taw.polybank.entity;
 
+import com.taw.polybank.dto.MessageDTO;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
@@ -95,5 +96,16 @@ public class MessageEntity {
 
     public void setClientByClientId(ClientEntity clientByClientId) {
         this.clientByClientId = clientByClientId;
+    }
+
+    public MessageDTO toDTO(){
+        MessageDTO messageDTO = new MessageDTO();
+        messageDTO.setId(getId());
+        messageDTO.setContent(getContent());
+        messageDTO.setTimestamp(getTimestamp());
+        messageDTO.setChatByChatId(getChatByChatId().toDTO());
+        messageDTO.setEmployeeByEmployeeId(getEmployeeByEmployeeId().toDTO());
+        messageDTO.setClientByClientId(getClientByClientId().toDTO());
+        return messageDTO;
     }
 }
