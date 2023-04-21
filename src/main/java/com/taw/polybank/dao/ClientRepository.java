@@ -11,21 +11,21 @@ import java.util.List;
 
 @Repository
 public interface ClientRepository extends JpaRepository<ClientEntity, Integer> {
-    @Query("select c from ClientDTO c where c.dni = :user and c.password = :password")
+    @Query("select c from ClientEntity c where c.dni = :user and c.password = :password")
     ClientEntity autenticar(@Param("user") String user, @Param("password") String password);
-    @Query("select c from ClientDTO c where c.name like concat('%',:name ,'%') or c.surname like concat('%',:name ,'%')")
+    @Query("select c from ClientEntity c where c.name like concat('%',:name ,'%') or c.surname like concat('%',:name ,'%')")
     List<ClientEntity> findByNameOrSurname(String name);
 
 
-    @Query("select c from ClientDTO c where c.dni = :dni")
+    @Query("select c from ClientEntity c where c.dni = :dni")
     ClientEntity findByDNI(@Param("dni") String dni);
 
-    @Query("select ce from ClientDTO ce join ce.authorizedAccountsById aa join aa.bankAccountByBankAccountId bank " +
-            "join bank.companiesById com where com.id = :id union select ce from ClientDTO ce " +
+    @Query("select ce from ClientEntity ce join ce.authorizedAccountsById aa join aa.bankAccountByBankAccountId bank " +
+            "join bank.companiesById com where com.id = :id union select ce from ClientEntity ce " +
             "join ce.bankAccountsById bank join bank.companiesById com where com.id = :id")
     List<ClientEntity> findAllRepresentativesOfGivenCompany(@Param("id") Integer id);
 
-    @Query("SELECT ce FROM ClientDTO ce " +
+    @Query("SELECT ce FROM ClientEntity ce " +
             "JOIN ce.authorizedAccountsById aa " +
             "JOIN aa.bankAccountByBankAccountId bank " +
             "JOIN bank.companiesById com " +
@@ -34,7 +34,7 @@ public interface ClientRepository extends JpaRepository<ClientEntity, Integer> {
             "AND ce.creationDate <= :registeredBefore " +
             "AND ce.creationDate >= :registeredAfter " +
             "UNION " +
-            "SELECT ce FROM ClientDTO ce " +
+            "SELECT ce FROM ClientEntity ce " +
             "JOIN ce.bankAccountsById bank " +
             "JOIN bank.companiesById com " +
             "WHERE com.id = :companyId " +
@@ -46,7 +46,7 @@ public interface ClientRepository extends JpaRepository<ClientEntity, Integer> {
                                                                                                          @Param("registeredBefore") Timestamp registeredBefore,
                                                                                                          @Param("registeredAfter") Timestamp registeredAfter);
 
-    @Query("SELECT ce FROM ClientDTO ce " +
+    @Query("SELECT ce FROM ClientEntity ce " +
             "JOIN ce.authorizedAccountsById aa " +
             "JOIN aa.bankAccountByBankAccountId bank " +
             "JOIN bank.companiesById com " +
@@ -54,7 +54,7 @@ public interface ClientRepository extends JpaRepository<ClientEntity, Integer> {
             "AND ce.creationDate <= :registeredBefore " +
             "AND ce.creationDate >= :registeredAfter " +
             "UNION " +
-            "SELECT ce FROM ClientDTO ce " +
+            "SELECT ce FROM ClientEntity ce " +
             "JOIN ce.bankAccountsById bank " +
             "JOIN bank.companiesById com " +
             "WHERE com.id = :companyId " +
