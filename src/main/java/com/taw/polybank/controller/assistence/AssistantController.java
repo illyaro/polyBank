@@ -42,7 +42,7 @@ public class AssistantController {
         return "assistence/assistantChatList";
     }
 
-    @PostMapping("filter")
+    @PostMapping("/filter")
     public String doFilterChats(Model model, HttpSession session, @ModelAttribute("filter")AssistantFilter filter) {
         model.addAttribute("filter", filter);
         EmployeeEntity employee = this.employeeRepository.findById((Integer) session.getAttribute("employeeID")).orElse(null);
