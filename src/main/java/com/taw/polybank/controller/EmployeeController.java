@@ -4,6 +4,7 @@ import com.taw.polybank.dao.ClientRepository;
 import com.taw.polybank.dao.CompanyRepository;
 import com.taw.polybank.dao.EmployeeRepository;
 import com.taw.polybank.dao.RequestRepository;
+import com.taw.polybank.entity.ClientEntity;
 import com.taw.polybank.entity.EmployeeEntity;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-import java.util.Scanner;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.*;
 
 @Controller
 @RequestMapping("/employee")
@@ -66,20 +68,35 @@ public class EmployeeController {
     }
 
     @GetMapping("/accounts")
-    public String getAccounts(Model model) {
+    public String getAccounts(Model model, @RequestParam("last_month") Optional<Integer> opt_last_month) {
+        List<ClientEntity> clientEntityList;
+        if (opt_last_month.isPresent() && opt_last_month.get() == 1)
+        {
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.MONTH, -1);
+            Date fechaHaceUnMes = cal.getTime();
+            Timestamp timestampHaceUnMes = new Timestamp(fechaHaceUnMes.getTime());
+
+
+        }
         model.addAttribute("clients", clientRepository.findAll());
         model.addAttribute("companies", companyRepository.findAll());
 
         return ("employee/accounts");
     }
 
-    /*@GetMapping("/suspicious")
-    public String getAccounts(Model model) {
+    @GetMapping("/inactive")
+    public String getInactive(Model model) {
 
-
-        return ("employee/accounts");
+        return ("employee/inactive_accounts");
     }
-*/
+
+
+    @GetMapping("/suspicious")
+    public String getSuspicious(Model model) {
+
+        return ("employee/suspicious");
+    }
 
     @GetMapping("/register")
     public String getRegister(Model model)

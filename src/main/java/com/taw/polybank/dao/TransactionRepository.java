@@ -23,7 +23,7 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
     @Query("select t from TransactionEntity t where t.bankAccountByBankAccountId = :bankAccount and t.timestamp >= :begin and t.timestamp <= :end and t.clientByClientId in :clients and t.paymentByPaymentId.amount >= :amount")
     List<TransactionEntity> filterByBankAccount_TimestampRange_TransactionOwner_Amount(BankAccountEntity bankAccount, Timestamp begin, Timestamp end, List<ClientEntity> clients, double amount);
 
-    @Query("select t from TransactionDTO t where t.bankAccountByBankAccountId = :bankAccount and t.timestamp >= :begin and t.timestamp <= :end and t.paymentByPaymentId.amount >= :amount")
+    @Query("select t from TransactionEntity t where t.bankAccountByBankAccountId = :bankAccount and t.timestamp >= :begin and t.timestamp <= :end and t.paymentByPaymentId.amount >= :amount")
     List<TransactionEntity> filterByBankAccount_TimestampRange_Amount(BankAccountEntity bankAccount, Timestamp begin, Timestamp end, double amount);
 
 
@@ -32,7 +32,7 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
 
     List<TransactionEntity> findTransactionEntitiesByBankAccountByBankAccountIdId(Integer id);
 
-    @Query("select trans from TransactionDTO trans where " +
+    @Query("select trans from TransactionEntity trans where " +
             "trans.bankAccountByBankAccountId.id = :id " +
             "AND trans.timestamp >= :dateAfter " +
             "AND trans.timestamp <= :dateBefore " +
@@ -45,7 +45,7 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
             @Param("minAmount") double minAmount,
             @Param("maxAmount") double maxAmount);
 
-    @Query("select trans from TransactionDTO trans where " +
+    @Query("select trans from TransactionEntity trans where " +
             "trans.bankAccountByBankAccountId.id = :id " +
             "AND trans.timestamp >= :dateAfter " +
             "AND trans.timestamp <= :dateBefore " +
@@ -60,7 +60,7 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
             @Param("maxAmount") double maxAmount,
             @Param("senderDni") String senderDni);
 
-    @Query("select trans from TransactionDTO trans where " +
+    @Query("select trans from TransactionEntity trans where " +
             "trans.bankAccountByBankAccountId.id = :id " +
             "AND trans.timestamp >= :dateAfter " +
             "AND trans.timestamp <= :dateBefore " +
@@ -75,7 +75,7 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
             @Param("maxAmount") double maxAmount,
             @Param("recipientName") String recipientName);
 
-    @Query("select trans from TransactionDTO trans where " +
+    @Query("select trans from TransactionEntity trans where " +
             "trans.bankAccountByBankAccountId.id = :id " +
             "AND trans.timestamp >= :dateAfter " +
             "AND trans.timestamp <= :dateBefore " +
