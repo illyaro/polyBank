@@ -76,7 +76,7 @@ public class EmployeeController {
             cal.add(Calendar.MONTH, -1);
             Date fechaHaceUnMes = cal.getTime();
             Timestamp timestampHaceUnMes = new Timestamp(fechaHaceUnMes.getTime());
-            clientEntityList = clientRepository.findAllInactiveFrom(timestampHaceUnMes);
+
 
         }
         model.addAttribute("clients", clientRepository.findAll());

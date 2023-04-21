@@ -66,6 +66,5 @@ public interface ClientRepository extends JpaRepository<ClientEntity, Integer> {
                                                                                      @Param("registeredAfter") Timestamp registeredAfter);
     ClientEntity findClientEntityByBankAccountsByIdAndName(Integer id, String name);
 
-    @Query("SELECT c FROM ClientEntity c WHERE NOT EXISTS (SELECT t FROM c.transactionsById t WHERE t.timestamp < :timestamp)")
-    List<ClientEntity> findAllInactiveFrom(@Param("lowerBoundTime")Timestamp timestamp);
+
 }
