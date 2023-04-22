@@ -88,7 +88,7 @@ public class ChatEntity implements DTO<Chat> {
         this.messagesById = messagesById;
     }
 
-    public Chat toDTO () {
+    public Chat toDTO() {
         Chat chat = new Chat();
 
         chat.setId(this.getId());

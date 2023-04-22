@@ -1,10 +1,5 @@
 package com.taw.polybank.dto;
 
-import com.taw.polybank.entity.*;
-import jakarta.persistence.Basic;
-import jakarta.persistence.Column;
-import jakarta.persistence.OneToMany;
-
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;

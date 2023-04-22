@@ -28,7 +28,7 @@ public class EmployeeService {
         return this.listToDTO(employeeRepository.findEmployeeWithMinimumChats());
     }
 
-    protected List<Employee> listToDTO (List<EmployeeEntity> employeeEntityList) {
+    protected List<Employee> listToDTO(List<EmployeeEntity> employeeEntityList) {
         ArrayList employeeList = new ArrayList<Employee>();
         employeeEntityList.forEach((final EmployeeEntity employeeEntity) -> employeeList.add(employeeEntity.toDTO()));
 

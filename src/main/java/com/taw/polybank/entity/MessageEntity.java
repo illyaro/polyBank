@@ -99,7 +99,7 @@ public class MessageEntity implements DTO<Message> {
         this.clientByClientId = clientByClientId;
     }
 
-    public Message toDTO () {
+    public Message toDTO() {
         Message message = new Message();
 
         message.setId(this.getId());

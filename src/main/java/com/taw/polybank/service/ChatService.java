@@ -5,7 +5,6 @@ import com.taw.polybank.dao.ClientRepository;
 import com.taw.polybank.dao.EmployeeRepository;
 import com.taw.polybank.dto.Chat;
 import com.taw.polybank.dto.Employee;
-import com.taw.polybank.dto.Message;
 import com.taw.polybank.entity.ChatEntity;
 import com.taw.polybank.entity.EmployeeEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,7 +121,7 @@ public class ChatService {
 
         chatEntity.setClientByClientId(clientRepository.findById(chat.getClient().getId()).orElse(null));
         chatEntity.setEmployeeByAssistantId(employeeRepository.findById(chat.getAssistant().getId()).orElse(null));
-        chatEntity.setMessagesById(this.listToDTO((List<Message>) chat.getMessageList()));
+        chatEntity.setMessagesById(new ArrayList<>());
         chatEntity.setClosed(chat.getClosed());
 
         this.chatRepository.save(chatEntity);
@@ -138,9 +137,9 @@ public class ChatService {
         }
     }
 
-    protected <T, U> List<T> listToDTO (List<U> chatEntityList) {
-        ArrayList chatList = new ArrayList<T>();
-        chatEntityList.forEach((final U chatEntity) -> chatList.add(U.toDTO()));
+    protected List<Chat> listToDTO(List<ChatEntity> chatEntityList) {
+        ArrayList chatList = new ArrayList<Chat>();
+        chatEntityList.forEach((final ChatEntity chatEntity) -> chatList.add(chatEntity.toDTO()));
 
         return chatList;
     }
