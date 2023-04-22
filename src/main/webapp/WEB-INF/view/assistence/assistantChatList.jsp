@@ -1,6 +1,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ page import="com.taw.polybank.entity.ChatEntity" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="com.taw.polybank.dto.Chat" %><%--
   Created by IntelliJ IDEA.
   User: Javier Jordán Luque
   Date: 20/03/2023
@@ -10,7 +10,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    List<ChatEntity> chatList = (List<ChatEntity>) request.getAttribute("chatList");
+    List<Chat> chatList = (List<Chat>) request.getAttribute("chatList");
 %>
 
 <html>
@@ -39,24 +39,12 @@
         <th></th>
     </tr>
     <%
-        for (ChatEntity chat : chatList) {
+        for (Chat chat : chatList) {
     %>
     <tr>
-        <td><%= chat.getClientByClientId().getDni() %></td>
-        <td><%= chat.getClientByClientId().getName() %></td>
-        <td>
-            <%
-                if (chat.getClosed() == 1) {
-            %>
-            Yes
-            <%
-            } else {
-            %>
-            No
-            <%
-                }
-            %>
-        </td>
+        <td><%= chat.getClient().getDni() %></td>
+        <td><%= chat.getClient().getName() %></td>
+        <td><%= chat.isClosed() %></td>
         <td><a href="/employee/assistence/chat?id=<%= chat.getId() %>">Open</a></td>
     </tr>
     <%

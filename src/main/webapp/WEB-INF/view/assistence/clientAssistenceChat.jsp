@@ -1,7 +1,7 @@
-<%@ page import="com.taw.polybank.entity.MessageEntity" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.taw.polybank.entity.ChatEntity" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="com.taw.polybank.dto.Message" %>
+<%@ page import="com.taw.polybank.dto.Chat" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="input" uri="http://www.springframework.org/tags/form" %>
 <%--
@@ -14,8 +14,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    ChatEntity chat = (ChatEntity) request.getAttribute("chat");
-    List<MessageEntity> messageList = new ArrayList<>(chat.getMessagesById());
+    Chat chat = (Chat) request.getAttribute("chat");
+    List<Message> messageList = new ArrayList<>(chat.getMessageList());
 %>
 
 <html>
@@ -23,18 +23,18 @@
     <title>Polybank - Assistence - Chat</title>
 </head>
 <body>
-<h1>Assistence Chat (Assistant <%= chat.getEmployeeByAssistantId().getName() %>)</h1>
+<h1>Assistence Chat (Assistant <%= chat.getAssistant().getName() %>)</h1>
 <table border="1">
     <tr>
         <th>ME</th>
         <th>ASSISTANT</th>
     </tr>
         <%
-            for (MessageEntity message : messageList) {
-                if (message.getClientByClientId() != null) {
+            for (Message message : messageList) {
+                if (message.getClient() != null) {
         %>
     <tr>
-        <td><%= message.getContent()%> (<%= message.getDate() %>)</td>
+        <td><%= message.getContentAndDate() %></td>
         <td></td>
     </tr>
         <%
@@ -42,7 +42,7 @@
         %>
     <tr>
         <td></td>
-        <td><%= message.getContent()%> (<%= message.getDate() %>)</td>
+        <td><%= message.getContentAndDate() %></td>
     </tr>
         <%
                 }

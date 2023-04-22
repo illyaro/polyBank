@@ -1,13 +1,11 @@
 package com.taw.polybank.controller.assistence;
 
-import com.taw.polybank.dao.ChatRepository;
-import com.taw.polybank.dao.EmployeeRepository;
-import com.taw.polybank.dao.MessageRepository;
 import com.taw.polybank.dto.Chat;
 import com.taw.polybank.dto.Employee;
-import com.taw.polybank.entity.ChatEntity;
-import com.taw.polybank.entity.EmployeeEntity;
-import com.taw.polybank.entity.MessageEntity;
+import com.taw.polybank.dto.Message;
+import com.taw.polybank.service.ChatService;
+import com.taw.polybank.service.EmployeeService;
+import com.taw.polybank.service.MessageService;
 import com.taw.polybank.ui.assistence.AssistantFilter;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +22,13 @@ import java.util.List;
 public class AssistantController {
 
     @Autowired
-    protected EmployeeRepository employeeRepository;
+    protected EmployeeService employeeService;
 
     @Autowired
-    protected ChatRepository chatRepository;
+    protected ChatService chatService;
 
     @Autowired
-    protected MessageRepository messageRepository;
+    protected MessageService messageService;
 
     @GetMapping("/")
     public String doListChats(Model model, HttpSession session) {
@@ -43,32 +41,32 @@ public class AssistantController {
     }
 
     protected String processFilter(Model model, HttpSession session, AssistantFilter filter) {
-        List<ChatEntity> chatList;
-        EmployeeEntity employee = this.employeeRepository.findById((Integer) session.getAttribute("employeeID")).orElse(null);
+        List<Chat> chatList;
+        Employee employee = this.employeeService.findById((Integer) session.getAttribute("employeeID"));
 
         if (employee != null) {
             if (filter == null || (filter.getClientDni() == "" && filter.getClientName() == "" && filter.getRecent() == false)) {
-                chatList = (List<ChatEntity>) employee.getChatsById();
+                chatList = (List<Chat>) employee.getChatList();
                 filter = new AssistantFilter();
             } else {
                 if (filter.getClientDni() != "") {
                     if (filter.getClientName() == "" && filter.getRecent() == false) {
-                        chatList = this.chatRepository.findByEmployeeAndClientDni(employee, filter.getClientDni());
+                        chatList = this.chatService.findByEmployeeAndClientDni(employee, filter.getClientDni());
                     } else if (filter.getClientName() != "" && filter.getRecent() == false) {
-                        chatList = this.chatRepository.findByEmployeeAndClientDniAndClientName(employee, filter.getClientDni(), filter.getClientName());
+                        chatList = this.chatService.findByEmployeeAndClientDniAndClientName(employee, filter.getClientDni(), filter.getClientName());
                     } else if (filter.getClientName() == "" && filter.getRecent() == true) {
-                        chatList = this.chatRepository.findByEmployeeAndClientDniAndRecent(employee, filter.getClientName());
+                        chatList = this.chatService.findByEmployeeAndClientDniAndRecent(employee, filter.getClientName());
                     } else {
-                        chatList = this.chatRepository.findByEmployeeAndClientDniAndClientNameAndRecent(employee, filter.getClientDni(), filter.getClientName());
+                        chatList = this.chatService.findByEmployeeAndClientDniAndClientNameAndRecent(employee, filter.getClientDni(), filter.getClientName());
                     }
                 } else if (filter.getClientName() != "") {
                     if (filter.getRecent() == false) {
-                        chatList = this.chatRepository.findByEmployeeAndClientName(employee, filter.getClientName());
+                        chatList = this.chatService.findByEmployeeAndClientName(employee, filter.getClientName());
                     } else {
-                        chatList = this.chatRepository.findByEmployeeAndClientNameAndRecent(employee, filter.getClientName());
+                        chatList = this.chatService.findByEmployeeAndClientNameAndRecent(employee, filter.getClientName());
                     }
                 } else {
-                    chatList = this.chatRepository.findByEmployeeAndRecent(employee);
+                    chatList = this.chatService.findByEmployeeAndRecent(employee);
                 }
             }
             model.addAttribute("chatList", chatList);
@@ -81,23 +79,35 @@ public class AssistantController {
     }
 
     @GetMapping("/chat")
-    public String doOpenChat (@RequestParam("id") Integer idChat, Model model) {
-        ChatEntity chat = this.chatRepository.findById(idChat).orElse(null);
-        model.addAttribute("chat", chat);
+    public String doOpenChat (@RequestParam("id") Integer chatId, Model model) {
+        Chat chat = this.chatService.findById(chatId);
 
-        return "assistence/assistantChat";
+        if (chat != null) {
+            model.addAttribute("chat", chat);
+
+            return "assistence/assistantChat";
+        }
+
+        return "error";
     }
 
     @PostMapping("/send")
     public String doSend (@RequestParam("content") String content, @RequestParam("chatId") Integer chatId) {
-        ChatEntity chat = chatRepository.findById(chatId).orElse(null);
-        MessageEntity message = new MessageEntity();
-        message.setChatByChatId(chat);
-        message.setContent(content);
-        message.setTimestamp(Timestamp.from(Instant.now()));
-        message.setEmployeeByEmployeeId(chat.getEmployeeByAssistantId());
-        message.setClientByClientId(null);
-        this.messageRepository.save(message);
-        return "redirect:/employee/assistence/chat?id=" + chatId;
+        Chat chat = chatService.findById(chatId);
+
+        if (chat != null) {
+            Message message = new Message();
+            message.setChat(chat);
+            message.setContent(content);
+            message.setTimestamp(Timestamp.from(Instant.now()));
+            message.setAssistant(chat.getAssistant());
+            message.setClient(null);
+
+            this.messageService.save(message);
+
+            return "redirect:/employee/assistence/chat?id=" + chatId;
+        }
+
+        return "error";
     }
 }

@@ -1,18 +1,28 @@
 package com.taw.polybank.dto;
 
+import com.taw.polybank.entity.*;
+import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
+import jakarta.persistence.OneToMany;
+
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Collection;
 
-public class Employee implements Serializable {
+public class Client implements Serializable {
     private int id;
     private String dni;
     private String name;
     private String password;
-    private Object type;
     private String salt;
+    private String surname;
+    private Timestamp creationDate;
+    private Collection<AuthorizedAccount> authorizedAccountList;
+    private Collection<BankAccount> bankAccountList;
     private Collection<Chat> chatList;
     private Collection<Message> messageList;
     private Collection<Request> requestList;
+    private Collection<Transaction> transactionList;
 
     public int getId() {
         return id;
@@ -46,20 +56,44 @@ public class Employee implements Serializable {
         this.password = password;
     }
 
-    public Object getType() {
-        return type;
-    }
-
-    public void setType(Object type) {
-        this.type = type;
-    }
-
     public String getSalt() {
         return salt;
     }
 
     public void setSalt(String salt) {
         this.salt = salt;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public Timestamp getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Timestamp creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public Collection<AuthorizedAccount> getAuthorizedAccountList() {
+        return authorizedAccountList;
+    }
+
+    public void setAuthorizedAccountList(Collection<AuthorizedAccount> authorizedAccountList) {
+        this.authorizedAccountList = authorizedAccountList;
+    }
+
+    public Collection<BankAccount> getBankAccountList() {
+        return bankAccountList;
+    }
+
+    public void setBankAccountList(Collection<BankAccount> bankAccountList) {
+        this.bankAccountList = bankAccountList;
     }
 
     public Collection<Chat> getChatList() {
@@ -84,5 +118,13 @@ public class Employee implements Serializable {
 
     public void setRequestList(Collection<Request> requestList) {
         this.requestList = requestList;
+    }
+
+    public Collection<Transaction> getTransactionList() {
+        return transactionList;
+    }
+
+    public void setTransactionList(Collection<Transaction> transactionList) {
+        this.transactionList = transactionList;
     }
 }

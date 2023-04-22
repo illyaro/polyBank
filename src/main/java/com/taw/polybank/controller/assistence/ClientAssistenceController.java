@@ -1,12 +1,12 @@
 package com.taw.polybank.controller.assistence;
 
-import com.taw.polybank.dao.ChatRepository;
-import com.taw.polybank.dao.ClientRepository;
-import com.taw.polybank.dao.EmployeeRepository;
-import com.taw.polybank.dao.MessageRepository;
-import com.taw.polybank.entity.ChatEntity;
-import com.taw.polybank.entity.ClientEntity;
-import com.taw.polybank.entity.MessageEntity;
+import com.taw.polybank.dto.Chat;
+import com.taw.polybank.dto.Client;
+import com.taw.polybank.dto.Message;
+import com.taw.polybank.service.ChatService;
+import com.taw.polybank.service.ClientService;
+import com.taw.polybank.service.EmployeeService;
+import com.taw.polybank.service.MessageService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,68 +23,97 @@ import java.util.List;
 public class ClientAssistenceController {
 
     @Autowired
-    protected ClientRepository clientRepository;
+    protected ClientService clientService;
 
     @Autowired
-    protected ChatRepository chatRepository;
+    protected ChatService chatService;
 
     @Autowired
-    protected MessageRepository messageRepository;
+    protected MessageService messageService;
 
     @Autowired
-    protected EmployeeRepository employeeRepository;
+    protected EmployeeService employeeService;
 
     @GetMapping("/")
     public String doListChats(Model model, HttpSession session) {
-        ClientEntity client = this.clientRepository.findById((Integer) session.getAttribute("clientID")).orElse(null);
-        List<ChatEntity> chatList = (List<ChatEntity>) client.getChatsById();
-        model.addAttribute("chatList", chatList);
+        Client client = this.clientService.findById((Integer) session.getAttribute("clientID"));
 
-        return "assistence/clientChatList";
+        if (client != null) {
+            List<Chat> chatList = (List<Chat>) client.getChatList();
+            model.addAttribute("chatList", chatList);
+
+            return "assistence/clientChatList";
+        }
+
+        return "error";
     }
 
     @GetMapping("/chat")
-    public String doOpenChat (@RequestParam("id") Integer idChat, Model model) {
-        ChatEntity chat = this.chatRepository.findById(idChat).orElse(null);
-        model.addAttribute("chat", chat);
+    public String doOpenChat (@RequestParam("id") Integer chatId, Model model) {
+        Chat chat = this.chatService.findById(chatId);
 
-        return "assistence/clientChat";
+        if (chat != null) {
+            model.addAttribute("chat", chat);
+
+            return "assistence/clientChat";
+        }
+
+        return "error";
     }
 
     @PostMapping("/newChat")
     public String doNewChat (Model model, HttpSession session) {
-        ClientEntity client = this.clientRepository.findById((Integer) session.getAttribute("clientID")).orElse(null);
-        ChatEntity chat = new ChatEntity();
-        chat.setClientByClientId(client);
-        chat.setEmployeeByAssistantId(employeeRepository.findEmployeeWithMinimumChats().get(0));
-        chat.setMessagesById(new ArrayList<>());
-        chat.setClosed((byte) 0);
+        Client client = this.clientService.findById((Integer) session.getAttribute("clientID"));
 
-        model.addAttribute("chat", chat);
+        if (client != null) {
+            Chat chat = new Chat();
+            chat.setClient(client);
+            chat.setAssistant(employeeService.findEmployeeWithMinimumChats().get(0));
+            chat.setMessageList(new ArrayList<>());
+            chat.setClosed((byte) 0);
 
-        this.chatRepository.save(chat);
+            model.addAttribute("chat", chat);
 
-        return "assistence/clientChat";
+            this.chatService.save(chat);
+
+            return "assistence/clientChat";
+        }
+
+        return "error";
     }
 
     @PostMapping("/send")
     public String doSend (@RequestParam("content") String content, @RequestParam("chatId") Integer chatId) {
-        ChatEntity chat = chatRepository.findById(chatId).orElse(null);
-        MessageEntity message = new MessageEntity();
-        message.setChatByChatId(chat);
-        message.setContent(content);
-        message.setTimestamp(Timestamp.from(Instant.now()));
-        message.setEmployeeByEmployeeId(null);
-        message.setClientByClientId(chat.getClientByClientId());
-        this.messageRepository.save(message);
-        return "redirect:/client/assistence/chat?id=" + chatId;
+        Chat chat = chatService.findById(chatId);
+
+        if (chat != null) {
+            Message message = new Message();
+            message.setChat(chat);
+            message.setContent(content);
+            message.setTimestamp(Timestamp.from(Instant.now()));
+            message.setAssistant(null);
+            message.setClient(chat.getClient());
+
+            this.messageService.save(message);
+
+            return "redirect:/client/assistence/chat?id=" + chatId;
+        }
+
+        return "error";
     }
 
     @PostMapping("/close")
     public String doSend (@RequestParam("chatId") Integer chatId) {
-        ChatEntity chat = chatRepository.findById(chatId).orElse(null);
-        chat.setClosed((byte) 1);
-        this.chatRepository.save(chat);
-        return "redirect:/client/assistence/";
+        Chat chat = chatService.findById(chatId);
+
+        if (chat != null) {
+            chat.setClosed((byte) 1);
+
+            this.chatService.close(chat);
+
+            return "redirect:/client/assistence/";
+        }
+
+        return "error";
     }
 }

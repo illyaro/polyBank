@@ -1,5 +1,5 @@
-<%@ page import="com.taw.polybank.entity.ChatEntity" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="com.taw.polybank.dto.Chat" %><%--
   Created by IntelliJ IDEA.
   User: Javier Jordán Luque
   Date: 27/03/2023
@@ -9,7 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    List<ChatEntity> chatList = (List<ChatEntity>) request.getAttribute("chatList");
+    List<Chat> chatList = (List<Chat>) request.getAttribute("chatList");
 %>
 
 <html>
@@ -26,23 +26,11 @@
         <th></th>
     </tr>
     <%
-        for (ChatEntity chat : chatList) {
+        for (Chat chat : chatList) {
     %>
     <tr>
-        <td><%= chat.getEmployeeByAssistantId().getName() %></td>
-        <td>
-            <%
-                if (chat.getClosed() == 1) {
-            %>
-            Yes
-            <%
-                } else {
-            %>
-            No
-            <%
-                }
-            %>
-        </td>
+        <td><%= chat.getAssistant().getName() %></td>
+        <td><%= chat.isClosed() %></td>
         <td><a href="/client/assistence/chat?id=<%= chat.getId() %>">Open</a></td>
         <%
             if (chat.getClosed() == 0) {

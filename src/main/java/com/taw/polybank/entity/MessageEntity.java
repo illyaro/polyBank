@@ -1,14 +1,14 @@
 package com.taw.polybank.entity;
 
+import com.taw.polybank.dto.DTO;
+import com.taw.polybank.dto.Message;
 import jakarta.persistence.*;
 
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 
 @Entity
 @Table(name = "Message", schema = "polyBank", catalog = "")
-public class MessageEntity {
+public class MessageEntity implements DTO<Message> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id", nullable = false)
@@ -99,9 +99,16 @@ public class MessageEntity {
         this.clientByClientId = clientByClientId;
     }
 
-    public String getDate() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String formattedDate = dateFormat.format(new Date(this.timestamp.getTime()));
-        return formattedDate;
+    public Message toDTO () {
+        Message message = new Message();
+
+        message.setId(this.getId());
+        message.setContent(this.getContent());
+        message.setTimestamp(this.getTimestamp());
+        message.setChat(this.getChatByChatId().toDTO());
+        message.setAssistant(this.getEmployeeByEmployeeId().toDTO());
+        message.setClient(this.getClientByClientId().toDTO());
+
+        return message;
     }
 }
