@@ -46,7 +46,7 @@ public class AssistantController {
 
         if (employee != null) {
             if (filter == null || (filter.getClientDni() == "" && filter.getClientName() == "" && filter.getRecent() == false)) {
-                chatList = (List<ChatDTO>) employee.getChatList();
+                chatList = chatService.findByEmployee(employee);
                 filter = new AssistantFilter();
             } else {
                 if (filter.getClientDni() != "") {

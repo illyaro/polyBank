@@ -39,7 +39,7 @@ public class ClientAssistenceController {
         ClientDTO client = this.clientService.findById((Integer) session.getAttribute("clientID"));
 
         if (client != null) {
-            List<ChatDTO> chatList = (List<ChatDTO>) client.getChatList();
+            List<ChatDTO> chatList = chatService.findByClient(client);
             model.addAttribute("chatList", chatList);
 
             return "assistence/clientChatList";
@@ -69,8 +69,7 @@ public class ClientAssistenceController {
             ChatDTO chat = new ChatDTO();
             chat.setClient(client);
             chat.setAssistant(employeeService.findEmployeeWithMinimumChats().get(0));
-            chat.setMessageList(new ArrayList<>());
-            chat.setClosed((byte) 0);
+            chat.setClosed(false);
 
             model.addAttribute("chat", chat);
 
@@ -107,7 +106,7 @@ public class ClientAssistenceController {
         ChatDTO chat = chatService.findById(chatId);
 
         if (chat != null) {
-            chat.setClosed((byte) 1);
+            chat.setClosed(true);
 
             this.chatService.close(chat);
 

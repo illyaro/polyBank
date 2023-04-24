@@ -6,9 +6,9 @@ public class MessageDTO {
     private int id;
     private String content;
     private Timestamp timestamp;
-    private ChatDTO chatByChatId;
-    private EmployeeDTO employeeByEmployeeId;
-    private ClientDTO clientByClientId;
+    private ChatDTO chat;
+    private EmployeeDTO assistant;
+    private ClientDTO client;
 
     public int getId() {
         return id;
@@ -35,27 +35,27 @@ public class MessageDTO {
     }
 
 
-    public ChatDTO getChatByChatId() {
-        return chatByChatId;
+    public ChatDTO getChat() {
+        return chat;
     }
 
-    public void setChatByChatId(ChatDTO chatByChatId) {
-        this.chatByChatId = chatByChatId;
+    public void setChat(ChatDTO chat) {
+        this.chat = chat;
     }
 
-    public EmployeeDTO getEmployeeByEmployeeId() {
-        return employeeByEmployeeId;
+    public EmployeeDTO getAssistant() {
+        return assistant;
     }
 
-    public void setEmployeeByEmployeeId(EmployeeDTO employeeByEmployeeId) {
-        this.employeeByEmployeeId = employeeByEmployeeId;
+    public void setAssistant(EmployeeDTO assistant) {
+        this.assistant = assistant;
     }
 
-    public ClientDTO getClientByClientId() {
-        return clientByClientId;
+    public ClientDTO getClient() {
+        return client;
     }
 
-    public void setClientByClientId(ClientDTO clientByClientId) {
-        this.clientByClientId = clientByClientId;
+    public void setClient(ClientDTO clientByClientId) {
+        this.client = client;
     }
 }

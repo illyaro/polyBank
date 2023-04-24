@@ -3,8 +3,8 @@ package com.taw.polybank.dto;
 public class ChatDTO {
     private int id;
     private boolean closed;
-    private ClientDTO clientByClientId;
-    private EmployeeDTO employeeByAssistantId;
+    private ClientDTO client;
+    private EmployeeDTO assistant;
 
     public int getId() {
         return id;
@@ -22,21 +22,19 @@ public class ChatDTO {
         this.closed = closed;
     }
 
-
-    public ClientDTO getClientByClientId() {
-        return clientByClientId;
+    public ClientDTO getClient() {
+        return client;
     }
 
-    public void setClientByClientId(ClientDTO clientByClientId) {
-        this.clientByClientId = clientByClientId;
+    public void setClient(ClientDTO client) {
+        this.client = client;
     }
 
-    public EmployeeDTO getEmployeeByAssistantId() {
-        return employeeByAssistantId;
+    public EmployeeDTO getAssistant() {
+        return assistant;
     }
 
-    public void setEmployeeByAssistantId(EmployeeDTO employeeByAssistantId) {
-        this.employeeByAssistantId = employeeByAssistantId;
+    public void setAssistant(EmployeeDTO assistant) {
+        this.assistant = assistant;
     }
-
 }

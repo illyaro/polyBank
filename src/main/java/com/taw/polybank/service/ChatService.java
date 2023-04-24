@@ -4,8 +4,10 @@ import com.taw.polybank.dao.ChatRepository;
 import com.taw.polybank.dao.ClientRepository;
 import com.taw.polybank.dao.EmployeeRepository;
 import com.taw.polybank.dto.ChatDTO;
+import com.taw.polybank.dto.ClientDTO;
 import com.taw.polybank.dto.EmployeeDTO;
 import com.taw.polybank.entity.ChatEntity;
+import com.taw.polybank.entity.ClientEntity;
 import com.taw.polybank.entity.EmployeeEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,30 @@ public class ChatService {
         }
 
         return null;
+    }
+
+    public List<ChatDTO> findByClient(ClientDTO client) {
+        ClientEntity clientEntity = clientRepository.findById(client.getId()).orElse(null);
+        List<ChatDTO> chatList = new ArrayList<>();
+
+        if (clientEntity != null) {
+            List<ChatEntity> chatEntityList = chatRepository.findByClient(clientEntity);
+            chatList = this.listToDTO(chatEntityList);
+        }
+
+        return chatList;
+    }
+
+    public List<ChatDTO> findByEmployee(EmployeeDTO employee) {
+        EmployeeEntity employeeEntity = employeeRepository.findById(employee.getId()).orElse(null);
+        List<ChatDTO> chatList = new ArrayList<>();
+
+        if (employeeEntity != null) {
+            List<ChatEntity> chatEntityList = chatRepository.findByEmployee(employeeEntity);
+            chatList = this.listToDTO(chatEntityList);
+        }
+
+        return chatList;
     }
 
     public List<ChatDTO> findByEmployeeAndClientDni(EmployeeDTO employee, String clientDni) {
@@ -122,7 +148,7 @@ public class ChatService {
         chatEntity.setClientByClientId(clientRepository.findById(chat.getClient().getId()).orElse(null));
         chatEntity.setEmployeeByAssistantId(employeeRepository.findById(chat.getAssistant().getId()).orElse(null));
         chatEntity.setMessagesById(new ArrayList<>());
-        chatEntity.setClosed(chat.getClosed());
+        chatEntity.setClosed((byte) ((chat.isClosed())? 1 : 0));
 
         this.chatRepository.save(chatEntity);
     }
@@ -131,7 +157,7 @@ public class ChatService {
         ChatEntity chatEntity = chatRepository.findById(chat.getId()).orElse(null);
 
         if (chat != null) {
-            chatEntity.setClosed(chat.getClosed());
+            chatEntity.setClosed((byte) ((chat.isClosed())? 1 : 0));
 
             chatRepository.save(chatEntity);
         }
