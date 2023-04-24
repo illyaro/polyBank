@@ -3,12 +3,12 @@ package com.taw.polybank.dto;
 import java.io.Serializable;
 import java.util.Collection;
 
-public class Chat implements Serializable {
+public class ChatDTO implements Serializable {
     private int id;
     private byte closed;
-    private Client client;
-    private Employee assistant;
-    private Collection<Message> messageList;
+    private ClientDTO client;
+    private EmployeeDTO assistant;
+    private Collection<MessageDTO> messageList;
 
     public int getId() {
         return id;
@@ -26,27 +26,27 @@ public class Chat implements Serializable {
         this.closed = closed;
     }
 
-    public Client getClient() {
+    public ClientDTO getClient() {
         return client;
     }
 
-    public void setClient(Client client) {
+    public void setClient(ClientDTO client) {
         this.client = client;
     }
 
-    public Employee getAssistant() {
+    public EmployeeDTO getAssistant() {
         return assistant;
     }
 
-    public void setAssistant(Employee assistant) {
+    public void setAssistant(EmployeeDTO assistant) {
         this.assistant = assistant;
     }
 
-    public Collection<Message> getMessageList() {
+    public Collection<MessageDTO> getMessageList() {
         return messageList;
     }
 
-    public void setMessageList(Collection<Message> messageList) {
+    public void setMessageList(Collection<MessageDTO> messageList) {
         this.messageList = messageList;
     }
 

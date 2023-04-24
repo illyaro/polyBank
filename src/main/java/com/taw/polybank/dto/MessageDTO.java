@@ -5,13 +5,13 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
-public class Message implements Serializable {
+public class MessageDTO implements Serializable {
     private int id;
     private String content;
     private Timestamp timestamp;
-    private Chat chat;
-    private Employee assistant;
-    private Client client;
+    private ChatDTO chat;
+    private EmployeeDTO assistant;
+    private ClientDTO client;
 
     public int getId() {
         return id;
@@ -37,27 +37,27 @@ public class Message implements Serializable {
         this.timestamp = timestamp;
     }
 
-    public Chat getChat() {
+    public ChatDTO getChat() {
         return chat;
     }
 
-    public void setChat(Chat chat) {
+    public void setChat(ChatDTO chat) {
         this.chat = chat;
     }
 
-    public Employee getAssistant() {
+    public EmployeeDTO getAssistant() {
         return assistant;
     }
 
-    public void setAssistant(Employee assistant) {
+    public void setAssistant(EmployeeDTO assistant) {
         this.assistant = assistant;
     }
 
-    public Client getClient() {
+    public ClientDTO getClient() {
         return client;
     }
 
-    public void setClient(Client client) {
+    public void setClient(ClientDTO client) {
         this.client = client;
     }
 

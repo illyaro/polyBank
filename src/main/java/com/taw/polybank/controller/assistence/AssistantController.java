@@ -1,8 +1,8 @@
 package com.taw.polybank.controller.assistence;
 
-import com.taw.polybank.dto.Chat;
-import com.taw.polybank.dto.Employee;
-import com.taw.polybank.dto.Message;
+import com.taw.polybank.dto.ChatDTO;
+import com.taw.polybank.dto.EmployeeDTO;
+import com.taw.polybank.dto.MessageDTO;
 import com.taw.polybank.service.ChatService;
 import com.taw.polybank.service.EmployeeService;
 import com.taw.polybank.service.MessageService;
@@ -41,12 +41,12 @@ public class AssistantController {
     }
 
     protected String processFilter(Model model, HttpSession session, AssistantFilter filter) {
-        List<Chat> chatList;
-        Employee employee = this.employeeService.findById((Integer) session.getAttribute("employeeID"));
+        List<ChatDTO> chatList;
+        EmployeeDTO employee = this.employeeService.findById((Integer) session.getAttribute("employeeID"));
 
         if (employee != null) {
             if (filter == null || (filter.getClientDni() == "" && filter.getClientName() == "" && filter.getRecent() == false)) {
-                chatList = (List<Chat>) employee.getChatList();
+                chatList = (List<ChatDTO>) employee.getChatList();
                 filter = new AssistantFilter();
             } else {
                 if (filter.getClientDni() != "") {
@@ -80,7 +80,7 @@ public class AssistantController {
 
     @GetMapping("/chat")
     public String doOpenChat (@RequestParam("id") Integer chatId, Model model) {
-        Chat chat = this.chatService.findById(chatId);
+        ChatDTO chat = this.chatService.findById(chatId);
 
         if (chat != null) {
             model.addAttribute("chat", chat);
@@ -93,10 +93,10 @@ public class AssistantController {
 
     @PostMapping("/send")
     public String doSend (@RequestParam("content") String content, @RequestParam("chatId") Integer chatId) {
-        Chat chat = chatService.findById(chatId);
+        ChatDTO chat = chatService.findById(chatId);
 
         if (chat != null) {
-            Message message = new Message();
+            MessageDTO message = new MessageDTO();
             message.setChat(chat);
             message.setContent(content);
             message.setTimestamp(Timestamp.from(Instant.now()));

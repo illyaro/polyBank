@@ -3,15 +3,15 @@ package com.taw.polybank.dto;
 import java.io.Serializable;
 import java.util.Collection;
 
-public class Employee implements Serializable {
+public class EmployeeDTO implements Serializable {
     private int id;
     private String dni;
     private String name;
     private String password;
     private Object type;
     private String salt;
-    private Collection<Chat> chatList;
-    private Collection<Message> messageList;
+    private Collection<ChatDTO> chatList;
+    private Collection<MessageDTO> messageList;
     private Collection<Request> requestList;
 
     public int getId() {
@@ -62,19 +62,19 @@ public class Employee implements Serializable {
         this.salt = salt;
     }
 
-    public Collection<Chat> getChatList() {
+    public Collection<ChatDTO> getChatList() {
         return chatList;
     }
 
-    public void setChatList(Collection<Chat> chatList) {
+    public void setChatList(Collection<ChatDTO> chatList) {
         this.chatList = chatList;
     }
 
-    public Collection<Message> getMessageList() {
+    public Collection<MessageDTO> getMessageList() {
         return messageList;
     }
 
-    public void setMessageList(Collection<Message> messageList) {
+    public void setMessageList(Collection<MessageDTO> messageList) {
         this.messageList = messageList;
     }
 

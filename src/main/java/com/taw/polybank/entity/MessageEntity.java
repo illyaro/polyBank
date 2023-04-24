@@ -1,14 +1,14 @@
 package com.taw.polybank.entity;
 
 import com.taw.polybank.dto.DTO;
-import com.taw.polybank.dto.Message;
+import com.taw.polybank.dto.MessageDTO;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
 
 @Entity
 @Table(name = "Message", schema = "polyBank", catalog = "")
-public class MessageEntity implements DTO<Message> {
+public class MessageEntity implements DTO<MessageDTO> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id", nullable = false)
@@ -99,8 +99,8 @@ public class MessageEntity implements DTO<Message> {
         this.clientByClientId = clientByClientId;
     }
 
-    public Message toDTO() {
-        Message message = new Message();
+    public MessageDTO toDTO() {
+        MessageDTO message = new MessageDTO();
 
         message.setId(this.getId());
         message.setContent(this.getContent());

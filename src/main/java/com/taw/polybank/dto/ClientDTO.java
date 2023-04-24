@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;
 
-public class Client implements Serializable {
+public class ClientDTO implements Serializable {
     private int id;
     private String dni;
     private String name;
@@ -14,8 +14,8 @@ public class Client implements Serializable {
     private Timestamp creationDate;
     private Collection<AuthorizedAccount> authorizedAccountList;
     private Collection<BankAccount> bankAccountList;
-    private Collection<Chat> chatList;
-    private Collection<Message> messageList;
+    private Collection<ChatDTO> chatList;
+    private Collection<MessageDTO> messageList;
     private Collection<Request> requestList;
     private Collection<Transaction> transactionList;
 
@@ -91,19 +91,19 @@ public class Client implements Serializable {
         this.bankAccountList = bankAccountList;
     }
 
-    public Collection<Chat> getChatList() {
+    public Collection<ChatDTO> getChatList() {
         return chatList;
     }
 
-    public void setChatList(Collection<Chat> chatList) {
+    public void setChatList(Collection<ChatDTO> chatList) {
         this.chatList = chatList;
     }
 
-    public Collection<Message> getMessageList() {
+    public Collection<MessageDTO> getMessageList() {
         return messageList;
     }
 
-    public void setMessageList(Collection<Message> messageList) {
+    public void setMessageList(Collection<MessageDTO> messageList) {
         this.messageList = messageList;
     }
 

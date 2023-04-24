@@ -1,8 +1,8 @@
 package com.taw.polybank.controller.assistence;
 
-import com.taw.polybank.dto.Chat;
-import com.taw.polybank.dto.Client;
-import com.taw.polybank.dto.Message;
+import com.taw.polybank.dto.ChatDTO;
+import com.taw.polybank.dto.ClientDTO;
+import com.taw.polybank.dto.MessageDTO;
 import com.taw.polybank.service.ChatService;
 import com.taw.polybank.service.ClientService;
 import com.taw.polybank.service.EmployeeService;
@@ -36,10 +36,10 @@ public class ClientAssistenceController {
 
     @GetMapping("/")
     public String doListChats(Model model, HttpSession session) {
-        Client client = this.clientService.findById((Integer) session.getAttribute("clientID"));
+        ClientDTO client = this.clientService.findById((Integer) session.getAttribute("clientID"));
 
         if (client != null) {
-            List<Chat> chatList = (List<Chat>) client.getChatList();
+            List<ChatDTO> chatList = (List<ChatDTO>) client.getChatList();
             model.addAttribute("chatList", chatList);
 
             return "assistence/clientChatList";
@@ -50,7 +50,7 @@ public class ClientAssistenceController {
 
     @GetMapping("/chat")
     public String doOpenChat (@RequestParam("id") Integer chatId, Model model) {
-        Chat chat = this.chatService.findById(chatId);
+        ChatDTO chat = this.chatService.findById(chatId);
 
         if (chat != null) {
             model.addAttribute("chat", chat);
@@ -63,10 +63,10 @@ public class ClientAssistenceController {
 
     @PostMapping("/newChat")
     public String doNewChat (Model model, HttpSession session) {
-        Client client = this.clientService.findById((Integer) session.getAttribute("clientID"));
+        ClientDTO client = this.clientService.findById((Integer) session.getAttribute("clientID"));
 
         if (client != null) {
-            Chat chat = new Chat();
+            ChatDTO chat = new ChatDTO();
             chat.setClient(client);
             chat.setAssistant(employeeService.findEmployeeWithMinimumChats().get(0));
             chat.setMessageList(new ArrayList<>());
@@ -84,10 +84,10 @@ public class ClientAssistenceController {
 
     @PostMapping("/send")
     public String doSend (@RequestParam("content") String content, @RequestParam("chatId") Integer chatId) {
-        Chat chat = chatService.findById(chatId);
+        ChatDTO chat = chatService.findById(chatId);
 
         if (chat != null) {
-            Message message = new Message();
+            MessageDTO message = new MessageDTO();
             message.setChat(chat);
             message.setContent(content);
             message.setTimestamp(Timestamp.from(Instant.now()));
@@ -104,7 +104,7 @@ public class ClientAssistenceController {
 
     @PostMapping("/close")
     public String doSend (@RequestParam("chatId") Integer chatId) {
-        Chat chat = chatService.findById(chatId);
+        ChatDTO chat = chatService.findById(chatId);
 
         if (chat != null) {
             chat.setClosed((byte) 1);
