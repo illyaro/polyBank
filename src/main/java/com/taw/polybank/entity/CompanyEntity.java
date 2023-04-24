@@ -1,5 +1,6 @@
 package com.taw.polybank.entity;
 
+import com.taw.polybank.dto.CompanyDTO;
 import jakarta.persistence.*;
 
 @Entity
@@ -58,8 +59,8 @@ public class CompanyEntity {
         this.bankAccountByBankAccountId = bankAccountByBankAccountId;
     }
 
-    public com.taw.polybank.dto.CompanyDTO toDTO() {
-        com.taw.polybank.dto.CompanyDTO companyDTO = new com.taw.polybank.dto.CompanyDTO();
+    public CompanyDTO toDTO() {
+        CompanyDTO companyDTO = new CompanyDTO();
         companyDTO.setId(getId());
         companyDTO.setName(getName());
         companyDTO.setBankAccountByBankAccountId(getBankAccountByBankAccountId().toDTO());

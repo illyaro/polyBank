@@ -125,8 +125,10 @@ public class BankAccountEntity {
     }
 
     public void setCompanyById(List<CompanyEntity> companiesById) {
-        this.companiesById = companiesById;
+    public Collection<CompanyEntity> getCompaniesById() {
+        return companiesById;
     }
+
 
     public Collection<RequestEntity> getRequestsById() {
         return requestsById;
