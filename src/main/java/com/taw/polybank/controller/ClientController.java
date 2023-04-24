@@ -1,18 +1,14 @@
 package com.taw.polybank.controller;
 
-import com.taw.polybank.controller.company.Client;
 import com.taw.polybank.dao.ClientRepository;
 import com.taw.polybank.dto.ClientDTO;
 import com.taw.polybank.entity.ClientEntity;
-import com.taw.polybank.entity.EmployeeEntity;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/client")
@@ -25,7 +21,7 @@ public class ClientController {
         Integer clientID = (Integer) session.getAttribute("clientID");
         ClientEntity client = this.clientRepository.findById(clientID).orElse(null);
         model.addAttribute("client", client);
-        return "clientView";
+        return "client/viewData";
     }
 
     @GetMapping("/edit")
@@ -34,14 +30,14 @@ public class ClientController {
         ClientEntity client = this.clientRepository.findById(clientID).orElse(null);
         ClientDTO clientDTO = new ClientDTO(client);
         model.addAttribute("client", clientDTO);
-        return "clientEdit";
+        return "client/editData";
     }
 
-    @GetMapping("/create")
+    @GetMapping("/register")
     public String addClient(Model model) {
         ClientEntity client = new ClientEntity();
         model.addAttribute("client", client);
-        return "clientAdd";
+        return "client/register";
     }
 
     @PostMapping("/save")
