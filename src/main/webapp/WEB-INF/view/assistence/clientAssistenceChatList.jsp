@@ -1,5 +1,5 @@
 <%@ page import="java.util.List" %>
-<%@ page import="com.taw.polybank.dto.Chat" %><%--
+<%@ page import="com.taw.polybank.dto.ChatDTO" %><%--
   Created by IntelliJ IDEA.
   User: Javier Jordán Luque
   Date: 27/03/2023
@@ -9,7 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    List<Chat> chatList = (List<Chat>) request.getAttribute("chatList");
+    List<ChatDTO> chatList = (List<ChatDTO>) request.getAttribute("chatList");
 %>
 
 <html>
@@ -26,7 +26,7 @@
         <th></th>
     </tr>
     <%
-        for (Chat chat : chatList) {
+        for (ChatDTO chat : chatList) {
     %>
     <tr>
         <td><%= chat.getAssistant().getName() %></td>

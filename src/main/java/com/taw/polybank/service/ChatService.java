@@ -3,8 +3,8 @@ package com.taw.polybank.service;
 import com.taw.polybank.dao.ChatRepository;
 import com.taw.polybank.dao.ClientRepository;
 import com.taw.polybank.dao.EmployeeRepository;
-import com.taw.polybank.dto.Chat;
-import com.taw.polybank.dto.Employee;
+import com.taw.polybank.dto.ChatDTO;
+import com.taw.polybank.dto.EmployeeDTO;
 import com.taw.polybank.entity.ChatEntity;
 import com.taw.polybank.entity.EmployeeEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class ChatService {
     @Autowired
     protected ClientRepository clientRepository;
 
-    public Chat findById(Integer chatId) {
+    public ChatDTO findById(Integer chatId) {
         ChatEntity chatEntity = this.chatRepository.findById(chatId).orElse(null);
 
         if (chatEntity != null) {
@@ -32,9 +32,9 @@ public class ChatService {
         return null;
     }
 
-    public List<Chat> findByEmployeeAndClientDni(Employee employee, String clientDni) {
+    public List<ChatDTO> findByEmployeeAndClientDni(EmployeeDTO employee, String clientDni) {
         EmployeeEntity employeeEntity = employeeRepository.findById(employee.getId()).orElse(null);
-        List<Chat> chatList = new ArrayList<>();
+        List<ChatDTO> chatList = new ArrayList<>();
 
         if (employeeEntity != null) {
             List<ChatEntity> chatEntityList = chatRepository.findByEmployeeAndClientDni(employeeEntity, clientDni);
@@ -44,9 +44,9 @@ public class ChatService {
         return chatList;
     }
 
-    public List<Chat> findByEmployeeAndClientDniAndClientName(Employee employee, String clientDni, String clientName) {
+    public List<ChatDTO> findByEmployeeAndClientDniAndClientName(EmployeeDTO employee, String clientDni, String clientName) {
         EmployeeEntity employeeEntity = employeeRepository.findById(employee.getId()).orElse(null);
-        List<Chat> chatList = new ArrayList<>();
+        List<ChatDTO> chatList = new ArrayList<>();
 
         if (employeeEntity != null) {
             List<ChatEntity> chatEntityList = chatRepository.findByEmployeeAndClientDniAndClientName(employeeEntity, clientDni, clientName);
@@ -56,9 +56,9 @@ public class ChatService {
         return chatList;
     }
 
-    public List<Chat> findByEmployeeAndClientDniAndRecent(Employee employee, String clientDni) {
+    public List<ChatDTO> findByEmployeeAndClientDniAndRecent(EmployeeDTO employee, String clientDni) {
         EmployeeEntity employeeEntity = employeeRepository.findById(employee.getId()).orElse(null);
-        List<Chat> chatList = new ArrayList<>();
+        List<ChatDTO> chatList = new ArrayList<>();
 
         if (employeeEntity != null) {
             List<ChatEntity> chatEntityList = chatRepository.findByEmployeeAndClientDniAndRecent(employeeEntity, clientDni);
@@ -68,9 +68,9 @@ public class ChatService {
         return chatList;
     }
 
-    public List<Chat> findByEmployeeAndClientDniAndClientNameAndRecent(Employee employee, String clientDni, String clientName) {
+    public List<ChatDTO> findByEmployeeAndClientDniAndClientNameAndRecent(EmployeeDTO employee, String clientDni, String clientName) {
         EmployeeEntity employeeEntity = employeeRepository.findById(employee.getId()).orElse(null);
-        List<Chat> chatList = new ArrayList<>();
+        List<ChatDTO> chatList = new ArrayList<>();
 
         if (employeeEntity != null) {
             List<ChatEntity> chatEntityList = chatRepository.findByEmployeeAndClientDniAndClientNameAndRecent(employeeEntity, clientDni, clientName);
@@ -80,9 +80,9 @@ public class ChatService {
         return chatList;
     }
 
-    public List<Chat> findByEmployeeAndClientName(Employee employee, String clientName) {
+    public List<ChatDTO> findByEmployeeAndClientName(EmployeeDTO employee, String clientName) {
         EmployeeEntity employeeEntity = employeeRepository.findById(employee.getId()).orElse(null);
-        List<Chat> chatList = new ArrayList<>();
+        List<ChatDTO> chatList = new ArrayList<>();
 
         if (employeeEntity != null) {
             List<ChatEntity> chatEntityList = chatRepository.findByEmployeeAndClientName(employeeEntity, clientName);
@@ -92,9 +92,9 @@ public class ChatService {
         return chatList;
     }
 
-    public List<Chat> findByEmployeeAndClientNameAndRecent(Employee employee, String clientName) {
+    public List<ChatDTO> findByEmployeeAndClientNameAndRecent(EmployeeDTO employee, String clientName) {
         EmployeeEntity employeeEntity = employeeRepository.findById(employee.getId()).orElse(null);
-        List<Chat> chatList = new ArrayList<>();
+        List<ChatDTO> chatList = new ArrayList<>();
 
         if (employeeEntity != null) {
             List<ChatEntity> chatEntityList = chatRepository.findByEmployeeAndClientNameAndRecent(employeeEntity, clientName);
@@ -104,9 +104,9 @@ public class ChatService {
         return chatList;
     }
 
-    public List<Chat> findByEmployeeAndRecent(Employee employee) {
+    public List<ChatDTO> findByEmployeeAndRecent(EmployeeDTO employee) {
         EmployeeEntity employeeEntity = employeeRepository.findById(employee.getId()).orElse(null);
-        List<Chat> chatList = new ArrayList<>();
+        List<ChatDTO> chatList = new ArrayList<>();
 
         if (employeeEntity != null) {
             List<ChatEntity> chatEntityList = chatRepository.findByEmployeeAndRecent(employeeEntity);
@@ -116,7 +116,7 @@ public class ChatService {
         return chatList;
     }
 
-    public void save(Chat chat) {
+    public void save(ChatDTO chat) {
         ChatEntity chatEntity = new ChatEntity();
 
         chatEntity.setClientByClientId(clientRepository.findById(chat.getClient().getId()).orElse(null));
@@ -127,7 +127,7 @@ public class ChatService {
         this.chatRepository.save(chatEntity);
     }
 
-    public void close(Chat chat) {
+    public void close(ChatDTO chat) {
         ChatEntity chatEntity = chatRepository.findById(chat.getId()).orElse(null);
 
         if (chat != null) {
@@ -137,8 +137,8 @@ public class ChatService {
         }
     }
 
-    protected List<Chat> listToDTO(List<ChatEntity> chatEntityList) {
-        ArrayList chatList = new ArrayList<Chat>();
+    protected List<ChatDTO> listToDTO(List<ChatEntity> chatEntityList) {
+        ArrayList chatList = new ArrayList<ChatDTO>();
         chatEntityList.forEach((final ChatEntity chatEntity) -> chatList.add(chatEntity.toDTO()));
 
         return chatList;

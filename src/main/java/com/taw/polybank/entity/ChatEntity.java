@@ -1,8 +1,8 @@
 package com.taw.polybank.entity;
 
-import com.taw.polybank.dto.Chat;
+import com.taw.polybank.dto.ChatDTO;
 import com.taw.polybank.dto.DTO;
-import com.taw.polybank.dto.Message;
+import com.taw.polybank.dto.MessageDTO;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Chat", schema = "polyBank", catalog = "")
-public class ChatEntity implements DTO<Chat> {
+public class ChatEntity implements DTO<ChatDTO> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id", nullable = false)
@@ -88,8 +88,8 @@ public class ChatEntity implements DTO<Chat> {
         this.messagesById = messagesById;
     }
 
-    public Chat toDTO() {
-        Chat chat = new Chat();
+    public ChatDTO toDTO() {
+        ChatDTO chat = new ChatDTO();
 
         chat.setId(this.getId());
         chat.setClosed(this.getClosed());
@@ -100,8 +100,8 @@ public class ChatEntity implements DTO<Chat> {
         return chat;
     }
 
-    protected List<Message> listToDTO(List<MessageEntity> messageEntityList) {
-        ArrayList messageList = new ArrayList<Message>();
+    protected List<MessageDTO> listToDTO(List<MessageEntity> messageEntityList) {
+        ArrayList messageList = new ArrayList<MessageDTO>();
         messageEntityList.forEach((final MessageEntity messageEntity) -> messageList.add(messageEntity.toDTO()));
 
         return messageList;

@@ -1,7 +1,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="com.taw.polybank.dto.Message" %>
-<%@ page import="com.taw.polybank.dto.Chat" %>
+<%@ page import="com.taw.polybank.dto.MessageDTO" %>
+<%@ page import="com.taw.polybank.dto.ChatDTO" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="input" uri="http://www.springframework.org/tags/form" %>
 <%--
@@ -14,8 +14,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    Chat chat = (Chat) request.getAttribute("chat");
-    List<Message> messageList = new ArrayList<>(chat.getMessageList());
+    ChatDTO chat = (ChatDTO) request.getAttribute("chat");
+    List<MessageDTO> messageList = new ArrayList<>(chat.getMessageList());
 %>
 
 <html>
@@ -30,7 +30,7 @@
         <th>ASSISTANT</th>
     </tr>
         <%
-            for (Message message : messageList) {
+            for (MessageDTO message : messageList) {
                 if (message.getClient() != null) {
         %>
     <tr>
