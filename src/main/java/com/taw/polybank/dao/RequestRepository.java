@@ -11,5 +11,6 @@ import java.util.List;
 
 @Repository
 public interface RequestRepository extends JpaRepository<RequestEntity, Integer> {
-    List<RequestEntity> findByBankAccountByBankAccountIdAndAndSolved(BankAccountEntity bankAccount, byte solved);
+    @Query("select request from RequestEntity request where request.bankAccountByBankAccountId = :bankAccount and request.solved = :solved")
+    List<RequestEntity> findByBankAccountByBankAccountIdAndSolved(BankAccountEntity bankAccount, byte solved);
 }

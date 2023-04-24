@@ -295,7 +295,7 @@ public class ATMController {
             return "atm/index";
         }
 
-        List<RequestEntity> requestsNotSolved = requestRepository.findByBankAccountByBankAccountIdAndAndSolved(bankAccount, (byte) 0);
+        List<RequestEntity> requestsNotSolved = requestRepository.findByBankAccountByBankAccountIdAndSolved(bankAccount, (byte) 0);
 
         if(requestsNotSolved.size()== 0){
             return "atm/requestUnban";

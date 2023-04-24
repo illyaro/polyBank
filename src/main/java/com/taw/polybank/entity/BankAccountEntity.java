@@ -1,9 +1,11 @@
 package com.taw.polybank.entity;
 
 import com.taw.polybank.dto.BankAccountDTO;
+import com.taw.polybank.dto.CompanyDTO;
 import jakarta.persistence.*;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @Entity
 @Table(name = "BankAccount", schema = "polyBank", catalog = "")
@@ -29,8 +31,8 @@ public class BankAccountEntity {
     @ManyToOne
     @JoinColumn(name = "Badge_id", referencedColumnName = "id", nullable = false)
     private BadgeEntity badgeByBadgeId;
-    @OneToMany(mappedBy = "bankAccountByBankAccountId")
-    private Collection<CompanyEntity> companiesById;
+    @OneToOne(mappedBy = "bankAccountByBankAccountId")
+    private CompanyEntity companiesById;
     @OneToMany(mappedBy = "bankAccountByBankAccountId")
     private Collection<RequestEntity> requestsById;
     @OneToMany(mappedBy = "bankAccountByBankAccountId")
@@ -119,11 +121,11 @@ public class BankAccountEntity {
         this.badgeByBadgeId = badgeByBadgeId;
     }
 
-    public Collection<CompanyEntity> getCompaniesById() {
+    public CompanyEntity getCompanyById() {
         return companiesById;
     }
 
-    public void setCompaniesById(Collection<CompanyEntity> companiesById) {
+    public void setCompanyById(CompanyEntity companiesById) {
         this.companiesById = companiesById;
     }
 
