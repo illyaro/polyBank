@@ -260,8 +260,8 @@ public class UserCompany {
 
         BankAccountEntity recipientBankAccount = bankAccountRepository.findBankAccountEntityByIban(iban);
         if (recipientBankAccount != null) {// Internal bank money transfer
-            CompanyEntity companyRecipient = recipientBankAccount.getCompaniesById().stream().filter(c -> c.getName().equals(beneficiaryName)).findFirst().orElse(null);
-            if (companyRecipient == null) { // Private Client is going to receive money, Authorized person can not figure as beneficiary only proper owner of the account.
+            CompanyEntity companyRecipient = recipientBankAccount.getCompanyById();
+            if (companyRecipient == null && companyRecipient.getName().equals(beneficiaryName)) { // Private Client is going to receive money, Authorized person can not figure as beneficiary only proper owner of the account.
                 ClientEntity clientRecipient = recipientBankAccount.getClientByClientId();
                 if (!clientRecipient.getName().equals(beneficiaryName)) {
                     // fail message name is not matching

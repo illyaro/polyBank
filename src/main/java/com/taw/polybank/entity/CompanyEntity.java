@@ -1,6 +1,5 @@
 package com.taw.polybank.entity;
 
-import com.taw.polybank.dto.CompanyDTO;
 import jakarta.persistence.*;
 
 @Entity
@@ -13,7 +12,7 @@ public class CompanyEntity {
     @Basic
     @Column(name = "name", nullable = false, length = 45)
     private String name;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "BankAccount_id", referencedColumnName = "id", nullable = false)
     private BankAccountEntity bankAccountByBankAccountId;
 
@@ -61,8 +60,8 @@ public class CompanyEntity {
         this.bankAccountByBankAccountId = bankAccountByBankAccountId;
     }
 
-    public CompanyDTO toDTO() {
-        CompanyDTO companyDTO = new CompanyDTO();
+    public com.taw.polybank.dto.CompanyDTO toDTO() {
+        com.taw.polybank.dto.CompanyDTO companyDTO = new com.taw.polybank.dto.CompanyDTO();
         companyDTO.setId(getId());
         companyDTO.setName(getName());
         companyDTO.setBankAccountByBankAccountId(getBankAccountByBankAccountId().toDTO());
