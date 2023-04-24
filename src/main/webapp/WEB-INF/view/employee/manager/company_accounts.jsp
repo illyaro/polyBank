@@ -23,24 +23,22 @@
 <div class="container">
 <% if (companyDTOList != null) { %>
 <h1>Empresas:</h1>
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-    </tr>
-    </thead>
-    <tbody>
-    <% for (CompanyDTO companyDTO : companyDTOList) { %>
-           <tr>
-                <td>
-                    <%= companyDTO.getId()%>
-                </td>
-                <td>
-                    <%= companyDTO.getName() %>
-                </td>
-            </tr>
-      <% } %>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">DNI</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Link</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% for (CompanyDTO companyDTO : companyDTOList) { %>
+               <tr>
+                    <td><%= companyDTO.getId()%></td>
+                    <td><%= companyDTO.getName() %></td>
+                    <td><a href="/employee/manager/account/company/<%= companyDTO.getId()%>">Ver más</a></td>
+                </tr>
+          <% } %>
     </tbody>
 </table>
 <% } %>

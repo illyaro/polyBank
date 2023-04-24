@@ -17,6 +17,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("client/assistence")
@@ -36,15 +37,12 @@ public class ClientAssistenceController {
 
     @GetMapping(value={"/", ""})
     public String doListChats(Model model, HttpSession session) {
-        ClientDTO client = this.clientService.findById((Integer) session.getAttribute("clientID"));
-
-        if (client != null) {
-            List<ChatDTO> chatList = chatService.findByClient(client);
+        Optional<ClientDTO> client = this.clientService.findById((Integer) session.getAttribute("clientID"));
+        if (client.isPresent()) {
+            List<ChatDTO> chatList = chatService.findByClient(client.get());
             model.addAttribute("chatList", chatList);
-
             return "assistence/clientChatList";
         }
-
         return "error";
     }
 
@@ -64,18 +62,14 @@ public class ClientAssistenceController {
 
     @PostMapping("/newChat")
     public String doNewChat (Model model, HttpSession session) {
-        ClientDTO client = this.clientService.findById((Integer) session.getAttribute("clientID"));
-
-        if (client != null) {
+        Optional<ClientDTO> client = this.clientService.findById((Integer) session.getAttribute("clientID"));
+        if (client.isPresent()) {
             ChatDTO chat = new ChatDTO();
-            chat.setClient(client);
+            chat.setClient(client.get());
             chat.setAssistant(employeeService.findEmployeeWithMinimumChats().get(0));
             chat.setClosed(false);
-
             model.addAttribute("chat", chat);
-
             this.chatService.save(chat);
-
             return "assistence/clientChat";
         }
 

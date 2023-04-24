@@ -21,7 +21,7 @@
 </h3>
 <form method="post">
     <%
-        if (bankAccount.getActive() != (byte) 1) {
+        if (bankAccount.isActive() != (byte) 1) {
     %>
     <button type="submit" formaction="/atm/makeTransfer" formmethod="get">Transfer money</button>
     <br>

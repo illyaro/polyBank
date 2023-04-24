@@ -19,8 +19,9 @@
 </head>
 <body>
 <div class="container">
-    <h1>Company</h1>
-    <p>Name<span>${company.name}</span></p>
+    <h1>Details</h1>
+    <p>Name - <span>${company.name}</span></p>
+    <p>More if needed</p>
 </div>
 </body>
 </html>

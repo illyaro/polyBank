@@ -36,14 +36,14 @@
             <td style="border: 1px solid"><%=unbanRequest.getDescription()%></td>
             <td style="border: 1px solid">
             <%
-                if(unbanRequest.getApproved() != null){
+                if(unbanRequest.isApproved() != null){
             %>
-                <%=unbanRequest.getApproved() == (byte) 1 ? "True" : "False"%>
+                <%=unbanRequest.isApproved() == (byte) 1 ? "True" : "False"%>
             <%
                 }
             %>
             </td>
-            <td style="border: 1px solid"><%=unbanRequest.getSolved() == (byte) 1 ? "True" : "False"%></td>
+            <td style="border: 1px solid"><%=unbanRequest.isSolved() == (byte) 1 ? "True" : "False"%></td>
         </tr>
         <%
             }

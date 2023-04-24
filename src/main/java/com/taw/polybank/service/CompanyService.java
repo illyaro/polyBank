@@ -1,6 +1,7 @@
 package com.taw.polybank.service;
 
 import com.taw.polybank.dao.CompanyRepository;
+import com.taw.polybank.dto.ClientDTO;
 import com.taw.polybank.dto.CompanyDTO;
 import com.taw.polybank.entity.CompanyEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,12 @@ public class CompanyService {
     }
 
     public Optional<CompanyDTO> findById(Integer id) {
-        Optional<CompanyEntity> companyEntity = companyRepository.findById(id);
-        companyRepository.findById(id);
-        return null;
+        Optional<CompanyEntity> companyEntityOptional = companyRepository.findById(id);
+        Optional<CompanyDTO> companyDTOOptional;
+        if (companyEntityOptional.isPresent())
+            companyDTOOptional = Optional.of(companyEntityOptional.get().toDTO());
+        else
+            companyDTOOptional = Optional.of(null);
+        return companyDTOOptional;
     }
 }

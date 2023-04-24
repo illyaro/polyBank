@@ -1,9 +1,11 @@
 package com.taw.polybank.service;
 
+import com.taw.polybank.dao.BankAccountRepository;
 import com.taw.polybank.dao.EmployeeRepository;
 import com.taw.polybank.dao.RequestRepository;
 import com.taw.polybank.dto.EmployeeDTO;
-import com.taw.polybank.entity.ClientEntity;
+import com.taw.polybank.dto.RequestDTO;
+import com.taw.polybank.entity.BankAccountEntity;
 import com.taw.polybank.entity.EmployeeEntity;
 import com.taw.polybank.entity.RequestEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class EmployeeService {
 
     @Autowired
     private RequestRepository requestRepository;
+    @Autowired
+    private BankAccountRepository bankAccountRepository;
+
 
     public List<EmployeeDTO> findAllClients(){
         List <EmployeeEntity> employeeEntityList= employeeRepository.findAll();
@@ -30,14 +35,31 @@ public class EmployeeService {
         return employeeDTOList;
     }
 
-    public void solveRequest(Integer id, byte approved) {
+    public void solveRequest(Integer id, boolean approved) {
         Optional<RequestEntity> requestEntityOptional =requestRepository.findById(id);
         if (requestEntityOptional.isEmpty())
             return;
         RequestEntity requestEntity = requestEntityOptional.get();
         requestEntity.setApproved(approved);
-        requestEntity.setSolved((byte) 1);
+        requestEntity.setSolved(true);
+        BankAccountEntity bankAccountEntity = requestEntity.getBankAccountByBankAccountId();
+        bankAccountEntity.setActive(true);
         requestRepository.save(requestEntity);
+        bankAccountRepository.save(bankAccountEntity);
+    }
+
+    public List<RequestDTO> findRequestsForEmployee(EmployeeEntity employee) {
+        if (employee != null && employee.getType().toString().equals("manager")) {
+            return getDtoList(requestRepository.findBySolvedAndAndEmployeeByEmployeeId(false, employee));
+        }
+        return new ArrayList<>();
+    }
+
+    public List<RequestDTO> getDtoList(List<RequestEntity> requestEntityList){
+        List<RequestDTO> requestDTOS = new ArrayList<>();
+        for (RequestEntity requestEntity : requestEntityList)
+            requestDTOS.add(requestEntity.toDTO());
+        return requestDTOS;
     }
     
     public EmployeeDTO findById(Integer employeeId) {
