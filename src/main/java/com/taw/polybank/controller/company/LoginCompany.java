@@ -4,6 +4,7 @@ import com.taw.polybank.dao.ClientRepository;
 import com.taw.polybank.dao.CompanyRepository;
 import com.taw.polybank.entity.ClientEntity;
 import com.taw.polybank.dto.CompanyDTO;
+import com.taw.polybank.entity.CompanyEntity;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -35,7 +36,7 @@ public class LoginCompany {
             if (passwordManager.verifyPassword(clientEntity, password)) {
                 Client client = new Client(clientEntity, false);
                 session.setAttribute("client", client);
-                CompanyDTO company = companyRepository.findCompanyRepresentedByClient(client.getId());
+                CompanyEntity company = companyRepository.findCompanyRepresentedByClient(client.getId());
                 if (company == null) {
                     company = companyRepository.findCompanyRepresentedByClientUsingAuthAcc(client.getId());
                 }

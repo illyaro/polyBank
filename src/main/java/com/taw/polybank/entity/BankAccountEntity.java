@@ -31,8 +31,8 @@ public class BankAccountEntity {
     @ManyToOne
     @JoinColumn(name = "Badge_id", referencedColumnName = "id", nullable = false)
     private BadgeEntity badgeByBadgeId;
-    @OneToOne(mappedBy = "bankAccountByBankAccountId")
-    private CompanyEntity companiesById;
+    @OneToMany(mappedBy = "bankAccountByBankAccountId")
+    private Collection<CompanyEntity> companiesById;
     @OneToMany(mappedBy = "bankAccountByBankAccountId")
     private Collection<RequestEntity> requestsById;
     @OneToMany(mappedBy = "bankAccountByBankAccountId")
@@ -121,11 +121,11 @@ public class BankAccountEntity {
         this.badgeByBadgeId = badgeByBadgeId;
     }
 
-    public CompanyEntity getCompanyById() {
+    public Collection<CompanyEntity> getCompaniesById() {
         return companiesById;
     }
 
-    public void setCompanyById(CompanyEntity companiesById) {
+    public void setCompaniesById(Collection<CompanyEntity> companiesById) {
         this.companiesById = companiesById;
     }
 

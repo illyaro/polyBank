@@ -98,7 +98,7 @@ public class RegisterCompany {
     }
 
     private void updateBankAccount(CompanyEntity company) {
-        company.getBankAccountByBankAccountId().setCompanyById(company);
+        company.getBankAccountByBankAccountId().setCompaniesById(List.of(company));
         BankAccountEntity bankAccount = company.getBankAccountByBankAccountId();
         bankAccount.setActive((byte) 0);
         Random random = new Random();
