@@ -7,6 +7,7 @@ import com.taw.polybank.entity.ClientEntity;
 import com.taw.polybank.entity.EmployeeEntity;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,14 +21,16 @@ public class ClientController {
     private ClientRepository clientRepository;
 
     @GetMapping("/view")
-    public String viewClient(@RequestParam("id") Integer clientID, Model model) {
+    public String viewClient(Model model, HttpSession session) {
+        Integer clientID = (Integer) session.getAttribute("clientID");
         ClientEntity client = this.clientRepository.findById(clientID).orElse(null);
         model.addAttribute("client", client);
         return "clientView";
     }
 
     @GetMapping("/edit")
-    public String editClient(@RequestParam("id") Integer clientID, Model model) {
+    public String editClient(Model model, HttpSession session) {
+        Integer clientID = (Integer) session.getAttribute("clientID");
         ClientEntity client = this.clientRepository.findById(clientID).orElse(null);
         ClientDTO clientDTO = new ClientDTO(client);
         model.addAttribute("client", clientDTO);
@@ -42,23 +45,22 @@ public class ClientController {
     }
 
     @PostMapping("/save")
-    public String saveClient (@ModelAttribute("client") ClientDTO clientDTO) {
+    public String saveClient (@ModelAttribute("client") ClientDTO clientDTO, HttpSession session) {
         ClientEntity client = this.clientRepository.findById(clientDTO.getId()).orElse(null);
         client.setName(clientDTO.getName());
         client.setSurname(clientDTO.getSurname());
         this.clientRepository.save(client);
-        return "redirect:/client/view?id="+client.getId();
+        return "redirect:/client/view";
     }
 
     @PostMapping("/login")
     public String postLogin(@RequestParam("dni") String dni, @RequestParam("password") String password,
-                            HttpSession session)
-    {
+                            HttpSession session) {
         ClientEntity client = clientRepository.findByDNI(dni);
         if (client != null) {
-            // It should be validated : BCrypt.checkpw(password + employee.getSalt(), employee.getPassword())
+            //BCrypt.checkpw(password + client.getSalt(), client.getPassword());
             session.setAttribute("clientID", client.getId());
-            return "redirect:/client/view?id="+client.getId();
+            return "redirect:/client/view";
         }
         return ("redirect:/login");
     }
