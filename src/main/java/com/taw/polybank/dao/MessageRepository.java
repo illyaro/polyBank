@@ -9,4 +9,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface MessageRepository extends JpaRepository<MessageEntity, Integer> {
+    @Query("select m from MessageEntity m where m.chatByChatId = :chat")
+    List<MessageEntity> findByChat(@Param("chat") ChatEntity chat);
 }

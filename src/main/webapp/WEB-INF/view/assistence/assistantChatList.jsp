@@ -44,7 +44,7 @@
     <tr>
         <td><%= chat.getClient().getDni() %></td>
         <td><%= chat.getClient().getName() %></td>
-        <td><%= chat.isClosed() %></td>
+        <td><%= chat.isClosedToString() %></td>
         <td><a href="/employee/assistence/chat?id=<%= chat.getId() %>">Open</a></td>
     </tr>
     <%

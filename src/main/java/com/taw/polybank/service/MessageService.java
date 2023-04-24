@@ -4,10 +4,15 @@ import com.taw.polybank.dao.ChatRepository;
 import com.taw.polybank.dao.ClientRepository;
 import com.taw.polybank.dao.EmployeeRepository;
 import com.taw.polybank.dao.MessageRepository;
+import com.taw.polybank.dto.ChatDTO;
 import com.taw.polybank.dto.MessageDTO;
+import com.taw.polybank.entity.ChatEntity;
 import com.taw.polybank.entity.MessageEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class MessageService {
@@ -19,6 +24,18 @@ public class MessageService {
     protected EmployeeRepository employeeRepository;
     @Autowired
     protected ClientRepository clientRepository;
+
+    public List<MessageDTO> findByChat(ChatDTO chat) {
+        ChatEntity chatEntity = chatRepository.findById(chat.getId()).orElse(null);
+        List<MessageDTO> messageList = new ArrayList<>();
+
+        if (chatEntity != null) {
+            List<MessageEntity> messageEntityList = messageRepository.findByChat(chatEntity);
+            messageList = this.listToDTO(messageEntityList);
+        }
+
+        return messageList;
+    }
 
     public void save(MessageDTO message) {
         MessageEntity messageEntity = new MessageEntity();
@@ -40,5 +57,12 @@ public class MessageService {
         }
 
         this.messageRepository.save(messageEntity);
+    }
+
+    protected List<MessageDTO> listToDTO(List<MessageEntity> messageEntityList) {
+        ArrayList messageList = new ArrayList<MessageDTO>();
+        messageEntityList.forEach((final MessageEntity messageEntity) -> messageList.add(messageEntity.toDTO()));
+
+        return messageList;
     }
 }

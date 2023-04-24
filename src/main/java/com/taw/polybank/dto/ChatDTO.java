@@ -37,4 +37,8 @@ public class ChatDTO {
     public void setAssistant(EmployeeDTO assistant) {
         this.assistant = assistant;
     }
+
+    public String isClosedToString() {
+        return (this.isClosed())? "Yes" : "No";
+    }
 }

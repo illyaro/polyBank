@@ -15,7 +15,7 @@
 
 <%
     ChatDTO chat = (ChatDTO) request.getAttribute("chat");
-    List<MessageDTO> messageList = new ArrayList<>(chat.getMessageList());
+    List<MessageDTO> messageList = (List<MessageDTO>) request.getAttribute("messageList");
 %>
 
 <html>
@@ -51,7 +51,7 @@
 </table>
 <br>
         <%
-            if (chat.getClosed() == 0) {
+            if (!chat.isClosed()) {
         %>
     <form action="/employee/assistence/send" method="post">
         <input hidden="true" name="chatId" value="<%= chat.getId() %>">

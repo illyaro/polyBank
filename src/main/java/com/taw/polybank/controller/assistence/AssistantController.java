@@ -81,9 +81,10 @@ public class AssistantController {
     @GetMapping("/chat")
     public String doOpenChat (@RequestParam("id") Integer chatId, Model model) {
         ChatDTO chat = this.chatService.findById(chatId);
-
         if (chat != null) {
             model.addAttribute("chat", chat);
+
+            model.addAttribute("messageList", messageService.findByChat(chat));
 
             return "assistence/assistantChat";
         }
