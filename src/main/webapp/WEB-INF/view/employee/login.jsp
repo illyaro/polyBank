@@ -22,7 +22,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">DNI</span>
                     </div>
-                    <input type="text" id="username" name="DNI" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1"/><br>
+                    <input type="text" id="username" name="dni" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1"/><br>
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">

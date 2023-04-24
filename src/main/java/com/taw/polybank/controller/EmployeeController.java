@@ -61,7 +61,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/login")
-    public String postLogin(@RequestParam("DNI") String dni, @RequestParam("password") String password,
+    public String postLogin(@RequestParam("dni") String dni, @RequestParam("password") String password,
                             HttpSession session)
     {
         if (dni.isBlank())
@@ -75,6 +75,7 @@ public class EmployeeController {
                 return ("redirect:/employee/assitence");
             else if (employee.getType().toString().equals("manager") )
                 return ("redirect:/employee/manager");
+            session.setAttribute("employee", employee);
         }
         return ("redirect:/employee/");
     }
