@@ -14,7 +14,7 @@ public class ClientService {
     @Autowired
     private ClientRepository clientRepository;
 
-    public List<ClientDTO> findAllClients(){
+    public List<ClientDTO> findAll(){
         List <ClientEntity> clientEntityList= clientRepository.findAll();
         List<ClientDTO> clientDTOList = new ArrayList<>();
         for (ClientEntity client: clientEntityList) {
