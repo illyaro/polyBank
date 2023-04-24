@@ -1,6 +1,8 @@
 package com.taw.polybank.controller;
 
+import com.taw.polybank.controller.company.Client;
 import com.taw.polybank.dao.ClientRepository;
+import com.taw.polybank.dto.ClientDTO;
 import com.taw.polybank.entity.ClientEntity;
 import com.taw.polybank.entity.EmployeeEntity;
 import jakarta.servlet.http.HttpSession;
@@ -16,16 +18,19 @@ import java.util.Optional;
 public class ClientController {
     @Autowired
     private ClientRepository clientRepository;
-    @GetMapping("/list")
-    public String showClients(Model model) {
-        model.addAttribute("clients", clientRepository.findAll());
-        return "clientList";
+
+    @GetMapping("/view")
+    public String viewClient(@RequestParam("id") Integer clientID, Model model) {
+        ClientEntity client = this.clientRepository.findById(clientID).orElse(null);
+        model.addAttribute("client", client);
+        return "clientView";
     }
 
     @GetMapping("/edit")
     public String editClient(@RequestParam("id") Integer clientID, Model model) {
         ClientEntity client = this.clientRepository.findById(clientID).orElse(null);
-        model.addAttribute("client", client);
+        ClientDTO clientDTO = new ClientDTO(client);
+        model.addAttribute("client", clientDTO);
         return "clientEdit";
     }
 
@@ -37,15 +42,12 @@ public class ClientController {
     }
 
     @PostMapping("/save")
-    public String saveClient (@ModelAttribute("client") ClientEntity client) {
+    public String saveClient (@ModelAttribute("client") ClientDTO clientDTO) {
+        ClientEntity client = this.clientRepository.findById(clientDTO.getId()).orElse(null);
+        client.setName(clientDTO.getName());
+        client.setSurname(clientDTO.getSurname());
         this.clientRepository.save(client);
-        return "redirect:/client/list";
-    }
-
-    @GetMapping("/delete")
-    public String doBorrar (@RequestParam("id") Integer clientID) {
-        this.clientRepository.deleteById(clientID);
-        return "redirect:/client/list";
+        return "redirect:/client/view?id="+client.getId();
     }
 
     @PostMapping("/login")
@@ -56,7 +58,7 @@ public class ClientController {
         if (client != null) {
             // It should be validated : BCrypt.checkpw(password + employee.getSalt(), employee.getPassword())
             session.setAttribute("clientID", client.getId());
-            return "redirect:/client/assistence/";
+            return "redirect:/client/view?id="+client.getId();
         }
         return ("redirect:/login");
     }

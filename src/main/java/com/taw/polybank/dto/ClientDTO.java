@@ -13,6 +13,7 @@ public class ClientDTO {
     private String surname;
     private Timestamp creationDate;
 
+    public ClientDTO(){}
     public ClientDTO(ClientEntity client){
         this.id = client.getId();
         this.dni = client.getDni();
