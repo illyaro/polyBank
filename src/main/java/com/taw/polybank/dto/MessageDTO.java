@@ -1,6 +1,8 @@
 package com.taw.polybank.dto;
 
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 public class MessageDTO {
     private int id;
@@ -57,5 +59,15 @@ public class MessageDTO {
 
     public void setClient(ClientDTO clientByClientId) {
         this.client = client;
+    }
+
+    public String getContentAndDate() {
+        return this.getContent() + " (" + this.getDate() + ")";
+    }
+
+    private String getDate() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = dateFormat.format(new Date(this.timestamp.getTime()));
+        return formattedDate;
     }
 }

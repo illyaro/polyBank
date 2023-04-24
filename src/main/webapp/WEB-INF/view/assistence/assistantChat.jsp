@@ -1,5 +1,4 @@
 <%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="com.taw.polybank.dto.ChatDTO" %>
 <%@ page import="com.taw.polybank.dto.MessageDTO" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>

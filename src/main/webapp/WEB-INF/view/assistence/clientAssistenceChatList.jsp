@@ -33,7 +33,7 @@
         <td><%= chat.isClosed() %></td>
         <td><a href="/client/assistence/chat?id=<%= chat.getId() %>">Open</a></td>
         <%
-            if (chat.getClosed() == 0) {
+            if (!chat.isClosed()) {
         %>
         <td>
             <form action="/client/assistence/close" method="post">

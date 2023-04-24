@@ -1,5 +1,4 @@
 <%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="com.taw.polybank.dto.MessageDTO" %>
 <%@ page import="com.taw.polybank.dto.ChatDTO" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -15,7 +14,7 @@
 
 <%
     ChatDTO chat = (ChatDTO) request.getAttribute("chat");
-    List<MessageDTO> messageList = new ArrayList<>(chat.getMessageList());
+    List<MessageDTO> messageList = (List<MessageDTO>) request.getAttribute("messageList");
 %>
 
 <html>
@@ -51,7 +50,7 @@
 </table>
 <br>
         <%
-            if (chat.getClosed() == 0) {
+            if (!chat.isClosed()) {
         %>
     <form action="/client/assistence/send" method="post">
         <input hidden="true" name="chatId" value="<%= chat.getId() %>">

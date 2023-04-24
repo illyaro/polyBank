@@ -54,6 +54,7 @@ public class ClientAssistenceController {
 
         if (chat != null) {
             model.addAttribute("chat", chat);
+            model.addAttribute("messageList", messageService.findByChat(chat));
 
             return "assistence/clientChat";
         }
