@@ -30,7 +30,7 @@ public class AssistantController {
     @Autowired
     protected MessageService messageService;
 
-    @GetMapping("/")
+    @GetMapping(value={"/", ""})
     public String doListChats(Model model, HttpSession session) {
         return processFilter(model, session, null);
     }
