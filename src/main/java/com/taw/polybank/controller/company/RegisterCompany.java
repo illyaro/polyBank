@@ -98,9 +98,9 @@ public class RegisterCompany {
     }
 
     private void updateBankAccount(CompanyEntity company) {
-        company.getBankAccountByBankAccountId().setCompanyById(company);
+        company.getBankAccountByBankAccountId().setCompanyById(List.of(company));
         BankAccountEntity bankAccount = company.getBankAccountByBankAccountId();
-        bankAccount.setActive((byte) 0);
+        bankAccount.setActive(false);
         Random random = new Random();
         StringBuilder iban = new StringBuilder();
         iban.append("ES44 5268 3000 ");
@@ -112,11 +112,11 @@ public class RegisterCompany {
     }
 
     private void defineActivationRequest(ClientEntity client, BankAccountEntity bankAccount, RequestEntity request) {
-        request.setSolved((byte) 0);
+        request.setSolved(false);
         request.setTimestamp(Timestamp.from(Instant.now()));
         request.setType("activation");
         request.setDescription("Activate company bank Account");
-        request.setApproved((byte) 0);
+        request.setApproved(false);
         request.setBankAccountByBankAccountId(bankAccount);
         List<EmployeeEntity> allManagers = employeeRepository.findAllManagers();
         request.setEmployeeByEmployeeId(allManagers.get(new Random().nextInt(allManagers.size())));

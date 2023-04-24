@@ -295,7 +295,7 @@ public class ATMController {
             return "atm/index";
         }
 
-        List<RequestEntity> requestsNotSolved = requestRepository.findByBankAccountByBankAccountIdAndSolved(bankAccount, (byte) 0);
+        List<RequestEntity> requestsNotSolved = requestRepository.findByBankAccountByBankAccountIdAndSolved(bankAccount,false);
 
         if(requestsNotSolved.size()== 0){
             return "atm/requestUnban";
@@ -319,7 +319,7 @@ public class ATMController {
             request.setClientByClientId(client);
             request.setBankAccountByBankAccountId(bankAccount);
             request.setEmployeeByEmployeeId(employees.get(0));
-            request.setSolved((byte) 0);
+            request.setSolved(false);
             request.setTimestamp(Timestamp.valueOf(LocalDateTime.now()));
             request.setType("activation");
             request.setDescription(description == null ? "" : description);

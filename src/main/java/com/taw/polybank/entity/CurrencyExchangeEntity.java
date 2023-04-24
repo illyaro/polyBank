@@ -4,6 +4,7 @@ import com.taw.polybank.dto.CurrencyExchangeDTO;
 import jakarta.persistence.*;
 
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "CurrencyExchange", schema = "polyBank", catalog = "")
@@ -25,9 +26,9 @@ public class CurrencyExchangeEntity {
     @JoinColumn(name = "finalBadge_id", referencedColumnName = "id", nullable = false)
     private BadgeEntity badgeByFinalBadgeId;
     @OneToMany(mappedBy = "currencyExchangeByCurrencyExchangeId")
-    private Collection<PaymentEntity> paymentsById;
+    private List<PaymentEntity> paymentsById;
     @OneToMany(mappedBy = "currencyExchangeByCurrencyExchangeId")
-    private Collection<TransactionEntity> transactionsById;
+    private List<TransactionEntity> transactionsById;
 
     public int getId() {
         return id;
@@ -95,19 +96,19 @@ public class CurrencyExchangeEntity {
         this.badgeByFinalBadgeId = badgeByFinalBadgeId;
     }
 
-    public Collection<PaymentEntity> getPaymentsById() {
+    public List<PaymentEntity> getPaymentsById() {
         return paymentsById;
     }
 
-    public void setPaymentsById(Collection<PaymentEntity> paymentsById) {
+    public void setPaymentsById(List<PaymentEntity> paymentsById) {
         this.paymentsById = paymentsById;
     }
 
-    public Collection<TransactionEntity> getTransactionsById() {
+    public List<TransactionEntity> getTransactionsById() {
         return transactionsById;
     }
 
-    public void setTransactionsById(Collection<TransactionEntity> transactionsById) {
+    public void setTransactionsById(List<TransactionEntity> transactionsById) {
         this.transactionsById = transactionsById;
     }
 

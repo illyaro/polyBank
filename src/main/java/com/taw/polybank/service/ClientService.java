@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClientService {
@@ -21,5 +22,15 @@ public class ClientService {
             clientDTOList.add(client.toDTO());
         }
         return clientDTOList;
+    }
+
+    public Optional<ClientDTO> findById(Integer id) {
+        Optional<ClientEntity> clientEntityOptional = clientRepository.findById(id);
+        Optional<ClientDTO> clientDTOOptional;
+        if (clientEntityOptional.isPresent())
+            clientDTOOptional = Optional.of(clientEntityOptional.get().toDTO());
+        else
+            clientDTOOptional = Optional.of(null);
+        return clientDTOOptional;
     }
 }

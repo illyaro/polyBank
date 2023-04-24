@@ -9,15 +9,32 @@
 <html>
 <head>
     <title>Polybank - Employee Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
 </head>
 <body>
-<h1>Inicia sesión como empleado:</h1>
-<form action="/employee/login" method="post">
-    <label for="username">Nombre: </label>
-    <input type="text" id="username" name="DNI"><br>
-    <label for="password">Contraseña: </label>
-    <input type="password" id="password" name="password"><br>
-    <input type="submit">
-</form>
+<div class="px-4 py-5 my-5 text-center">
+    <h1 class="display-5 fw-bold">Login</h1>
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">Log in as an employee:</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <form action="/employee/login" method="post">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">DNI</span>
+                    </div>
+                    <input type="text" id="username" name="DNI" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1"/><br>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon2">Contraseña</span>
+                    </div>
+                    <input type="text" id="password" name="password" placeholder="Contraseña" aria-label="Username" aria-describedby="basic-addon1"/><br>
+                </div>
+                <input type="submit">
+            </form>
+        </div>
+    </div>
+</div>
+<h1></h1>
 </body>
 </html>

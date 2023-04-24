@@ -1,6 +1,7 @@
 <%@ page import="com.taw.polybank.entity.RequestEntity" %>
 <%@ page import="java.util.Collection" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="com.taw.polybank.dto.RequestDTO" %><%--
   Created by IntelliJ IDEA.
   User: jmsan
   Date: 13/03/2023
@@ -15,40 +16,32 @@
 </head>
 <body>
 <%
-    List<RequestEntity> requests = (List<RequestEntity>) request.getAttribute("requests");
+    List<RequestDTO> requests = (List<RequestDTO>) request.getAttribute("requests");
 %>
 <div class="container">
-<h1>Solicitudes pendientes:</h1>
+<h1>Pending requests:</h1>
 <% if (requests != null) { %>
-    <table border="1">
+    <table class="table">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Cuenta que solicita</th>
-                <th>Timestamp</th>
-                <th>Descripción</th>
-                <th>Aprobar/Denegar</th>
+                <th scope="col">ID</th>
+                <th scope="col">Cuenta que solicita</th>
+                <th scope="col">Timestamp</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Aprobar/Denegar</th>
             </tr>
         </thead>
         <tbody>
-            <% for (RequestEntity requestEntity : requests ) { %>
+            <% for (RequestDTO requestDTO : requests ) { %>
             <tr>
+                <td><%= requestDTO.getId()%></td>
+                <td><%= requestDTO.getClientByClientId().getDni()%></td>
+                <td><%= requestDTO.getTimestamp()%></td>
+                <td><%= requestDTO.getDescription()%></td>
                 <td>
-                    <%= requestEntity.getId()%>
-                </td>
-                <td>
-                    <%= requestEntity.getClientByClientId().getDni()%>
-                </td>
-                <td>
-                    <%= requestEntity.getTimestamp()%>
-                </td>
-                <td>
-                    <%= requestEntity.getDescription()%>
-                </td>
-                <td>
-                    <a href="/employee/manager/approve/<%=requestEntity.getId()%>">Aprobar</a>
+                    <a href="/employee/manager/approve/<%=requestDTO.getId()%>">Aprobar</a>
                     </br>
-                    <a href="/employee/manager/deny/<%=requestEntity.getId()%>">Denegar</a>
+                    <a href="/employee/manager/deny/<%=requestDTO.getId()%>">Denegar</a>
                 </td>
             </tr>
             <% } %>

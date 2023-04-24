@@ -61,11 +61,11 @@ public class UserCompany {
 
         RequestEntity request = new RequestEntity();
 
-        request.setSolved((byte) 0);
+        request.setSolved(false);
         request.setTimestamp(Timestamp.from(Instant.now()));
         request.setType("activation");
         request.setDescription(message);
-        request.setApproved((byte) 0);
+        request.setApproved(false);
         request.setBankAccountByBankAccountId(bankAccount);
         List<EmployeeEntity> allManagers = employeeRepository.findAllManagers();
         request.setEmployeeByEmployeeId(allManagers.get(new Random().nextInt(allManagers.size())));
@@ -260,7 +260,10 @@ public class UserCompany {
 
         BankAccountEntity recipientBankAccount = bankAccountRepository.findBankAccountEntityByIban(iban);
         if (recipientBankAccount != null) {// Internal bank money transfer
-            CompanyEntity companyRecipient = recipientBankAccount.getCompanyById();
+            List<CompanyEntity> companyEntities = recipientBankAccount.getCompanyById();
+            CompanyEntity companyRecipient = null;
+            if (companyEntities.size() > 0)
+                 companyRecipient = companyEntities.get(0);
             if (companyRecipient == null && companyRecipient.getName().equals(beneficiaryName)) { // Private Client is going to receive money, Authorized person can not figure as beneficiary only proper owner of the account.
                 ClientEntity clientRecipient = recipientBankAccount.getClientByClientId();
                 if (!clientRecipient.getName().equals(beneficiaryName)) {
@@ -395,7 +398,7 @@ public class UserCompany {
         PaymentEntity payment = new PaymentEntity();
         payment.setAmount(amount);
         payment.setBenficiaryByBenficiaryId(beneficiary);
-        payment.setTransactionsById(List.of(transaction));
+        payment.setTransactionById(List.of(transaction));
         return payment;
     }
 
