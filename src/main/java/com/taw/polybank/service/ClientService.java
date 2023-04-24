@@ -22,4 +22,14 @@ public class ClientService {
         }
         return clientDTOList;
     }
+    
+    public ClientDTO findById(Integer clientId) {
+        ClientEntity clientEntity = this.clientRepository.findById(clientId).orElse(null);
+
+        if (clientEntity != null) {
+            return clientEntity.toDTO();
+        }
+
+        return null;
+    }
 }

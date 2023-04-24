@@ -22,10 +22,10 @@ public class MessageEntity {
     @JoinColumn(name = "Chat_id", referencedColumnName = "id", nullable = false)
     private ChatEntity chatByChatId;
     @ManyToOne
-    @JoinColumn(name = "Employee_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "Employee_id", referencedColumnName = "id", nullable = true)
     private EmployeeEntity employeeByEmployeeId;
     @ManyToOne
-    @JoinColumn(name = "Client_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "Client_id", referencedColumnName = "id", nullable = true)
     private ClientEntity clientByClientId;
 
     public int getId() {
@@ -103,9 +103,9 @@ public class MessageEntity {
         messageDTO.setId(getId());
         messageDTO.setContent(getContent());
         messageDTO.setTimestamp(getTimestamp());
-        messageDTO.setChatByChatId(getChatByChatId().toDTO());
-        messageDTO.setEmployeeByEmployeeId(getEmployeeByEmployeeId().toDTO());
-        messageDTO.setClientByClientId(getClientByClientId().toDTO());
+        messageDTO.setChat(getChatByChatId().toDTO());
+        messageDTO.setAssistant(getEmployeeByEmployeeId().toDTO());
+        messageDTO.setClient(getClientByClientId().toDTO());
         return messageDTO;
     }
 }
