@@ -35,15 +35,13 @@
 <script>
     form=document.getElementById("someForm");
     function asClient() {
-        form.action="/"; // TODO Insert your login link
+        form.action="/client/login"; // TODO Insert your login link
         form.submit();
     }
     function asRepresentative() {
         form.action="/company/login"; //TODO Add for your f#king employee another button DO NOT REMOVE COMPANY LOGIN!!!!!!!!!!!!
         form.submit();
     }
-
-
 </script>
 
 </body>

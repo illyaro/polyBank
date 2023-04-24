@@ -47,7 +47,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/login")
-    public String postLogin(@RequestParam("DNI") String dni, @RequestParam("password") String password,
+    public String postLogin(@RequestParam("dni") String dni, @RequestParam("password") String password,
                             HttpSession session)
     {
         Optional<EmployeeEntity> employee_opt = employeeRepository.findByDNI(dni);
@@ -56,7 +56,7 @@ public class EmployeeController {
             // It should be validated : BCrypt.checkpw(password + employee.getSalt(), employee.getPassword())
             session.setAttribute("employeeID", employee.getId());
             session.setAttribute("type", employee.getType());
-            return ("employee/actions");
+            return ("redirect:/employee/assistence/");
         }
         return ("redirect:/employee/");
     }
