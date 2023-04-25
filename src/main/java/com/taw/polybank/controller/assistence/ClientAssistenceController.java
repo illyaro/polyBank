@@ -35,7 +35,7 @@ public class ClientAssistenceController {
     @Autowired
     protected EmployeeService employeeService;
 
-    @GetMapping("/")
+    @GetMapping(value={"/", ""})
     public String doListChats(Model model, HttpSession session) {
         Optional<ClientDTO> client = this.clientService.findById((Integer) session.getAttribute("clientID"));
         if (client.isPresent()) {
