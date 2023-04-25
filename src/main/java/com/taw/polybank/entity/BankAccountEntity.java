@@ -30,7 +30,7 @@ public class BankAccountEntity {
     @ManyToOne
     @JoinColumn(name = "Badge_id", referencedColumnName = "id", nullable = false)
     private BadgeEntity badgeByBadgeId;
-    @OneToMany
+    @OneToMany(mappedBy = "bankAccountByBankAccountId")
     private List<CompanyEntity> companiesById;
     @OneToMany(mappedBy = "bankAccountByBankAccountId")
     private Collection<RequestEntity> requestsById;
