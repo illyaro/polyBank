@@ -44,7 +44,7 @@
 
     const transactionWindow = document.getElementById("transactionWindow");
     const blockedAccountWindow = document.getElementById("blockedAccountWindow");
-    const isActiveAccount = <%=companyBankAccount.isActive() == (byte) 1%>
+    const isActiveAccount = <%=companyBankAccount.isActive()%>
 
 
         window.onload = function () {

@@ -12,7 +12,7 @@ public class CompanyEntity {
     @Basic
     @Column(name = "name", nullable = false, length = 45)
     private String name;
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "BankAccount_id", referencedColumnName = "id", nullable = false)
     private BankAccountEntity bankAccountByBankAccountId;
 

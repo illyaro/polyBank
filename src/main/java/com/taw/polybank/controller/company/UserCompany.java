@@ -1,6 +1,7 @@
 package com.taw.polybank.controller.company;
 
 import com.taw.polybank.dao.*;
+import com.taw.polybank.dto.CompanyDTO;
 import com.taw.polybank.entity.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;

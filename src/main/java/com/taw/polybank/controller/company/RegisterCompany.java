@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -73,12 +75,23 @@ public class RegisterCompany {
 
         // filling up bank account fields
         bankAccount.setClientByClientId(client);
-        bankAccount.setRequestsById(List.of(request));
+        ArrayList<RequestEntity> bank_requestEntities = new ArrayList<>(1);
+        bank_requestEntities.add(request);
+        bankAccount.setRequestsById(bank_requestEntities);
+        ArrayList<CompanyEntity> companyEntities = new ArrayList<>(1);
+        companyEntities.add(company);
+        bankAccount.setCompanyById(companyEntities);
 
         // filling up Client fields
         client.setCreationDate(Timestamp.from(Instant.now()));
-        client.setBankAccountsById(List.of(bankAccount));
-        client.setRequestsById(List.of(request));
+        ArrayList<BankAccountEntity> bankAccountEntities = new ArrayList<>(1);
+        bankAccountEntities.add(bankAccount);
+        client.setBankAccountsById(bankAccountEntities);
+        ArrayList<RequestEntity> client_requestEntities = new ArrayList<>(1);
+        client_requestEntities.add(request);
+        client.setRequestsById(client_requestEntities);
+
+        company.setBankAccountByBankAccountId(bankAccount);
 
         PasswordManager passwordManager = new PasswordManager();
         passwordManager.savePassword(client);
@@ -88,8 +101,8 @@ public class RegisterCompany {
 
         // saving Entities
         clientRepository.save(client);
-        bankAccountRepository.save(bankAccount);
         companyRepository.save(company);
+        bankAccountRepository.save(bankAccount);
         requestRepository.save(request);
 
         session.invalidate();

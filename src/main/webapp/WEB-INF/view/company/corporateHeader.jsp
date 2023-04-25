@@ -1,6 +1,7 @@
 <%@ page import="com.taw.polybank.entity.ClientEntity" %>
 <%@ page import="com.taw.polybank.entity.CompanyEntity" %>
 <%@ page import="com.taw.polybank.controller.company.Client" %>
+<%@ page import="com.taw.polybank.dto.CompanyDTO" %>
 
 <%--
   Created by IntelliJ IDEA.
