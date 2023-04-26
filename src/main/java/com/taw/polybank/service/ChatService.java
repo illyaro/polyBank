@@ -142,6 +142,12 @@ public class ChatService {
         return chatList;
     }
 
+    public ChatDTO findByMaxId() {
+        ChatEntity chatEntity = chatRepository.findByMaxId().get(0);
+        ChatDTO chat = chatEntity.toDTO();
+        return chat;
+    }
+
     public void save(ChatDTO chat) {
         ChatEntity chatEntity = new ChatEntity();
 
