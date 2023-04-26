@@ -61,10 +61,9 @@ public class MessageService {
 
     protected List<MessageDTO> listToDTO(List<MessageEntity> messageEntityList) {
         ArrayList messageList = new ArrayList<MessageDTO>();
-        for (MessageEntity m : messageEntityList) {
-            messageList.add(m.toDTO());
+        for (MessageEntity messageEntity : messageEntityList) {
+            messageList.add(messageEntity.toDTO());
         }
-
         return messageList;
     }
 }
