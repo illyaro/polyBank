@@ -22,7 +22,7 @@
     <title>Polybank - Assistant - Chat</title>
 </head>
 <body>
-<h1>Assistance Chat (Client <%= chat.getClient().getName() %>)</h1>
+<h1>Assistance Chat (Client <%= chat.getClient().getDni() + " - " + chat.getClient().getName() %>)</h1>
 <table border="1">
     <tr>
         <th>ME</th>
