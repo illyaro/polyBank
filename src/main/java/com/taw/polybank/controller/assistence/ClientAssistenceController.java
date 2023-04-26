@@ -41,7 +41,7 @@ public class ClientAssistenceController {
         if (client.isPresent()) {
             List<ChatDTO> chatList = chatService.findByClient(client.get());
             model.addAttribute("chatList", chatList);
-            return "assistence/clientChatList";
+            return "assistence/clientAssistenceChatList";
         }
         return "error";
     }
@@ -54,7 +54,7 @@ public class ClientAssistenceController {
             model.addAttribute("chat", chat);
             model.addAttribute("messageList", messageService.findByChat(chat));
 
-            return "assistence/clientChat";
+            return "assistence/clientAssistenceChat";
         }
 
         return "error";
@@ -69,8 +69,9 @@ public class ClientAssistenceController {
             chat.setAssistant(employeeService.findEmployeeWithMinimumChats().get(0));
             chat.setClosed(false);
             model.addAttribute("chat", chat);
+            model.addAttribute("messageList", messageService.findByChat(chat));
             this.chatService.save(chat);
-            return "assistence/clientChat";
+            return "assistence/clientAssistenceChat";
         }
 
         return "error";

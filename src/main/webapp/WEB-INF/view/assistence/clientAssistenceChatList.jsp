@@ -30,7 +30,7 @@
     %>
     <tr>
         <td><%= chat.getAssistant().getName() %></td>
-        <td><%= chat.isClosed() %></td>
+        <td><%= chat.isClosedToString() %></td>
         <td><a href="/client/assistence/chat?id=<%= chat.getId() %>">Open</a></td>
         <%
             if (!chat.isClosed()) {
