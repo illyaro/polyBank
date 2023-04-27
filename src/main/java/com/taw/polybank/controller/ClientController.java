@@ -1,7 +1,9 @@
 package com.taw.polybank.controller;
 
+import com.taw.polybank.dao.BankAccountRepository;
 import com.taw.polybank.dao.ClientRepository;
 import com.taw.polybank.dto.ClientDTO;
+import com.taw.polybank.entity.BankAccountEntity;
 import com.taw.polybank.entity.ClientEntity;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 public class ClientController {
     @Autowired
     private ClientRepository clientRepository;
+    @Autowired
+    private BankAccountRepository bankAccountRepository;
 
     @GetMapping("/view")
     public String viewClient(Model model, HttpSession session) {
@@ -47,6 +51,19 @@ public class ClientController {
         client.setSurname(clientDTO.getSurname());
         this.clientRepository.save(client);
         return "redirect:/client/view";
+    }
+
+    @GetMapping("/account")
+    public String viewBankAccount (@RequestParam("id") Integer accountID, Model model, HttpSession session) {
+        Integer clientID = (Integer) session.getAttribute("clientID");
+        BankAccountEntity account = this.bankAccountRepository.findById(accountID).orElse(null);
+        if (account.getClientByClientId().getId() == clientID) {
+            model.addAttribute("account", account);
+            return "client/bankAccount/viewData";
+        } else {
+            System.out.println("ERROR: No accesible.");
+            return "redirect:/client/view";
+        }
     }
 
     @PostMapping("/login")
