@@ -19,8 +19,6 @@
     <form:input path="dni" readonly="true" id="dni"></form:input><br>
     <label for="name">Name:</label>
     <form:input path="name" size="45" maxlength="45" id="name"></form:input><br>
-    <form:hidden path="password"></form:hidden>
-    <form:hidden path="salt"></form:hidden>
     <label for="surname">Surname:</label>
     <form:input path="surname" size="45" maxlength="45" id="surname"></form:input><br>
 
@@ -28,7 +26,7 @@
 
     <form:button>Save</form:button>
 </form:form> <br>
-<form action="/atm" method="get">
+<form action="/atm/" method="get">
     <button>Go back</button>
 </form>
 </body>

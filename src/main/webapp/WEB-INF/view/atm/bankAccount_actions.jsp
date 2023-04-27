@@ -1,5 +1,7 @@
 <%@ page import="com.taw.polybank.entity.BankAccountEntity" %>
-<%@ page import="com.taw.polybank.entity.BadgeEntity" %><%--
+<%@ page import="com.taw.polybank.entity.BadgeEntity" %>
+<%@ page import="com.taw.polybank.dto.BankAccountDTO" %>
+<%@ page import="com.taw.polybank.dto.BadgeDTO" %><%--
   Created by IntelliJ IDEA.
   User: lucia
   Date: 01/04/2023
@@ -8,8 +10,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    BankAccountEntity bankAccount = (BankAccountEntity) session.getAttribute("bankAccount");
-    BadgeEntity badge = (BadgeEntity) session.getAttribute("badge");
+    BankAccountDTO bankAccount = (BankAccountDTO) session.getAttribute("bankAccount");
+    BadgeDTO badge = (BadgeDTO) session.getAttribute("badge");
 %>
 <html>
 <head>
@@ -21,7 +23,7 @@
 </h3>
 <form method="post">
     <%
-        if (bankAccount.getActive() != (byte) 1) {
+        if (bankAccount.isActive()) {
     %>
     <button type="submit" formaction="/atm/makeTransfer" formmethod="get">Transfer money</button>
     <br>

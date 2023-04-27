@@ -1,5 +1,5 @@
-<%@ page import="com.taw.polybank.entity.RequestEntity" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="com.taw.polybank.dto.RequestDTO" %><%--
   Created by IntelliJ IDEA.
   User: lucia
   Date: 15/04/2023
@@ -8,7 +8,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    List<RequestEntity> requests = (List<RequestEntity>) request.getAttribute("requests");
+    List<RequestDTO> requests = (List<RequestDTO>) request.getAttribute("requests");
 %>
 <html>
 <head>
@@ -26,7 +26,7 @@
             <th style="border: 1px solid">Solved</th>
         </tr>
         <%
-            for (RequestEntity unbanRequest : requests){
+            for (RequestDTO unbanRequest : requests){
         %>
         <tr style="border: 1px solid">
             <td style="border: 1px solid"><%=unbanRequest.getClientByClientId().getName() +" "+ unbanRequest.getClientByClientId().getSurname()%></td>
@@ -36,14 +36,14 @@
             <td style="border: 1px solid"><%=unbanRequest.getDescription()%></td>
             <td style="border: 1px solid">
             <%
-                if(unbanRequest.getApproved() != null){
+                if(unbanRequest.isSolved()){
             %>
-                <%=unbanRequest.getApproved() == (byte) 1 ? "True" : "False"%>
+                <%=unbanRequest.isApproved() ? "True" : "False"%>
             <%
                 }
             %>
             </td>
-            <td style="border: 1px solid"><%=unbanRequest.getSolved() == (byte) 1 ? "True" : "False"%></td>
+            <td style="border: 1px solid"><%=unbanRequest.isSolved() ? "True" : "False"%></td>
         </tr>
         <%
             }

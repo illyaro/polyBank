@@ -1,6 +1,6 @@
-<%@ page import="com.taw.polybank.entity.BadgeEntity" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.taw.polybank.entity.BankAccountEntity" %><%--
+<%@ page import="com.taw.polybank.dto.BankAccountDTO" %>
+<%@ page import="com.taw.polybank.dto.BadgeDTO" %><%--
   Created by IntelliJ IDEA.
   User: lucia
   Date: 01/04/2023
@@ -10,9 +10,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <%
-  BankAccountEntity bankAccount = (BankAccountEntity) session.getAttribute("bankAccount");
-  BadgeEntity actualBadge = (BadgeEntity) session.getAttribute("badge");
-  List<BadgeEntity> badges = (List<BadgeEntity>) request.getAttribute("badges");
+  BankAccountDTO bankAccount = (BankAccountDTO) session.getAttribute("bankAccount");
+  BadgeDTO actualBadge = (BadgeDTO) session.getAttribute("badge");
+  List<BadgeDTO> badges = (List<BadgeDTO>) request.getAttribute("badges");
 %>
 <head>
     <title>PolyBank - TakeOut</title>
@@ -25,7 +25,7 @@
   <input type="text" maxlength="6" name="amount" id="amount">
   <select name="badge">
     <%
-      for (BadgeEntity badge : badges){
+      for (BadgeDTO badge : badges){
     %>
     <option value="<%=badge.getId()%>" <%if(badge.getId() == actualBadge.getId()){%> selected <%}%> ><%=badge.getName()%></option>
     <%

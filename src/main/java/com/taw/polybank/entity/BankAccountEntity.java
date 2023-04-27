@@ -152,4 +152,14 @@ public class BankAccountEntity {
         bankAccountDTO.setClientByClientId(getClientByClientId().toDTO());
         return bankAccountDTO;
     }
+
+    public static BankAccountEntity toEntity(BankAccountDTO bankAccountDTO) {
+        BankAccountEntity bankAccountEntity = new BankAccountEntity();
+        bankAccountEntity.setActive(bankAccountDTO.isActive() ? (byte)1 : (byte)0);
+        bankAccountEntity.setId(bankAccountDTO.getId());
+        bankAccountEntity.setBalance(bankAccountDTO.getBalance());
+        bankAccountEntity.setIban(bankAccountDTO.getIban());
+        bankAccountEntity.setClientByClientId(ClientEntity.toEntity(bankAccountDTO.getClientByClientId()));
+        return bankAccountEntity;
+    }
 }

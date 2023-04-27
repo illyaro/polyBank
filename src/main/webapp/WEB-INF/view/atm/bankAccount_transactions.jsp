@@ -1,6 +1,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.taw.polybank.entity.*" %><%--
+<%@ page import="com.taw.polybank.dto.*" %><%--
   Created by IntelliJ IDEA.
   User: lucia
   Date: 02/04/2023
@@ -9,8 +9,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    BankAccountEntity bankAccount = (BankAccountEntity) session.getAttribute("bankAccount");
-    List<TransactionEntity> transactions = (List<TransactionEntity>) request.getAttribute("transactions");
+    BankAccountDTO bankAccount = (BankAccountDTO) session.getAttribute("bankAccount");
+    List<TransactionDTO> transactions = (List<TransactionDTO>) request.getAttribute("transactions");
 %>
 <html>
 <head>
@@ -59,7 +59,7 @@
         <th style="border: 1px solid">Final badge</th>
     </tr>
     <%
-        for (TransactionEntity transaction : transactions) {
+        for (TransactionDTO transaction : transactions) {
     %>
     <tr style="border: 1px solid">
         <th style="border: 1px solid"><%=transaction.getTimestamp()%>
@@ -68,7 +68,7 @@
         </th>
         <%
             if (transaction.getCurrencyExchangeByCurrencyExchangeId() != null) {
-                CurrencyExchangeEntity currencyExchange = transaction.getCurrencyExchangeByCurrencyExchangeId();
+                CurrencyExchangeDTO currencyExchange = transaction.getCurrencyExchangeByCurrencyExchangeId();
         %>
         <th style="border: 1px solid"><%=currencyExchange.getInitialAmount()%></th>
         <th style="border: 1px solid"><%=currencyExchange.getBadgeByInitialBadgeId().getName()%></th>
@@ -87,11 +87,11 @@
 
         <%
             if (transaction.getPaymentByPaymentId() != null) {
-                PaymentEntity payment = transaction.getPaymentByPaymentId();
+                PaymentDTO payment = transaction.getPaymentByPaymentId();
         %>
         <%
             if (payment.getBenficiaryByBenficiaryId() != null) {
-                BenficiaryEntity beneficiary = payment.getBenficiaryByBenficiaryId();
+                BenficiaryDTO beneficiary = payment.getBenficiaryByBenficiaryId();
         %>
         <th style="border: 1px solid"><%=beneficiary.getIban()%></th>
         <th style="border: 1px solid"><%=beneficiary.getName()%></th>
@@ -105,7 +105,7 @@
         %>
         <%
             if (payment.getCurrencyExchangeByCurrencyExchangeId() != null) {
-                CurrencyExchangeEntity paymentCurrencyExchange = payment.getCurrencyExchangeByCurrencyExchangeId();
+                CurrencyExchangeDTO paymentCurrencyExchange = payment.getCurrencyExchangeByCurrencyExchangeId();
         %>
         <th style="border: 1px solid"><%=paymentCurrencyExchange.getInitialAmount()%></th>
         <th style="border: 1px solid"><%=paymentCurrencyExchange.getBadgeByInitialBadgeId().getName()%></th>

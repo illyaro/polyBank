@@ -10,6 +10,7 @@ public class ClientDTO {
     private String name;
     private String surname;
     private Timestamp creationDate;
+
     public int getId() {
         return id;
     }

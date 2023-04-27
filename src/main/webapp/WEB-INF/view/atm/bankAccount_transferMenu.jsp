@@ -1,6 +1,6 @@
-<%@ page import="com.taw.polybank.entity.BadgeEntity" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.taw.polybank.entity.BankAccountEntity" %><%--
+<%@ page import="com.taw.polybank.dto.BankAccountDTO" %>
+<%@ page import="com.taw.polybank.dto.BadgeDTO" %><%--
   Created by IntelliJ IDEA.
   User: lucia
   Date: 01/04/2023
@@ -9,8 +9,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    BankAccountEntity bankAccount = (BankAccountEntity) session.getAttribute("bankAccount");
-    BadgeEntity actualBadge = (BadgeEntity) session.getAttribute("badge");
+    BankAccountDTO bankAccount = (BankAccountDTO) session.getAttribute("bankAccount");
+    BadgeDTO actualBadge = (BadgeDTO) session.getAttribute("badge");
 %>
 <html>
 <head>
