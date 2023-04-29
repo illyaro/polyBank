@@ -1,5 +1,6 @@
 package com.taw.polybank.entity;
 
+import com.taw.polybank.dto.CurrencyExchangeDTO;
 import com.taw.polybank.dto.PaymentDTO;
 import jakarta.persistence.*;
 

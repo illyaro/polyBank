@@ -1,7 +1,5 @@
 package com.taw.polybank.dao;
 
-import com.taw.polybank.dto.CompanyDTO;
-import com.taw.polybank.entity.ClientEntity;
 import com.taw.polybank.entity.CompanyEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,4 +21,6 @@ public interface CompanyRepository extends JpaRepository<CompanyEntity, Integer>
             "UNION " +
             "select co from CompanyEntity co join co.bankAccountByBankAccountId bc join bc.authorizedAccountsById auth join auth.clientByClientId cli where cli.id = :id")
     List<CompanyEntity> findCompanyRepresentedByClient(@Param("id") int id);
+
+    CompanyEntity findCompanyEntityByName(String name);
 }

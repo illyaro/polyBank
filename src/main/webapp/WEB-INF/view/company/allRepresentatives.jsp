@@ -2,7 +2,10 @@
 <%@ page import="com.taw.polybank.entity.ClientEntity" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.taw.polybank.entity.MessageEntity" %>
-<%@ page import="com.taw.polybank.controller.company.Client" %><%--
+<%@ page import="com.taw.polybank.dto.ClientDTO" %>
+<%@ page import="com.taw.polybank.dto.CompanyDTO" %>
+<%@ page import="com.taw.polybank.service.ClientService" %>
+<%@ page import="com.taw.polybank.service.AuthorizedAccountService" %><%--
   Created by IntelliJ IDEA.
   User: Illya Rozumovskyy
   Date: 06/04/2023
@@ -13,8 +16,11 @@
 <html>
 <head>
     <%
-        List<ClientEntity> clientList = (List<ClientEntity>) request.getAttribute("clientList");
-        Client active = (Client) session.getAttribute("client");
+        List<ClientDTO> clientList = (List<ClientDTO>) request.getAttribute("clientList");
+        ClientDTO active = (ClientDTO) session.getAttribute("client");
+        CompanyDTO company = (CompanyDTO) session.getAttribute("company");
+        ClientService clientService = (ClientService) request.getAttribute("clientService");
+        AuthorizedAccountService authorizedAccountService = (AuthorizedAccountService) request.getAttribute("authorizedAccountService");
     %>
     <title>Representatives of ${company.name}</title>
     <link rel="stylesheet" type="text/css" href="../../../commonStyle.css">
@@ -35,6 +41,8 @@
     <form:button class="prettyButton" name="Submit">Filter</form:button>
 </form:form>
 
+<a href="/company/user/listAllRepresentatives" class="prettyButton">Reset</a><br/>
+
 <table border="1">
     <tr>
         <th>Block Representative</th>
@@ -46,12 +54,12 @@
         <th>Last Message</th>
     </tr>
     <%
-        for(ClientEntity c : clientList){
+        for(ClientDTO c : clientList){
     %>
     <tr>
         <%
             String style = "";
-            if(active.getId() == c.getId() || c.getAuthorizedAccountsById().size() < 1){
+            if(active.getId() == c.getId() || clientService.getNumberAuthorizedAccounts(c.getId()) < 1){
                 style = "style=\"pointer-events: none; color: gray; text-decoration: none;\"";
             }
         %>
@@ -61,13 +69,13 @@
         <td><%=c.getDni()%></td>
         <%
             String status = "ok";
-            if(c.getAuthorizedAccountsById().size() >= 1 && c.getAuthorizedAccountsById().stream().reduce((a,b) -> a).orElse(null).getBlocked() == (byte) 1){
+            if(clientService.isBlocked(c, company, authorizedAccountService)){
                 status = "blocked";
             }
         %>
         <td><%=status%></td>
         <td><%=c.getCreationDate().toLocalDateTime()%></td>
-        <td><%=c.getMessagesById().stream().reduce((a, b) -> b).map(MessageEntity::getContent).orElse("")%></td>
+        <td><%=clientService.getLastMessage(c)%></td>
     </tr>
     <%
         }

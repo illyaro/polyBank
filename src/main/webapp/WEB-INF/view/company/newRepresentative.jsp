@@ -7,13 +7,12 @@
   To change this template use File | Settings | File Templates.
 --%>
 
-<%@ page import="com.taw.polybank.entity.CompanyEntity" %>
-<%@ page import="com.taw.polybank.controller.company.Client" %>
+<%@ page import="com.taw.polybank.dto.ClientDTO" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <%
-        Client client = (Client) request.getAttribute("client");
+        ClientDTO client = (ClientDTO) request.getAttribute("client");
     %>
     <title>Add new Representative to ${company.name}</title>
     <link rel="stylesheet" type="text/css" href="../../../commonStyle.css">
@@ -23,19 +22,18 @@
 <h1>Add new Representative to ${company.name}</h1>
 
 <form:form id="mainForm" action="" modelAttribute="client" method="post">
-    <form:hidden path="client.id"/>
+    <form:hidden path="id"/>
     <form:hidden path="isNew"/>
 
-    <form:label path="client.name">Representative's name:</form:label>
-    <form:input path="client.name" size="45" maxlength="45" class="formElement"/>
+    <form:label path="name">Representative's name:</form:label>
+    <form:input path="name" size="45" maxlength="45" class="formElement"/>
     <br/>
-    <form:label path="client.surname">Representative's surname:</form:label>
-    <form:input path="client.surname" size="45" maxlength="45" class="formElement"/>
+    <form:label path="surname">Representative's surname:</form:label>
+    <form:input path="surname" size="45" maxlength="45" class="formElement"/>
     <br/>
-    <form:label path="client.dni">Representative's ID:</form:label>
-    <form:input path="client.dni" size="45" maxlength="45" class="formElement"/>
+    <form:label path="dni">Representative's ID:</form:label>
+    <form:input path="dni" size="45" maxlength="45" class="formElement"/>
     <br/>
-    <form:hidden path="client.password"/>
 
     <form:button id="submitButtonOne" class="prettyButton" onclick="setUpPassword()">Set up password</form:button>
     <form:button id="submitButtonTwo" class="prettyButton" onclick="saveRepresentative()">Save</form:button>
