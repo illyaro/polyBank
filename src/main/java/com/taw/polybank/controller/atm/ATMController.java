@@ -1,6 +1,5 @@
 package com.taw.polybank.controller.atm;
 
-import ch.qos.logback.core.net.server.Client;
 import com.taw.polybank.dto.*;
 import com.taw.polybank.service.*;
 import jakarta.servlet.http.HttpSession;
@@ -21,6 +20,9 @@ public class ATMController {
 
     @Autowired
     private ClientService clientService;
+
+    @Autowired
+    private BeneficiaryService beneficiaryService;
 
     @Autowired
     private BadgeService badgeService;
@@ -74,6 +76,7 @@ public class ATMController {
         if (session.getAttribute("client") == null)
             return "atm/index";
         clientService.guardarCliente(client, "");
+        beneficiaryService.guardarBeneficiarios(client);
         session.setAttribute("client", client);
         model.addAttribute("bankAccounts", bankAccountService.findByClient(client));
         return "atm/user_data";
@@ -132,6 +135,10 @@ public class ATMController {
 
         if(suspiciousAccountService.isSuspicious(receiverIBAN)){
             model.addAttribute("error", "The destination account is suspicious. You cannot transfer money to it.");
+            return "atm/bankAccount_transferMenu";
+        }
+        if(bankAccountReceiver != null && !bankAccountReceiver.getClientByClientId().getName().equals(receiverName)){
+            model.addAttribute("error", "The name of the proprietary of the destination account is not correct.");
             return "atm/bankAccount_transferMenu";
         }
 
