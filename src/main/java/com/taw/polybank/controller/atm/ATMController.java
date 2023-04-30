@@ -31,6 +31,9 @@ public class ATMController {
     @Autowired
     private RequestService requestService;
 
+    @Autowired
+    private SuspiciousAccountService suspiciousAccountService;
+
     @GetMapping("/")
     public String doIndex(Model model, HttpSession session) {
         ClientDTO client = (ClientDTO) session.getAttribute("client");
@@ -121,11 +124,17 @@ public class ATMController {
     }
 
     @PostMapping("/makeTransfer")
-    public String doMakeTransfer(@RequestParam("amount") double amount, @RequestParam("receiver") String receiverIBAN, @RequestParam("receiverName") String receiverName, HttpSession session) {
+    public String doMakeTransfer(@RequestParam("amount") double amount, @RequestParam("receiver") String receiverIBAN, @RequestParam("receiverName") String receiverName, Model model, HttpSession session) {
         if (session.getAttribute("client") == null || session.getAttribute("bankAccount") == null)
             return "atm/index";
 
         BankAccountDTO bankAccountReceiver = bankAccountService.findByIban(receiverIBAN);
+
+        if(suspiciousAccountService.isSuspicious(receiverIBAN)){
+            model.addAttribute("error", "The destination account is suspicious. You cannot transfer money to it.");
+            return "atm/bankAccount_transferMenu";
+        }
+
         BadgeDTO emisorBadge = (BadgeDTO) session.getAttribute("badge");
         BadgeDTO badgeReceiver;
         if(bankAccountReceiver != null) {

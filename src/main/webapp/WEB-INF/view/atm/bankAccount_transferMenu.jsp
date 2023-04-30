@@ -30,6 +30,11 @@
                     </h5>
                 </li>
                 <li class="list-group-item">
+                    <c:if test="${error != null}">
+                        <p style="color:red;">
+                                ${error}
+                        </p>
+                    </c:if>
                     <form method="post" action="/atm/makeTransfer">
                         <div style="text-align: left">
                             <label for="amount">Amount: </label>
