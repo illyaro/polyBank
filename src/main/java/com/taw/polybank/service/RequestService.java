@@ -37,9 +37,9 @@ public class RequestService {
     private ClientRepository clientRepository;
 
 
-    public List<RequestDTO> findByBankAccountByBankAccountIdAndAndSolved(BankAccountDTO bankAccount, byte b) {
+    public List<RequestDTO> findByBankAccountByBankAccountIdAndAndSolved(BankAccountDTO bankAccount, boolean b) {
         BankAccountEntity bankAccountEntity = bankAccountRepository.findByIban(bankAccount.getIban()).orElse(null);
-        List<RequestEntity> requestEntityList = requestRepository.findByBankAccountByBankAccountIdAndAndSolved(bankAccountEntity, b);
+        List<RequestEntity> requestEntityList = requestRepository.findByBankAccountByBankAccountIdAndSolved(bankAccountEntity, b);
         return entityListToDTO(requestEntityList);
     }
 
@@ -61,14 +61,13 @@ public class RequestService {
         request.setClientByClientId(clientEntity);
         request.setBankAccountByBankAccountId(bankAccountEntity);
         request.setEmployeeByEmployeeId(employees.get(0));
-        request.setSolved((byte) 0);
+        request.setSolved(false);
         request.setTimestamp(Timestamp.valueOf(LocalDateTime.now()));
         request.setType(activation);
         request.setDescription(description == null ? "" : description);
 
         requestRepository.save(request);
-    protected RequestRepository requestRepository;
-
+    }
 
     public RequestEntity toEntity(RequestDTO request) {
         RequestEntity requestEntity = requestRepository.findById(request.getId()).orElse(new RequestEntity());

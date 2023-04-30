@@ -39,7 +39,7 @@ public class BadgeService {
         }
     }
 
-    public List<BadgeDTO> findAll() {
+    public List<BadgeDTO> findAllBadges() {
         List<BadgeEntity> badgeEntityList = badgeRepository.findAll();
         List<BadgeDTO> badgeDTOList = new ArrayList<>();
         for(BadgeEntity badgeEntity : badgeEntityList){
@@ -50,8 +50,8 @@ public class BadgeService {
 
     public BadgeDTO findById(int badgeId) {
         BadgeEntity badgeEntity = badgeRepository.findById(badgeId).orElse(null);
-        return  badgeEntity == null ? null : badgeEntity.toDTO();
-    protected BadgeRepository badgeRepository;
+        return badgeEntity == null ? null : badgeEntity.toDTO();
+    }
 
     public List<BadgeDTO> findAll() {
         return badgeRepository.findAll().stream().map(badge -> badge.toDTO()).collect(Collectors.toList());

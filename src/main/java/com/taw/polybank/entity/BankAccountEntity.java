@@ -161,7 +161,7 @@ public class BankAccountEntity {
 
     public static BankAccountEntity toEntity(BankAccountDTO bankAccountDTO) {
         BankAccountEntity bankAccountEntity = new BankAccountEntity();
-        bankAccountEntity.setActive(bankAccountDTO.isActive() ? (byte)1 : (byte)0);
+        bankAccountEntity.setActive(bankAccountDTO.isActive());
         bankAccountEntity.setId(bankAccountDTO.getId());
         bankAccountEntity.setBalance(bankAccountDTO.getBalance());
         bankAccountEntity.setIban(bankAccountDTO.getIban());

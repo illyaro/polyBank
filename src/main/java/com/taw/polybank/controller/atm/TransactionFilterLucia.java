@@ -1,16 +1,15 @@
 package com.taw.polybank.controller.atm;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 
-public class TransactionFilter {
+public class TransactionFilterLucia {
     private Date timestampBegin;
     private Date timestampEnd;
     private String transactionOwner;
     private String beneficiaryIban;
     private double amount;
 
-    public TransactionFilter(Date timestampBegin, Date timestampEnd, String transactionOwner, String beneficiaryIban, double amount){
+    public TransactionFilterLucia(Date timestampBegin, Date timestampEnd, String transactionOwner, String beneficiaryIban, double amount){
         this.timestampBegin = timestampBegin;
         this.timestampEnd = timestampEnd;
         this.transactionOwner = transactionOwner;

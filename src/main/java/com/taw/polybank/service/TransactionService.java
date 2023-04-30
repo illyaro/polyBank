@@ -1,23 +1,19 @@
 package com.taw.polybank.service;
 
-import com.taw.polybank.controller.atm.TransactionFilter;
+import com.taw.polybank.controller.atm.TransactionFilterLucia;
 import com.taw.polybank.dao.*;
 import com.taw.polybank.dto.*;
 import com.taw.polybank.entity.*;
-import jakarta.servlet.http.HttpSession;
 import com.taw.polybank.dao.TransactionRepository;
-import com.taw.polybank.dto.*;
 import com.taw.polybank.entity.CurrencyExchangeEntity;
 import com.taw.polybank.entity.TransactionEntity;
-import com.taw.polybank.ui.transaction.TransactionFilter;
+import com.taw.polybank.ui.transaction.TransactionFilterJose;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,7 +57,7 @@ public class TransactionService {
         return transactionDTOList;
     }
 
-    public List<TransactionDTO> filter(BankAccountDTO bankAccount, TransactionFilter filter) {
+    public List<TransactionDTO> filter(BankAccountDTO bankAccount, TransactionFilterLucia filter) {
         Timestamp begin = Timestamp.valueOf(filter.getTimestampBegin().toLocalDate().atTime(0,0));
         Timestamp end = Timestamp.valueOf(filter.getTimestampEnd().toLocalDate().atTime(23,59));
 
@@ -254,7 +250,7 @@ public class TransactionService {
                 .collect(Collectors.toList());
     }
 
-    public List<TransactionDTO> findByClientIdAndFilter(Integer id, TransactionFilter filter) {
+    public List<TransactionDTO> findByClientIdAndFilter(Integer id, TransactionFilterJose filter) {
         if (filter.getType() == null || filter.getType().isBlank())
             return findByClientIdAndMinimumAmount(id, filter.getAmount());
         if (filter.getType().equals("Payment")) {
@@ -266,7 +262,7 @@ public class TransactionService {
         }
     }
 
-    public List<TransactionDTO> findByBankIdAndFilter(int id, TransactionFilter filter) {
+    public List<TransactionDTO> findByBankIdAndFilter(int id, TransactionFilterJose filter) {
         if (filter.getType() == null || filter.getType().isBlank())
             return getDtoList(transactionRepository.findByBankIdAndMinimumAmount(id, filter.getAmount()));
         if (filter.getType().equals("Payment")) {
@@ -277,7 +273,7 @@ public class TransactionService {
             return getAnyTransactionByClientIdDTOS(id, filter);
     }
 
-    private List<TransactionDTO> getAnyTransactionByClientIdDTOS(Integer id, TransactionFilter filter) {
+    private List<TransactionDTO> getAnyTransactionByClientIdDTOS(Integer id, TransactionFilterJose filter) {
         if (filter.getSorting() == null || filter.getSorting().isBlank()) {
             return findByClientId(id);
         } else if (filter.getSorting().equals("timestamp_asc")) {
@@ -288,7 +284,7 @@ public class TransactionService {
             return findByClientId(id);
     }
 
-    private List<TransactionDTO> getCurrencyExchangeByClientIdDTOS(Integer id, TransactionFilter filter) {
+    private List<TransactionDTO> getCurrencyExchangeByClientIdDTOS(Integer id, TransactionFilterJose filter) {
         if (filter.getSorting() == null || filter.getSorting().isBlank()) {
             return findCurrencyExchangesByClientIdAndMinimumAmount(id, filter.getAmount());
         } else if (filter.getSorting().equals("timestamp_asc")) {
@@ -299,7 +295,7 @@ public class TransactionService {
             return findCurrencyExchangesByClientIdAndMinimumAmount(id, filter.getAmount());
     }
 
-    private List<TransactionDTO> getPaymentByClientIdDTOS(Integer id, TransactionFilter filter) {
+    private List<TransactionDTO> getPaymentByClientIdDTOS(Integer id, TransactionFilterJose filter) {
         if (filter.getSorting() == null || filter.getSorting().isBlank()) {
             return findPaymentsByClientIdAndMinimumAmount(id, filter.getAmount());
         } else if (filter.getSorting().equals("timestamp_asc")) {
@@ -310,7 +306,7 @@ public class TransactionService {
             return findPaymentsByClientIdAndMinimumAmount(id, filter.getAmount());
     }
 
-    private List<TransactionDTO> getAnyTransactionByBankIdDTOS(Integer id, TransactionFilter filter) {
+    private List<TransactionDTO> getAnyTransactionByBankIdDTOS(Integer id, TransactionFilterJose filter) {
         if (filter.getSorting() == null || filter.getSorting().isBlank()) {
             return findByBankId(id);
         } else if (filter.getSorting().equals("timestamp_asc")) {
@@ -329,7 +325,7 @@ public class TransactionService {
         return getDtoList(transactionRepository.findByBankIdSortByTimestampAsc(id));
     }
 
-    private List<TransactionDTO> getCurrencyExchangeByBankIdDTOS(Integer id, TransactionFilter filter) {
+    private List<TransactionDTO> getCurrencyExchangeByBankIdDTOS(Integer id, TransactionFilterJose filter) {
         if (filter.getSorting() == null || filter.getSorting().isBlank()) {
             return findCurrencyExchangesByBankIdAndMinimumAmount(id, filter.getAmount());
         } else if (filter.getSorting().equals("timestamp_asc")) {
@@ -356,7 +352,7 @@ public class TransactionService {
         return getDtoList(transactionRepository.findCurrencyExchangesByBankIdAndMinimumAmount(id, amount));
     }
 
-    private List<TransactionDTO> getPaymentByBankIdDTOS(Integer id, TransactionFilter filter) {
+    private List<TransactionDTO> getPaymentByBankIdDTOS(Integer id, TransactionFilterJose filter) {
         if (filter.getSorting() == null || filter.getSorting().isBlank()) {
             return findPaymentsByBankIdAndMinimumAmount(id, filter.getAmount());
         } else if (filter.getSorting().equals("timestamp_asc")) {

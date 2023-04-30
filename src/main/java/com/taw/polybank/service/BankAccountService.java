@@ -1,16 +1,19 @@
 package com.taw.polybank.service;
 
+import com.taw.polybank.dao.AuthorizedAccountRepository;
 import com.taw.polybank.dao.BankAccountRepository;
 import com.taw.polybank.dao.ClientRepository;
-import com.taw.polybank.dto.BankAccountDTO;
-import com.taw.polybank.dto.ClientDTO;
-import com.taw.polybank.entity.BankAccountEntity;
-import com.taw.polybank.entity.ClientEntity;
+import com.taw.polybank.dto.*;
+import com.taw.polybank.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BankAccountService {
@@ -20,6 +23,9 @@ public class BankAccountService {
 
     @Autowired
     private ClientRepository clientRepository;
+
+    @Autowired
+    private AuthorizedAccountRepository authorizedAccountRepository;
 
     public List<BankAccountDTO> findByClient(ClientDTO client) {
         ClientEntity clientEntity = clientRepository.findByDNI(client.getDni());
@@ -43,29 +49,7 @@ public class BankAccountService {
     public BankAccountDTO findByIban(String bankAccountIBAN) {
         BankAccountEntity bankAccountEntity = bankAccountRepository.findByIban(bankAccountIBAN).orElse(null);
         return bankAccountEntity == null ? null : bankAccountEntity.toDTO();
-import com.taw.polybank.dao.AuthorizedAccountRepository;
-import com.taw.polybank.dao.BankAccountRepository;
-import com.taw.polybank.dto.*;
-import com.taw.polybank.entity.AuthorizedAccountEntity;
-import com.taw.polybank.entity.BankAccountEntity;
-import com.taw.polybank.entity.CompanyEntity;
-import com.taw.polybank.entity.RequestEntity;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-@Service
-public class BankAccountService {
-    @Autowired
-    private BankAccountRepository bankAccountRepository;
-    @Autowired
-    protected AuthorizedAccountRepository authorizedAccountRepository;
+    }
 
     public List<BankAccountDTO> findAll() {
         List<BankAccountEntity> bankAccountEntityList = bankAccountRepository.findAll();

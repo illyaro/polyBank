@@ -1,8 +1,6 @@
 package com.taw.polybank.controller.atm;
 
-import com.taw.polybank.dao.*;
 import com.taw.polybank.dto.*;
-import com.taw.polybank.entity.*;
 import com.taw.polybank.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,7 +126,7 @@ public class ATMController {
         if (session.getAttribute("client") == null || session.getAttribute("bankAccount") == null)
             return "atm/index";
 
-        List<BadgeDTO> badges = badgeService.findAll();
+        List<BadgeDTO> badges = badgeService.findAllBadges();
         model.addAttribute("badges", badges);
 
         return "atm/bankAccount_takeOut";
@@ -157,7 +155,7 @@ public class ATMController {
 
         BankAccountDTO bankAccount = (BankAccountDTO) session.getAttribute("bankAccount");
         List<TransactionDTO> transactions = transactionService.findByBankAccountByBankAccountId(bankAccount);
-        TransactionFilter filter = new TransactionFilter(Date.valueOf(LocalDate.now()), Date.valueOf(LocalDate.now()), "", "", 0.0);
+        TransactionFilterLucia filter = new TransactionFilterLucia(Date.valueOf(LocalDate.now()), Date.valueOf(LocalDate.now()), "", "", 0.0);
 
         model.addAttribute("transactions", transactions);
         model.addAttribute("filter", filter);
@@ -165,7 +163,7 @@ public class ATMController {
     }
 
     @PostMapping("/checkTransactions")
-    public String filterTransactions(HttpSession session, Model model, @ModelAttribute("filter")TransactionFilter filter){
+    public String filterTransactions(HttpSession session, Model model, @ModelAttribute("filter") TransactionFilterLucia filter){
         if (session.getAttribute("client") == null || session.getAttribute("bankAccount") == null)
             return "atm/index";
 
@@ -184,7 +182,7 @@ public class ATMController {
             return "atm/index";
         }
 
-        List<RequestDTO> requestsNotSolved = requestService.findByBankAccountByBankAccountIdAndAndSolved(bankAccount, (byte) 0);
+        List<RequestDTO> requestsNotSolved = requestService.findByBankAccountByBankAccountIdAndAndSolved(bankAccount, false);
 
         if(requestsNotSolved.size()== 0){
             return "atm/requestUnban";

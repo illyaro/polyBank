@@ -55,12 +55,14 @@ public class ClientService {
         return entityListToDTOList(clientEntityList);
     }
 
-    public List<ClientDTO> entityListToDTOList (List<ClientEntity> clientEntityList){
+    public List<ClientDTO> entityListToDTOList (List<ClientEntity> clientEntityList) {
         List<ClientDTO> clientDTOList = new ArrayList<>();
-        for(ClientEntity clientEntity : clientEntityList){
+        for (ClientEntity clientEntity : clientEntityList) {
             clientDTOList.add(clientEntity.toDTO());
         }
         return clientDTOList;
+    }
+
     public Optional<ClientDTO> findById(Integer id) {
         Optional<ClientEntity> clientEntityOptional = clientRepository.findById(id);
         Optional<ClientDTO> clientDTOOptional;
