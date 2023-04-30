@@ -1,5 +1,6 @@
 package com.taw.polybank.controller.atm;
 
+import ch.qos.logback.core.net.server.Client;
 import com.taw.polybank.dto.*;
 import com.taw.polybank.service.*;
 import jakarta.servlet.http.HttpSession;
@@ -70,6 +71,26 @@ public class ATMController {
         if (session.getAttribute("client") == null)
             return "atm/index";
         clientService.guardarCliente(client, "");
+        session.setAttribute("client", client);
+        model.addAttribute("bankAccounts", bankAccountService.findByClient(client));
+        return "atm/user_data";
+    }
+
+    @PostMapping("/changePassword")
+    public String doChangePassword(@RequestParam("password") String password, @RequestParam("password2") String password2, Model model, HttpSession session) {
+        ClientDTO client = (ClientDTO) session.getAttribute("client");
+        if (client == null)
+            return "atm/index";
+        if(!password.equals(password2)){
+            model.addAttribute("error", "Contraseñas no coinciden");
+            model.addAttribute("client", client);
+            return "atm/user_edit";
+        }else if (password.length() < 7){
+            model.addAttribute("error", "La contraseña es muy corta. Debe tener más de 7 símbolos.");
+            model.addAttribute("client", client);
+            return "atm/user_edit";
+        }
+        clientService.guardarCliente(client, password);
         session.setAttribute("client", client);
         model.addAttribute("bankAccounts", bankAccountService.findByClient(client));
         return "atm/user_data";
