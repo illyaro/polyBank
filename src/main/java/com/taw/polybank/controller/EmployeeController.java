@@ -4,8 +4,14 @@ import com.taw.polybank.dao.ClientRepository;
 import com.taw.polybank.dao.CompanyRepository;
 import com.taw.polybank.dao.EmployeeRepository;
 import com.taw.polybank.dao.RequestRepository;
+import com.taw.polybank.dto.*;
 import com.taw.polybank.entity.ClientEntity;
 import com.taw.polybank.entity.EmployeeEntity;
+import com.taw.polybank.entity.TransactionEntity;
+import com.taw.polybank.service.*;
+import com.taw.polybank.ui.client.ClientFilter;
+import com.taw.polybank.ui.company.CompanyFilter;
+import com.taw.polybank.ui.transaction.TransactionFilter;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -26,90 +32,177 @@ public class EmployeeController {
     private EmployeeRepository employeeRepository;
 
     @Autowired
-    private RequestRepository requestRepository;
+    private EmployeeService employeeService;
 
     @Autowired
-    private CompanyRepository companyRepository;
+    private CompanyService companyService;
 
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientService clientService;
 
-    @GetMapping("/")
+    @Autowired
+    private BankAccountService bankAccountService;
+    @Autowired
+    private TransactionService transactionService;
+
+    @GetMapping(value = {"", "/", "/login", "/login/"})
     public String doBase()
     {
         return ("employee/login");
     }
 
-    @GetMapping("/login")
-    public String getLogin()
-    {
-        return doBase();
-    }
-
     @PostMapping("/login")
-    public String postLogin(@RequestParam("DNI") String dni, @RequestParam("password") String password,
+    public String postLogin(@RequestParam("dni") String dni,
                             HttpSession session)
     {
+        if (dni.isBlank())
+            return "redirect:/employee";
         Optional<EmployeeEntity> employee_opt = employeeRepository.findByDNI(dni);
         if (employee_opt.isPresent()) {
             EmployeeEntity employee = employee_opt.get();
-            // It should be validated : BCrypt.checkpw(password + employee.getSalt(), employee.getPassword())
-            session.setAttribute("employeeID", employee.getId());
-            session.setAttribute("type", employee.getType());
-            return ("employee/actions");
+            session.setAttribute("employee", employee);
+            if (employee.getType().toString().equals("assistant"))
+                return ("redirect:/employee/assistance");
+            else if (employee.getType().toString().equals("manager") )
+                return ("redirect:/employee/manager");
+            session.setAttribute("employee", employee);
         }
         return ("redirect:/employee/");
     }
 
-    @GetMapping("/requests")
-    public String getRequests(Model model) {
-        model.addAttribute("requests", requestRepository.findAll());
-        return ("employee/requests");
+    @GetMapping(value={"manager", "manager/"})
+    public String getActions(Model model, HttpSession session) {
+        if (session.getAttribute("employee") == null)
+            return "redirect:/employee";
+        return ("employee/manager/actions");
     }
 
-    @GetMapping("/accounts")
-    public String getAccounts(Model model, @RequestParam("last_month") Optional<Integer> opt_last_month) {
-        List<ClientEntity> clientEntityList;
-        if (opt_last_month.isPresent() && opt_last_month.get() == 1)
-        {
-            Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.MONTH, -1);
-            Date fechaHaceUnMes = cal.getTime();
-            Timestamp timestampHaceUnMes = new Timestamp(fechaHaceUnMes.getTime());
-
-
-        }
-        model.addAttribute("clients", clientRepository.findAll());
-        model.addAttribute("companies", companyRepository.findAll());
-
-        return ("employee/accounts");
+    @GetMapping("manager/requests")
+    public String getRequests(HttpSession session, Model model) {
+        if (session.getAttribute("employee") == null)
+            return ("redirect:/employee");
+        List<RequestDTO> requestDTOS = employeeService.findRequestsForEmployee((EmployeeEntity) session.getAttribute("employee"));
+        model.addAttribute("requests", requestDTOS);
+        return ("employee/manager/requests");
     }
 
-    @GetMapping("/inactive")
-    public String getInactive(Model model) {
+    @GetMapping("manager/accounts/clients")
+    public String getClientAccounts(Model model) {
+        model.addAttribute("clients", clientService.findAll());
+        model.addAttribute("filtro", new ClientFilter());
+        return ("employee/manager/client_accounts");
+    }
 
-        return ("employee/inactive_accounts");
+    @PostMapping("manager/accounts/clients")
+    public String postClientAccounts(Model model,
+                                     @ModelAttribute("filtro") ClientFilter filter) {
+        model.addAttribute("clients", clientService.findByFilter(filter));
+        if (filter == null)
+            model.addAttribute("filtro", new ClientFilter());
+        return ("employee/manager/client_accounts");
+    }
+
+    @GetMapping("manager/accounts/companies")
+    public String getCompanyAccounts(Model model) {
+        model.addAttribute("companies", companyService.findAll());
+        model.addAttribute("filtro", new ClientFilter());
+        return ("employee/manager/company_accounts");
+    }
+
+    @PostMapping("manager/accounts/companies")
+    public String postCompanyAccounts(Model model,
+                                     @ModelAttribute("filtro")CompanyFilter companyFilter) {
+        model.addAttribute("companies", companyService.findByFilter(companyFilter));
+        if (companyFilter == null)
+            model.addAttribute("filtro", new CompanyFilter());
+        return ("employee/manager/company_accounts");
+    }
+
+    @GetMapping("manager/approve/{id}")
+    public String getApprove(@PathVariable("id") Integer id, Model model) {
+        employeeService.solveRequest(id, true);
+        return ("redirect:/employee/manager/requests");
+    }
+
+    @GetMapping("manager/deny/{id}")
+    public String getDeny(@PathVariable("id") Integer id, Model model) {
+        employeeService.solveRequest(id, false);
+        return ("redirect:/employee/manager/requests");
+    }
+
+    @GetMapping("manager/account/client/{id}")
+    public String getClientAccount(@PathVariable("id") Integer id, Model model) {
+        Optional<ClientDTO> clientDTOOptional = clientService.findById(id);
+        if (clientDTOOptional.isEmpty())
+            return ("redirect:/employee/manager/accounts/clients");
+        model.addAttribute("client", clientDTOOptional.get());
+        model.addAttribute("filtro", new TransactionFilter());
+        model.addAttribute("transactions", transactionService.findByClientId(id));
+        return ("employee/manager/see_client_account");
+    }
+
+    @PostMapping("manager/account/client/{id}")
+    public String postClientAccount(@PathVariable("id") Integer id,
+                                   @ModelAttribute("filtro") TransactionFilter filter,
+                                   Model model) {
+        Optional<ClientDTO> clientDTOOptional = clientService.findById(id);
+        if (clientDTOOptional.isEmpty())
+            return ("redirect:/employee/manager/accounts/clients");
+        model.addAttribute("client", clientDTOOptional.get());
+        model.addAttribute("transactions", transactionService.findByClientIdAndFilter(id, filter));
+        return ("employee/manager/see_client_account");
     }
 
 
-    @GetMapping("/suspicious")
+    @GetMapping("manager/account/company/{id}")
+    public String getCompanyAccount(@PathVariable("id") Integer id, Model model) {
+        Optional<CompanyDTO> companyDTOOptional = companyService.findById(id);
+        if (companyDTOOptional.isEmpty())
+            return ("redirect:/employee/manager/accounts/companies");
+        model.addAttribute("company", companyDTOOptional.get());
+        model.addAttribute("filtro", new TransactionFilter());
+        model.addAttribute("transactions", transactionService.findByBankId(companyDTOOptional.get().getBankAccountByBankAccountId().getId()));
+        return ("employee/manager/see_company_account");
+    }
+
+    @PostMapping("manager/account/company/{id}")
+    public String postCompanyAccount(@PathVariable("id") Integer id,
+                                     @ModelAttribute("filtro") TransactionFilter filter,
+                                     Model model) {
+        Optional<CompanyDTO> companyDTOOptional = companyService.findById(id);
+        if (companyDTOOptional.isEmpty())
+            return ("redirect:/employee/manager/accounts/companies");
+        CompanyDTO companyDTO = companyDTOOptional.get();
+        model.addAttribute("company", companyDTO);
+        model.addAttribute("transactions", transactionService
+                        .findByBankIdAndFilter(companyDTO.getBankAccountByBankAccountId().getId(), filter));
+        return ("employee/manager/see_company_account");
+    }
+
+
+    @GetMapping("manager/suspicious")
     public String getSuspicious(Model model) {
-
-        return ("employee/suspicious");
+        model.addAttribute("suspicious", bankAccountService.findSuspicious());
+        return ("employee/manager/suspicious");
     }
 
-    @GetMapping("/register")
-    public String getRegister(Model model)
-    {
-        model.addAttribute("newEmployee", new EmployeeEntity());
-        return ("employee/register");
+    @GetMapping("manager/block/account/{id}")
+    public String getDisabled(@PathVariable("id") Integer id) {
+        bankAccountService.blockAccountById(id);
+        return ("redirect:/employee/manager/suspicious");
     }
 
-    @PostMapping("/register")
-    public String postRegister(@ModelAttribute("newEmployee") EmployeeEntity employee)
-    {
-        System.out.println(employee.getId());
-        System.out.println(employee.getDni());
-        return ("redirect:/employee/");
+    @GetMapping("manager/disable/account/{id}")
+    public String getBlocked(@PathVariable("id") Integer id) {
+        bankAccountService.blockAccountById(id);
+        return ("redirect:/employee/manager/accounts/inactive");
+    }
+
+
+    @GetMapping("manager/accounts/inactive")
+    public String getInactiveAccounts(Model model) {
+        List<BankAccountDTO> bankAccountDTOS = bankAccountService.findInactive();
+        model.addAttribute("inactive", bankAccountDTOS);
+        return ("employee/manager/inactive_accounts");
     }
 }

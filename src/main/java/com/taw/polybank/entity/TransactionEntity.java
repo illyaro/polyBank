@@ -1,9 +1,12 @@
 package com.taw.polybank.entity;
 
+import com.taw.polybank.dto.CurrencyExchangeDTO;
 import com.taw.polybank.dto.TransactionDTO;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.Collections;
+import java.util.List;
 
 @Entity
 @Table(name = "Transaction", schema = "polyBank", catalog = "")
@@ -101,8 +104,11 @@ public class TransactionEntity {
         transactionDTO.setId(getId());
         transactionDTO.setTimestamp(getTimestamp());
         transactionDTO.setBankAccountByBankAccountId(getBankAccountByBankAccountId().toDTO());
-        transactionDTO.setCurrencyExchangeByCurrencyExchangeId(currencyExchangeByCurrencyExchangeId.toDTO());
-        transactionDTO.setPaymentByPaymentId(getPaymentByPaymentId().toDTO());
+        if (getCurrencyExchangeByCurrencyExchangeId() != null)
+            transactionDTO.setCurrencyExchangeByCurrencyExchangeId(getCurrencyExchangeByCurrencyExchangeId().toDTO());
+        if (getPaymentByPaymentId() != null)
+            transactionDTO.setPaymentByPaymentId(getPaymentByPaymentId().toDTO());
+        transactionDTO.setClientByClientId(getClientByClientId().toDTO());
         return transactionDTO;
     }
 }

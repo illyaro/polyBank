@@ -1,9 +1,11 @@
 package com.taw.polybank.entity;
 
+import com.taw.polybank.dto.CurrencyExchangeDTO;
 import com.taw.polybank.dto.PaymentDTO;
 import jakarta.persistence.*;
 
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "Payment", schema = "polyBank", catalog = "")
@@ -22,7 +24,8 @@ public class PaymentEntity {
     @JoinColumn(name = "CurrencyExchange_id", referencedColumnName = "id")
     private CurrencyExchangeEntity currencyExchangeByCurrencyExchangeId;
     @OneToMany(mappedBy = "paymentByPaymentId")
-    private Collection<TransactionEntity> transactionsById;
+    private List<TransactionEntity> transactionsById;;
+
 
     public int getId() {
         return id;
@@ -79,12 +82,12 @@ public class PaymentEntity {
         this.currencyExchangeByCurrencyExchangeId = currencyExchangeByCurrencyExchangeId;
     }
 
-    public Collection<TransactionEntity> getTransactionsById() {
+    public List<TransactionEntity> getTransactionById() {
         return transactionsById;
     }
 
-    public void setTransactionsById(Collection<TransactionEntity> transactionsById) {
-        this.transactionsById = transactionsById;
+    public void setTransactionById(List<TransactionEntity> transactionById) {
+        this.transactionsById = transactionById;
     }
 
     public PaymentDTO toDTO() {
@@ -92,7 +95,8 @@ public class PaymentEntity {
         paymentDTO.setId(getId());
         paymentDTO.setAmount(getAmount());
         paymentDTO.setBenficiaryByBenficiaryId(benficiaryByBenficiaryId.toDTO());
-        paymentDTO.setCurrencyExchangeByCurrencyExchangeId(getCurrencyExchangeByCurrencyExchangeId().toDTO());
+        if (getCurrencyExchangeByCurrencyExchangeId() != null)
+            paymentDTO.setCurrencyExchangeByCurrencyExchangeId(getCurrencyExchangeByCurrencyExchangeId().toDTO());
         return paymentDTO;
     }
 }

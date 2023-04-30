@@ -13,7 +13,7 @@ public class CompanyEntity {
     @Basic
     @Column(name = "name", nullable = false, length = 45)
     private String name;
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "BankAccount_id", referencedColumnName = "id", nullable = false)
     private BankAccountEntity bankAccountByBankAccountId;
 
@@ -37,9 +37,7 @@ public class CompanyEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         CompanyEntity company = (CompanyEntity) o;
-
         if (id != company.id) return false;
         if (name != null ? !name.equals(company.name) : company.name != null) return false;
 

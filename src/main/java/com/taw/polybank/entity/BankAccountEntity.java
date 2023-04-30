@@ -4,6 +4,7 @@ import com.taw.polybank.dto.BankAccountDTO;
 import jakarta.persistence.*;
 
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "BankAccount", schema = "polyBank", catalog = "")
@@ -17,7 +18,7 @@ public class BankAccountEntity {
     private String iban;
     @Basic
     @Column(name = "active", nullable = false)
-    private byte active;
+    private boolean active;
     @Basic
     @Column(name = "balance", nullable = false, precision = 0)
     private double balance;
@@ -30,7 +31,7 @@ public class BankAccountEntity {
     @JoinColumn(name = "Badge_id", referencedColumnName = "id", nullable = false)
     private BadgeEntity badgeByBadgeId;
     @OneToMany(mappedBy = "bankAccountByBankAccountId")
-    private Collection<CompanyEntity> companiesById;
+    private List<CompanyEntity> companiesById;
     @OneToMany(mappedBy = "bankAccountByBankAccountId")
     private Collection<RequestEntity> requestsById;
     @OneToMany(mappedBy = "bankAccountByBankAccountId")
@@ -52,11 +53,11 @@ public class BankAccountEntity {
         this.iban = iban;
     }
 
-    public byte getActive() {
+    public boolean isActive() {
         return active;
     }
 
-    public void setActive(byte active) {
+    public void setActive(boolean active) {
         this.active = active;
     }
 
@@ -89,7 +90,7 @@ public class BankAccountEntity {
         long temp;
         result = id;
         result = 31 * result + (iban != null ? iban.hashCode() : 0);
-        result = 31 * result + (int) active;
+        result = 31 * result + (active? 1 : 0);
         temp = Double.doubleToLongBits(balance);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
@@ -119,13 +120,17 @@ public class BankAccountEntity {
         this.badgeByBadgeId = badgeByBadgeId;
     }
 
-    public Collection<CompanyEntity> getCompaniesById() {
+    public List<CompanyEntity> getCompanyById() {
         return companiesById;
     }
 
-    public void setCompaniesById(Collection<CompanyEntity> companiesById) {
+    public void setCompanyById(List<CompanyEntity> companiesById) {
         this.companiesById = companiesById;
     }
+    public List<CompanyEntity> getCompaniesById() {
+        return companiesById;
+    }
+
 
     public Collection<RequestEntity> getRequestsById() {
         return requestsById;
@@ -145,11 +150,12 @@ public class BankAccountEntity {
 
     public BankAccountDTO toDTO() {
         BankAccountDTO bankAccountDTO = new BankAccountDTO();
-        bankAccountDTO.setActive(getActive() != 0);
         bankAccountDTO.setId(getId());
-        bankAccountDTO.setBalance(getBalance());
         bankAccountDTO.setIban(getIban());
+        bankAccountDTO.setActive(isActive());
+        bankAccountDTO.setBalance(getBalance());
         bankAccountDTO.setClientByClientId(getClientByClientId().toDTO());
+        bankAccountDTO.setBadgeByBadgeId(getBadgeByBadgeId().toDTO());
         return bankAccountDTO;
     }
 

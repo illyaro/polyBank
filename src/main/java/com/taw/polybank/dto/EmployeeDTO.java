@@ -1,9 +1,5 @@
 package com.taw.polybank.dto;
 
-import jakarta.persistence.*;
-
-import java.util.Collection;
-
 public class EmployeeDTO {
     // It does not provide salt and password due to security concerns
     private int id;

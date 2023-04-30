@@ -14,7 +14,7 @@ public class RequestEntity {
     private int id;
     @Basic
     @Column(name = "solved", nullable = false)
-    private byte solved;
+    private boolean solved;
     @Basic
     @Column(name = "timestamp", nullable = false)
     private Timestamp timestamp;
@@ -26,7 +26,7 @@ public class RequestEntity {
     private String description;
     @Basic
     @Column(name = "approved", nullable = true)
-    private Byte approved;
+    private boolean approved;
     @ManyToOne
     @JoinColumn(name = "Client_id", referencedColumnName = "id", nullable = false)
     private ClientEntity clientByClientId;
@@ -45,11 +45,11 @@ public class RequestEntity {
         this.id = id;
     }
 
-    public byte getSolved() {
+    public boolean isSolved() {
         return solved;
     }
 
-    public void setSolved(byte solved) {
+    public void setSolved(boolean solved) {
         this.solved = solved;
     }
 
@@ -77,11 +77,11 @@ public class RequestEntity {
         this.description = description;
     }
 
-    public Byte getApproved() {
+    public boolean isApproved() {
         return approved;
     }
 
-    public void setApproved(Byte approved) {
+    public void setApproved(boolean approved) {
         this.approved = approved;
     }
 
@@ -97,7 +97,7 @@ public class RequestEntity {
         if (timestamp != null ? !timestamp.equals(request.timestamp) : request.timestamp != null) return false;
         if (type != null ? !type.equals(request.type) : request.type != null) return false;
         if (description != null ? !description.equals(request.description) : request.description != null) return false;
-        if (approved != null ? !approved.equals(request.approved) : request.approved != null) return false;
+        if (approved != request.approved) return false;
 
         return true;
     }
@@ -105,11 +105,11 @@ public class RequestEntity {
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + (int) solved;
+        result = 31 * result + (solved? 1 : 0);
         result = 31 * result + (timestamp != null ? timestamp.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (approved != null ? approved.hashCode() : 0);
+        result = 31 * result + ((approved)? 1 : 0);
         return result;
     }
 
@@ -140,13 +140,11 @@ public class RequestEntity {
     public RequestDTO toDTO(){
         RequestDTO requestDTO = new RequestDTO();
         requestDTO.setId(getId());
-        requestDTO.setType(getType());
-        requestDTO.setClientByClientId(getClientByClientId().toDTO());
-        requestDTO.setDescription(getDescription());
+        requestDTO.setSolved(isSolved());
         requestDTO.setTimestamp(getTimestamp());
         requestDTO.setApproved(getApproved() != null && getApproved() != 0);
         requestDTO.setBankAccountByBankAccountId(getBankAccountByBankAccountId().toDTO());
-        requestDTO.setSolved(getSolved() != 0);
+        requestDTO.setEmployeeByEmployeeId(getEmployeeByEmployeeId().toDTO());
         return requestDTO;
     }
 }

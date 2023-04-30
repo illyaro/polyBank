@@ -87,8 +87,8 @@ public class ChatEntity {
     public ChatDTO toDTO(){
         ChatDTO chatDTO = new ChatDTO();
         chatDTO.setId(getId());
-        chatDTO.setClientByClientId(getClientByClientId().toDTO());
-        chatDTO.setEmployeeByAssistantId(getEmployeeByAssistantId().toDTO());
+        chatDTO.setClient(getClientByClientId().toDTO());
+        chatDTO.setAssistant(getEmployeeByAssistantId().toDTO());
         chatDTO.setClosed(getClosed() != 0);
         return chatDTO;
     }
