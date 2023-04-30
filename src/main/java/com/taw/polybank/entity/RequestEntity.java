@@ -146,6 +146,7 @@ public class RequestEntity {
         requestDTO.setClientByClientId(getClientByClientId().toDTO());
         requestDTO.setBankAccountByBankAccountId(getBankAccountByBankAccountId().toDTO());
         requestDTO.setEmployeeByEmployeeId(getEmployeeByEmployeeId().toDTO());
+        requestDTO.setDescription(getDescription());
         return requestDTO;
     }
 }
