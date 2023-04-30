@@ -13,10 +13,11 @@
 <body>
 <h1>Welcome to PolyBank ATM!</h1>
 <h3>Please, log in to continue.</h3>
-<c:if test="${error != null}">
-    <p style="color:red">
+<c:if test="${error != null}" >
+    <p style="color:red;">
             ${error}
-    </p></c:if>
+    </p>
+</c:if>
 <form method="post" action="/atm/login">
     <label for="userName">Username: </label><input id="userName" name="userName" type="text" size="45" maxlength="45"><br><br>
     <label for="password">Password: </label><input id="password" name="password" type="password" size="40" maxlength="40"><br><br>

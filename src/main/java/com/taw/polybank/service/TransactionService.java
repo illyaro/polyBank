@@ -431,4 +431,9 @@ public class TransactionService {
     public List<TransactionDTO> findByBankId(int id) {
         return getDtoList(transactionRepository.findByBankAccountId(id));
     }
+
+    public BankAccountDTO updateBankAccount(BankAccountDTO bankAccountEmisor) {
+        BankAccountEntity bankAccountEntity = bankAccountRepository.findByIban(bankAccountEmisor.getIban()).orElse(null);
+        return bankAccountEntity == null ? null : bankAccountEntity.toDTO();
+    }
 }

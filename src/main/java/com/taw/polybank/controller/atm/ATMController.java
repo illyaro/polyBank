@@ -46,7 +46,8 @@ public class ATMController {
     public String doMostrarDatos(@RequestParam("userName") String user, @RequestParam("password") String password, Model model, HttpSession session) {
         ClientDTO client = clientService.autenticar(user, password);
         if (client == null) {
-            model.addAttribute("error", "Credenciales incorrectas");
+            model.addAttribute("error", "User with given ID and password is not found");
+            return "atm/index";
         } else {
             session.setAttribute("client", client);
         }
@@ -117,6 +118,9 @@ public class ATMController {
 
         transactionService.makeTransaction(amount, receiverIBAN, receiverName, badgeReceiver, emisorBadge, bankAccountEmisor, client);
 
+        BankAccountDTO bankAccountDTO = transactionService.updateBankAccount(bankAccountEmisor);
+        session.setAttribute("bankAccount", bankAccountDTO);
+
         return "atm/bankAccount_actions";
     }
 
@@ -141,9 +145,11 @@ public class ATMController {
         ClientDTO client = (ClientDTO) session.getAttribute("client");
         BadgeDTO emisorBadge = (BadgeDTO) session.getAttribute("badge");
         BadgeDTO badge = badgeService.findById(badgeId);
-        BankAccountDTO bankAccountEmisor = (BankAccountDTO) session.getAttribute("bankAccount");
 
-        transactionService.makeTransaction(amount, bankAccount.getIban(), client.getName(), badge, emisorBadge, bankAccountEmisor, client);
+        transactionService.makeTransaction(amount, bankAccount.getIban(), client.getName(), badge, emisorBadge, bankAccount, client);
+
+        BankAccountDTO bankAccountDTO = transactionService.updateBankAccount(bankAccount);
+        session.setAttribute("bankAccount", bankAccountDTO);
 
         return "atm/bankAccount_actions";
     }

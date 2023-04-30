@@ -46,7 +46,9 @@ public class ClientService {
         ClientEntity clientEntity = clientRepository.findByDNI(client.getDni());
         clientEntity.setName(client.getName());
         clientEntity.setSurname(client.getSurname());
-        clientEntity.setPassword(password);
+        if(!password.isBlank()){
+            clientEntity.setPassword(password);
+        }
         clientRepository.save(clientEntity);
     }
 
