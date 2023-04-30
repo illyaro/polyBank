@@ -144,7 +144,7 @@ public class RequestEntity {
         requestDTO.setClientByClientId(getClientByClientId().toDTO());
         requestDTO.setDescription(getDescription());
         requestDTO.setTimestamp(getTimestamp());
-        requestDTO.setApproved(getApproved() != 0);
+        requestDTO.setApproved(getApproved() != null && getApproved() != 0);
         requestDTO.setBankAccountByBankAccountId(getBankAccountByBankAccountId().toDTO());
         requestDTO.setSolved(getSolved() != 0);
         return requestDTO;

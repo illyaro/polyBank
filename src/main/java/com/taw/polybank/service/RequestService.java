@@ -37,8 +37,8 @@ public class RequestService {
 
     public List<RequestDTO> entityListToDTO (List<RequestEntity> requestEntityList){
         List<RequestDTO> requestDTOList = new ArrayList<>();
-        for(RequestEntity transactionEntity : requestEntityList){
-            requestDTOList.add(transactionEntity.toDTO());
+        for(RequestEntity requestEntity : requestEntityList){
+            requestDTOList.add(requestEntity.toDTO());
         }
         return requestDTOList;
     }
