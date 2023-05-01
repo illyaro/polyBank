@@ -198,7 +198,7 @@ public class ATMController {
 
         BankAccountDTO bankAccount = (BankAccountDTO) session.getAttribute("bankAccount");
         List<TransactionDTO> transactions = transactionService.findByBankAccountByBankAccountId(bankAccount);
-        TransactionFilterLucia filter = new TransactionFilterLucia(Date.valueOf(LocalDate.now()), Date.valueOf(LocalDate.now()), "", "", 0.0);
+        TransactionFilterLucia filter = new TransactionFilterLucia(Date.valueOf(LocalDate.now()), Date.valueOf(LocalDate.now()), "", "", "0.0");
 
         model.addAttribute("transactions", transactions);
         model.addAttribute("filter", filter);

@@ -7,14 +7,17 @@ public class TransactionFilterLucia {
     private Date timestampEnd;
     private String transactionOwner;
     private String beneficiaryIban;
-    private double amount;
+    private String amountString;
 
-    public TransactionFilterLucia(Date timestampBegin, Date timestampEnd, String transactionOwner, String beneficiaryIban, double amount){
+    private Double amount;
+
+    public TransactionFilterLucia(Date timestampBegin, Date timestampEnd, String transactionOwner, String beneficiaryIban, String amount){
         this.timestampBegin = timestampBegin;
         this.timestampEnd = timestampEnd;
         this.transactionOwner = transactionOwner;
         this.beneficiaryIban = beneficiaryIban;
-        this.amount = amount;
+        this.amountString = amount;
+        this.amount = Double.parseDouble((amount == null || amount.equals("")) ? "0": amount);
     }
 
 
@@ -34,7 +37,7 @@ public class TransactionFilterLucia {
         return beneficiaryIban;
     }
 
-    public double getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
@@ -54,7 +57,13 @@ public class TransactionFilterLucia {
         this.beneficiaryIban = beneficiaryIban;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
+    public void setAmountString(String amount) {
+        if(amount == null || amount.equals("")){
+            this.amountString = "0.0";
+            this.amount = 0.0;
+        }else {
+            this.amountString = amount;
+            this.amount = Double.parseDouble(amount);
+        }
     }
 }

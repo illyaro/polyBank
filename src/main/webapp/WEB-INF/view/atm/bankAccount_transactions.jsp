@@ -41,7 +41,9 @@
                     <form:input type="number" path="amount" id="amount" name="amount"></form:input> <br>
                 </div>
                 <form:button type="submit" class="btn btn-primary">Filter</form:button>
+                <button class="btn btn-danger" formmethod="get" formaction="/atm/checkTransactions">Remove filters</button>
             </form:form>
+
             <form action="/atm/enumerarAcciones" method="post">
                 <button class="btn btn-secondary">Go back</button>
             </form>
