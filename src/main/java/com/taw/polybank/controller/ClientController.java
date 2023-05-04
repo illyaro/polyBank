@@ -1,12 +1,12 @@
 package com.taw.polybank.controller;
 
-import com.taw.polybank.controller.company.Client;
+
 import com.taw.polybank.dao.*;
-import com.taw.polybank.dto.ClientDTO;
+import com.taw.polybank.dto.*;
 import com.taw.polybank.entity.*;
+import com.taw.polybank.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,15 +24,19 @@ public class ClientController {
     @Autowired
     protected BankAccountRepository bankAccountRepository;
     @Autowired
-    protected BadgeRepository badgeRepository;
+    protected BankAccountService bankAccountService;
     @Autowired
-    protected CurrencyExchangeRepository currencyExchangeRepository;
+    protected ClientService clientService;
     @Autowired
-    protected TransactionRepository transactionRepository;
+    protected BadgeService badgeService;
     @Autowired
-    protected BeneficiaryRepository beneficiaryRepository;
+    protected CurrencyExchangeService currencyExchangeService;
     @Autowired
-    protected PaymentRepository paymentRepository;
+    protected TransactionService transactionService;
+    @Autowired
+    protected BeneficiaryService beneficiaryService;
+    @Autowired
+    protected PaymentService paymentService;
 
     @GetMapping("/view")
     public String viewClient(Model model, HttpSession session) {
@@ -82,50 +86,41 @@ public class ClientController {
 
     @GetMapping("/account/moneyExchange")
     public String moneyExchangeOnBankAccount (@RequestParam("id") Integer accountID, Model model, HttpSession session) {
-        BadgeEntity badge = new BadgeEntity();
-        List<BadgeEntity> badgeList = this.badgeRepository.findAll();
+        BadgeDTO badge = new BadgeDTO();
+        List<BadgeDTO>  badgeList = badgeService.findAll();
         BankAccountEntity account = this.bankAccountRepository.findById(accountID).orElse(null);
         model.addAttribute("badge", badge);
-        model.addAttribute("account", account);
         model.addAttribute("badgeList", badgeList);
+        model.addAttribute("account", account);
         return "client/bankAccount/moneyExchange";
     }
 
     @PostMapping("/account/makeExchange")
-    public String makeExchange(@ModelAttribute BadgeEntity targetBadge, @RequestParam("id") Integer accountID, HttpSession session, Model model) {
+    public String makeExchange(@ModelAttribute BadgeDTO targetBadge, @RequestParam("id") Integer accountID, HttpSession session, Model model) {
 
         Integer clientID = (Integer) session.getAttribute("clientID");
         ClientEntity client = this.clientRepository.findById(clientID).orElse(null);
+        ClientDTO clientDTO = new ClientDTO(client);
         BankAccountEntity bankAccount = this.bankAccountRepository.findById(accountID).orElse(null);
-        BadgeEntity currentBadge = bankAccount.getBadgeByBadgeId();
-        targetBadge = badgeRepository.findById(targetBadge.getId()).get();
-        System.out.println("Current: "+currentBadge.getName()+"/ Target: "+targetBadge.getName());
-        TransactionEntity transaction = defineTransaction(client, bankAccount);
-        BenficiaryEntity beneficiary = this.beneficiaryRepository.findBenficiaryEntityByNameAndIban(client.getName(), bankAccount.getIban());
-        PaymentEntity payment = definePayment(bankAccount.getBalance(), beneficiary, transaction);
+        BankAccountDTO accountDTO = new BankAccountDTO(bankAccount);
+        BadgeDTO currentBadge = new BadgeDTO(bankAccount.getBadgeByBadgeId());
+        targetBadge = badgeService.findById(targetBadge.getId());
 
-        if (beneficiary == null) {
-            beneficiary = defineBeneficiary(client.getName(), bankAccount.getIban(), targetBadge, payment);
-        } else {
-            Collection<PaymentEntity> allPayments = beneficiary.getPaymentsById();
-            allPayments.add(payment);
-            beneficiary.setPaymentsById(allPayments);
-        }
+        TransactionDTO transaction = defineTransaction(clientDTO, accountDTO);
+        BenficiaryDTO beneficiary = defineBeneficiary(client.getName(), bankAccount.getIban(), targetBadge);
+        PaymentDTO payment = definePayment(bankAccount.getBalance(), beneficiary);
 
         payment.setBenficiaryByBenficiaryId(beneficiary);
 
         if (currentBadge.getId() != targetBadge.getId()) {
-            CurrencyExchangeEntity currencyExchange = defineCurrencyExchange(currentBadge, targetBadge, bankAccount.getBalance(), transaction, payment);
-            payment.setCurrencyExchangeByCurrencyExchangeId(currencyExchange);
-            transaction.setCurrencyExchangeByCurrencyExchangeId(currencyExchange);
+            CurrencyExchangeDTO currencyExchange = defineCurrencyExchange(currentBadge, targetBadge, bankAccount.getBalance(), transaction, payment);
             transaction.setPaymentByPaymentId(payment);
-            this.currencyExchangeRepository.save(currencyExchange);
-            bankAccount.setBalance(currencyExchange.getFinalAmount());
-            bankAccount.setBadgeByBadgeId(targetBadge);
-            this.beneficiaryRepository.save(beneficiary);
-            this.paymentRepository.save(payment);
-            this.transactionRepository.save(transaction);
-            this.bankAccountRepository.save(bankAccount);
+            accountDTO.setBalance(currencyExchange.getFinalAmount());
+            accountDTO.setBadgeByBadgeId(targetBadge);
+            this.beneficiaryService.save(beneficiary);
+            paymentService.save(payment, beneficiaryService, currencyExchangeService, badgeService);
+            transactionService.save(transaction, clientService, bankAccountService, currencyExchangeService, paymentService, badgeService, beneficiaryService);
+            bankAccountService.save(accountDTO, clientService, badgeService);
         } else {
             System.out.println("ERROR: Can't change currency to the same badge.");
         }
@@ -144,43 +139,43 @@ public class ClientController {
         }
         return ("redirect:/login");
     }
-    
-    private PaymentEntity definePayment(Double amount, BenficiaryEntity beneficiary, TransactionEntity transaction) {
-        PaymentEntity payment = new PaymentEntity();
+
+    private PaymentDTO definePayment(Double amount, BenficiaryDTO beneficiary) {
+        PaymentDTO payment = new PaymentDTO();
         payment.setAmount(amount);
         payment.setBenficiaryByBenficiaryId(beneficiary);
-        payment.setTransactionsById(List.of(transaction));
         return payment;
     }
 
-    private TransactionEntity defineTransaction(ClientEntity client, BankAccountEntity bankAccount) {
-        TransactionEntity transaction = new TransactionEntity();
+    private TransactionDTO defineTransaction(ClientDTO client, BankAccountDTO bankAccount) {
+        TransactionDTO transaction = new TransactionDTO();
         transaction.setTimestamp(Timestamp.from(Instant.now()));
         transaction.setClientByClientId(client);
         transaction.setBankAccountByBankAccountId(bankAccount);
         return transaction;
     }
 
-    private BenficiaryEntity defineBeneficiary(String beneficiaryName, String iban, BadgeEntity recipientBadge, PaymentEntity payment) {
-        BenficiaryEntity beneficiary = new BenficiaryEntity();
-        beneficiary = new BenficiaryEntity();
-        beneficiary.setIban(iban);
-        beneficiary.setName(beneficiaryName);
-        beneficiary.setBadge(recipientBadge.getName());
-        beneficiary.setSwift("XXX" + recipientBadge.getName() + "BNK");
-        beneficiary.setPaymentsById(List.of(payment));
-        return beneficiary;
-    }
-
-    private CurrencyExchangeEntity defineCurrencyExchange(BadgeEntity originBadge, BadgeEntity recipientBadge, Double amount, TransactionEntity transaction, PaymentEntity payment) {
-        CurrencyExchangeEntity currencyExchange = new CurrencyExchangeEntity();
+    private CurrencyExchangeDTO defineCurrencyExchange(BadgeDTO originBadge, BadgeDTO recipientBadge,
+                                                       Double amount, TransactionDTO transaction,
+                                                       PaymentDTO payment) {
+        CurrencyExchangeDTO currencyExchange = new CurrencyExchangeDTO();
         currencyExchange.setBadgeByInitialBadgeId(originBadge);
         currencyExchange.setBadgeByFinalBadgeId(recipientBadge);
         currencyExchange.setInitialAmount(amount);
         double amountAfterExchange = (recipientBadge.getValue() / originBadge.getValue()) * amount;
         currencyExchange.setFinalAmount(amountAfterExchange);
-        currencyExchange.setTransactionsById(List.of(transaction));
-        currencyExchange.setPaymentsById(List.of(payment));
+        payment.setCurrencyExchangeByCurrencyExchangeId(currencyExchange);
+        transaction.setCurrencyExchangeByCurrencyExchangeId(currencyExchange);
+        currencyExchangeService.save(currencyExchange, badgeService);
         return currencyExchange;
+    }
+
+    private BenficiaryDTO defineBeneficiary(String beneficiaryName, String iban, BadgeDTO recipientBadge) {
+        BenficiaryDTO beneficiary = new BenficiaryDTO();
+        beneficiary.setIban(iban);
+        beneficiary.setName(beneficiaryName);
+        beneficiary.setBadge(recipientBadge.getName());
+        beneficiary.setSwift("XXX" + recipientBadge.getName() + "BNK");
+        return beneficiary;
     }
 }
