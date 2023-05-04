@@ -1,5 +1,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ page import="com.taw.polybank.entity.BankAccountEntity" %><%--
+<%@ page import="com.taw.polybank.entity.BankAccountEntity" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.taw.polybank.dto.BadgeDTO" %><%--
 <%--
   Created by IntelliJ IDEA.
   User: Illya Rozumovskyy
@@ -16,16 +18,22 @@
 <body>
 <%
     BankAccountEntity account = (BankAccountEntity) request.getAttribute("account");
+    List<BadgeDTO> badgeList = (List<BadgeDTO>) request.getAttribute("badgeList");
 %>
 <div id="transactionWindow">
     <h1>Money Exchange</h1>
     <p>Balance: <%=account.getBalance()%> <%=account.getBadgeByBadgeId().getName()%></p>
 
-    <form:form modelAttribute="badge" method="post" action="/client/account/makeExchange?id=${account.getId()}">
-        <form:label path="id">Desired currency: </form:label>
-        <form:select path="id" items="${badgeList}" itemLabel="name" itemValue="id"/>
-        <form:button class="btn btn-primary">Exchange</form:button>
-    </form:form>
+    <form action="/client/account/makeExchange" method="post">
+        <input type="hidden" id="account" name="account" value="<%=account.getId()%>">
+        <label for="badge">Desired currency: </label>
+        <select id="badge" name="badge">
+            <% for (BadgeDTO badge : badgeList) { %>
+                <option value="<%=badge.getId() %>"><%= badge.getName() %></option>
+            <% } %>
+        </select>
+        <input type="submit" class="btn btn-primary" value="Exchange">
+    </form>
 </div>
 </body>
 </html>

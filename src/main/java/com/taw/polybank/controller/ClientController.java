@@ -86,17 +86,15 @@ public class ClientController {
 
     @GetMapping("/account/moneyExchange")
     public String moneyExchangeOnBankAccount (@RequestParam("id") Integer accountID, Model model, HttpSession session) {
-        BadgeDTO badge = new BadgeDTO();
         List<BadgeDTO>  badgeList = badgeService.findAll();
         BankAccountEntity account = this.bankAccountRepository.findById(accountID).orElse(null);
-        model.addAttribute("badge", badge);
         model.addAttribute("badgeList", badgeList);
         model.addAttribute("account", account);
         return "client/bankAccount/moneyExchange";
     }
 
     @PostMapping("/account/makeExchange")
-    public String makeExchange(@ModelAttribute BadgeDTO targetBadge, @RequestParam("id") Integer accountID, HttpSession session, Model model) {
+    public String makeExchange(@RequestParam("account") Integer accountID, @RequestParam("badge") Integer badgeID, HttpSession session, Model model) {
 
         Integer clientID = (Integer) session.getAttribute("clientID");
         ClientEntity client = this.clientRepository.findById(clientID).orElse(null);
@@ -104,7 +102,7 @@ public class ClientController {
         BankAccountEntity bankAccount = this.bankAccountRepository.findById(accountID).orElse(null);
         BankAccountDTO accountDTO = new BankAccountDTO(bankAccount);
         BadgeDTO currentBadge = new BadgeDTO(bankAccount.getBadgeByBadgeId());
-        targetBadge = badgeService.findById(targetBadge.getId());
+        BadgeDTO targetBadge = badgeService.findById(badgeID);
 
         TransactionDTO transaction = defineTransaction(clientDTO, accountDTO);
         BenficiaryDTO beneficiary = defineBeneficiary(client.getName(), bankAccount.getIban(), targetBadge);
