@@ -19,11 +19,11 @@
 %>
 <div id="transactionWindow">
     <h1>Money Exchange</h1>
-    <p>Balance: <%=account.getBalance()%> <%=account.getBadgeByBadgeId().getName()%></p><br>
+    <p>Balance: <%=account.getBalance()%> <%=account.getBadgeByBadgeId().getName()%></p>
 
-    <form:form modelAttribute="badge" method="post" action="/client/account/makeExchange">
+    <form:form modelAttribute="badge" method="post" action="/client/account/makeExchange?id=${account.getId()}">
         <form:label path="id">Desired currency: </form:label>
-        <form:select path="id" items="${badgeList}" itemLabel="name" itemValue="id"/><br><br>
+        <form:select path="id" items="${badgeList}" itemLabel="name" itemValue="id"/>
         <form:button class="btn btn-primary">Exchange</form:button>
     </form:form>
 </div>
