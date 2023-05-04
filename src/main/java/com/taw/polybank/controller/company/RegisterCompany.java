@@ -1,16 +1,14 @@
 package com.taw.polybank.controller.company;
 
-import com.taw.polybank.dao.*;
-import com.taw.polybank.entity.*;
+import com.taw.polybank.controller.PasswordManager;
+import com.taw.polybank.dto.*;
+import com.taw.polybank.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -22,29 +20,26 @@ import java.util.Random;
 public class RegisterCompany {
 
     @Autowired
-    protected BadgeRepository badgeRepository;
+    protected BadgeService badgeService;
 
     @Autowired
-    protected BankAccountRepository bankAccountRepository;
+    protected BankAccountService bankAccountService;
 
     @Autowired
-    protected ClientRepository clientRepository;
+    protected ClientService clientService;
 
     @Autowired
-    protected CompanyRepository companyRepository;
+    protected CompanyService companyService;
 
     @Autowired
-    protected RequestRepository requestRepository;
+    protected RequestService requestService;
 
     @Autowired
-    protected EmployeeRepository employeeRepository;
+    protected EmployeeService employeeService;
 
     @GetMapping("/registerCompany")
     public String doRegister(Model model) {
-        CompanyEntity company = new CompanyEntity();
-        model.addAttribute("company", company);
-
-        List<BadgeEntity> badgeList = badgeRepository.findAll();
+        List<BadgeDTO> badgeList = badgeService.findAll();
         model.addAttribute("badgeList", badgeList);
 
         return "/company/registerCompany";
@@ -52,55 +47,58 @@ public class RegisterCompany {
 
 
     @PostMapping("/registerCompanyOwner")
-    public String doRegisterCompanyOwner(@ModelAttribute("company") CompanyEntity company,
+    public String doRegisterCompanyOwner(@RequestParam("name") String companyName,
+                                         @RequestParam("badge") Integer badgeId,
                                          Model model,
                                          HttpSession session) {
-        updateBankAccount(company);
-        ClientEntity client = new ClientEntity();
+        ClientDTO client = new ClientDTO();
         model.addAttribute("client", client);
+
+        CompanyDTO company = new CompanyDTO();
+        company.setName(companyName);
+
+        BadgeDTO badge = badgeService.findById(badgeId);
+        BankAccountDTO bankAccount = new BankAccountDTO();
+        bankAccount.setBadgeByBadgeId(badge);
+        company.setBankAccountByBankAccountId(bankAccount);
         session.setAttribute("bankAccount", company.getBankAccountByBankAccountId());
         session.setAttribute("company", company);
         return "/company/registerOwner";
     }
 
     @PostMapping("/saveNewCompany")
-    public String doSaveNewCompany(@ModelAttribute("client") ClientEntity client,
+    public String doSaveNewCompany(@ModelAttribute("client") ClientDTO client,
+                                   @RequestParam("password") String password,
                                    Model model,
                                    HttpSession session) {
-        BankAccountEntity bankAccount = (BankAccountEntity) session.getAttribute("bankAccount");
-        CompanyEntity company = (CompanyEntity) session.getAttribute("company");
-        RequestEntity request = new RequestEntity();
-
+        BankAccountDTO bankAccount = (BankAccountDTO) session.getAttribute("bankAccount");
+        CompanyDTO company = (CompanyDTO) session.getAttribute("company");
+        RequestDTO request = new RequestDTO();
+        updateBankAccount(bankAccount);
         // filling up bank account fields
         bankAccount.setClientByClientId(client);
-        bankAccount.setRequestsById(List.of(request));
 
         // filling up Client fields
         client.setCreationDate(Timestamp.from(Instant.now()));
-        client.setBankAccountsById(List.of(bankAccount));
-        client.setRequestsById(List.of(request));
 
-        PasswordManager passwordManager = new PasswordManager();
-        passwordManager.savePassword(client);
+        PasswordManager passwordManager = new PasswordManager(clientService);
+        String[] saltAndPass = passwordManager.savePassword(client, password);
 
         // creating activation request
         defineActivationRequest(client, bankAccount, request);
 
-        // saving Entities
-        clientRepository.save(client);
-        bankAccountRepository.save(bankAccount);
-        companyRepository.save(company);
-        requestRepository.save(request);
+        // saving DTOs
+        clientService.save(client, saltAndPass);
+        companyService.save(company, bankAccountService, clientService, badgeService);
+        bankAccount.setId(bankAccountService.getBankAccountId(bankAccount));
+        requestService.save(request, clientService, bankAccountService, employeeService, badgeService);
 
         session.invalidate();
-
         return "redirect:/";
     }
 
-    private void updateBankAccount(CompanyEntity company) {
-        company.getBankAccountByBankAccountId().setCompanyById(company);
-        BankAccountEntity bankAccount = company.getBankAccountByBankAccountId();
-        bankAccount.setActive((byte) 0);
+    private void updateBankAccount(BankAccountDTO bankAccount) {
+        bankAccount.setActive(false);
         Random random = new Random();
         StringBuilder iban = new StringBuilder();
         iban.append("ES44 5268 3000 ");
@@ -111,15 +109,16 @@ public class RegisterCompany {
         bankAccount.setIban(iban.toString());
     }
 
-    private void defineActivationRequest(ClientEntity client, BankAccountEntity bankAccount, RequestEntity request) {
-        request.setSolved((byte) 0);
+    private void defineActivationRequest(ClientDTO client, BankAccountDTO bankAccount, RequestDTO request) {
+        request.setSolved(false);
         request.setTimestamp(Timestamp.from(Instant.now()));
         request.setType("activation");
         request.setDescription("Activate company bank Account");
-        request.setApproved((byte) 0);
+        request.setApproved(false);
         request.setBankAccountByBankAccountId(bankAccount);
-        List<EmployeeEntity> allManagers = employeeRepository.findAllManagers();
-        request.setEmployeeByEmployeeId(allManagers.get(new Random().nextInt(allManagers.size())));
+
+        EmployeeDTO manager = employeeService.findManager();
+        request.setEmployeeByEmployeeId(manager);
         request.setClientByClientId(client);
     }
 }

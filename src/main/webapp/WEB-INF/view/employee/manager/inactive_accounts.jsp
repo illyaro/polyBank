@@ -4,7 +4,9 @@
 <%@ page import="com.taw.polybank.entity.CompanyEntity" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.taw.polybank.dto.ClientDTO" %>
-<%@ page import="com.taw.polybank.dto.CompanyDTO" %><%--
+<%@ page import="com.taw.polybank.dto.CompanyDTO" %>
+<%@ page import="com.taw.polybank.dto.BankAccountDTO" %>
+<%@ page import="java.util.ArrayList" %><%--
   Created by IntelliJ IDEA.
   User: jmsan
   Date: 13/03/2023
@@ -19,56 +21,33 @@
 </head>
 <body>
 <%
-    List<ClientDTO> clientDTOList = (List<ClientDTO>) request.getAttribute("clients");
-    List<CompanyDTO> companyDTOList = (List<CompanyDTO>) request.getAttribute("companies");
+    List<BankAccountDTO> bankAccountDTOS = (List<BankAccountDTO>) request.getAttribute("inactive");
 %>
+<jsp:include page="../components/navbar.jsp"></jsp:include>
 <div class="container">
-    <% if (clientDTOList != null) { %>
-    <h1>Clientes</h1>
-    <table>
+    <h1>Inactive Bank Accounts</h1>
+    <table class="table">
         <thead>
-        <tr>
-            <th>DNI</th>
-            <th>Timestamp</th>
-        </tr>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">IBAN</th>
+                <th scope="col">Balance</th>
+                <th scope="col">Link</th>
+            </tr>
         </thead>
         <tbody>
-        <% for (ClientDTO client : clientDTOList) { %>
+        <% if (bankAccountDTOS != null) { %>
+        <% for (BankAccountDTO bankAccountDTO : bankAccountDTOS ) { %>
         <tr>
-            <td>
-                <%= client.getDni()%>
-            </td>
-            <td>
-                <%= client.getCreationDate() %>
-            </td>
+            <td><%= bankAccountDTO.getId()%></td>
+            <td><%= bankAccountDTO.getIban()%></td>
+            <td><%= bankAccountDTO.getBalance()%></td>
+            <td><a href="/employee/manager/accounts/bank/block/<%= bankAccountDTO.getId()%>">Block Account</a></td>
         </tr>
+        <% } %>
         <% } %>
         </tbody>
     </table>
-    <% } %>
-<% if (companyDTOList != null) { %>
-<h1>Empresas:</h1>
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-    </tr>
-    </thead>
-    <tbody>
-    <% for (CompanyDTO companyDTO : companyDTOList) { %>
-           <tr>
-                <td>
-                    <%= companyDTO.getId()%>
-                </td>
-                <td>
-                    <%= companyDTO.getName() %>
-                </td>
-            </tr>
-      <% } %>
-    </tbody>
-</table>
-<% } %>
 </div>
 </body>
 </html>

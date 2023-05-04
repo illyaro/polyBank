@@ -1,5 +1,6 @@
 package com.taw.polybank.entity;
 
+import com.taw.polybank.dto.CompanyDTO;
 import jakarta.persistence.*;
 
 @Entity
@@ -12,7 +13,7 @@ public class CompanyEntity {
     @Basic
     @Column(name = "name", nullable = false, length = 45)
     private String name;
-    @OneToOne
+    @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "BankAccount_id", referencedColumnName = "id", nullable = false)
     private BankAccountEntity bankAccountByBankAccountId;
 
@@ -36,9 +37,7 @@ public class CompanyEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         CompanyEntity company = (CompanyEntity) o;
-
         if (id != company.id) return false;
         if (name != null ? !name.equals(company.name) : company.name != null) return false;
 
@@ -60,8 +59,8 @@ public class CompanyEntity {
         this.bankAccountByBankAccountId = bankAccountByBankAccountId;
     }
 
-    public com.taw.polybank.dto.CompanyDTO toDTO() {
-        com.taw.polybank.dto.CompanyDTO companyDTO = new com.taw.polybank.dto.CompanyDTO();
+    public CompanyDTO toDTO() {
+        CompanyDTO companyDTO = new CompanyDTO();
         companyDTO.setId(getId());
         companyDTO.setName(getName());
         companyDTO.setBankAccountByBankAccountId(getBankAccountByBankAccountId().toDTO());

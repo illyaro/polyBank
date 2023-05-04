@@ -1,6 +1,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ page import="com.taw.polybank.entity.CompanyEntity" %>
-<%@ page import="com.taw.polybank.entity.BankAccountEntity" %><%--
+<%@ page import="com.taw.polybank.dto.CompanyDTO" %>
+<%@ page import="com.taw.polybank.dto.BankAccountDTO" %>
+
 <%--
   Created by IntelliJ IDEA.
   User: Illya Rozumovskyy
@@ -14,8 +15,8 @@
     <title>Exchange money of ${company.name}</title>
     <link rel="stylesheet" type="text/css" href="../../../commonStyle.css">
     <%
-        CompanyEntity company = (CompanyEntity) session.getAttribute("company");
-        BankAccountEntity companyBankAccount = company.getBankAccountByBankAccountId();
+        CompanyDTO company = (CompanyDTO) session.getAttribute("company");
+        BankAccountDTO companyBankAccount = company.getBankAccountByBankAccountId();
 
     %>
 </head>
@@ -44,7 +45,7 @@
 
     const transactionWindow = document.getElementById("transactionWindow");
     const blockedAccountWindow = document.getElementById("blockedAccountWindow");
-    const isActiveAccount = <%=companyBankAccount.getActive() == (byte) 1%>
+    const isActiveAccount = <%=companyBankAccount.isActive()%>
 
 
         window.onload = function () {

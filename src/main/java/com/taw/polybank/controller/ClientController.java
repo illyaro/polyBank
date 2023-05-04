@@ -144,6 +144,7 @@ public class ClientController {
         }
         return ("redirect:/login");
     }
+    
     private PaymentEntity definePayment(Double amount, BenficiaryEntity beneficiary, TransactionEntity transaction) {
         PaymentEntity payment = new PaymentEntity();
         payment.setAmount(amount);
