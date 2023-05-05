@@ -44,5 +44,12 @@
     </tr>
 </table>
 <a class="btn btn-primary" href='/client/edit?id=<%=client.getId()%>'>Edit my data</a>
+
+<%-- Don't Remove, button for client assistence --%>
+<br>
+<h3>Assistance</h3>
+<form action="/client/assistance" method="get">
+    <button>Assistance</button>
+</form>
 </body>
 </html>
