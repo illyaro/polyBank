@@ -34,8 +34,8 @@
     </tr>
 </table>
 <a class="btn btn-primary" href='/client/account/moneyExchange'>Money exchange</a>
-<a class="btn btn-primary" href='/client/account/transaction?id=<%=account.getId()%>'>Make a transaction</a>
-<a class="btn btn-primary" href='/client/account/operationHistory?id=<%=account.getId()%>'>Operation history</a>
+<a class="btn btn-primary" href='/client/account/transaction'>Make a transaction</a>
+<a class="btn btn-primary" href='/client/account/operationHistory'>Operation history</a>
 <a class="btn btn-danger" href='/client/view'>Return</a>
 </body>
 </html>

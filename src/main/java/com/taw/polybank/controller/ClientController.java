@@ -5,6 +5,7 @@ import com.taw.polybank.dao.*;
 import com.taw.polybank.dto.*;
 import com.taw.polybank.entity.*;
 import com.taw.polybank.service.*;
+import com.taw.polybank.ui.companyFilters.TransactionFilterIllya;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -210,7 +211,9 @@ public class ClientController {
             transaction.setPaymentByPaymentId(payment);
             accountDTO.setBalance(currencyExchange.getFinalAmount());
             accountDTO.setBadgeByBadgeId(targetBadge);
-            this.beneficiaryService.save(beneficiary);
+            beneficiary.setBadge(targetBadge.getName());
+            beneficiary.setSwift("XXX" + targetBadge.getName() + "BNK");
+            beneficiaryService.save(beneficiary);
             paymentService.save(payment, beneficiaryService, currencyExchangeService, badgeService);
             transactionService.save(transaction, clientService, bankAccountService, currencyExchangeService, paymentService, badgeService, beneficiaryService);
             bankAccountService.save(accountDTO, clientService, badgeService);
@@ -219,6 +222,61 @@ public class ClientController {
         }
 
         return "redirect:/client/account?id="+accountDTO.getId();
+    }
+
+    @GetMapping("/account/operationHistory")
+    public String operationHistory(HttpSession session, Model model) {
+        return operationHistoryFilters(null, session, model);
+    }
+
+    @PostMapping("/account/operationHistory")
+    public String operationHistory(@ModelAttribute("transactionFilter") TransactionFilterIllya transactionFilter, HttpSession session, Model model) {
+        return operationHistoryFilters(transactionFilter, session, model);
+    }
+
+    private String operationHistoryFilters(TransactionFilterIllya transactionFilter, HttpSession session, Model model) {
+        List<TransactionDTO> transactionList;
+        BankAccountEntity accountEntity = (BankAccountEntity) session.getAttribute("account");
+        BankAccountDTO bankAccount = new BankAccountDTO(accountEntity);
+
+        if (transactionFilter == null) {
+            transactionList = transactionService.findTransactionsByBankAccountByBankAccountIdId(bankAccount.getId());
+            transactionFilter = new TransactionFilterIllya();
+
+        } else {
+            Timestamp dateAfter = new Timestamp(transactionFilter.getTransactionAfter().getTime());
+            Timestamp dateBefore = new Timestamp(transactionFilter.getTransactionBefore().getTime());
+            if (transactionFilter.getSenderId().isBlank() && transactionFilter.getRecipientName().isBlank()) {
+                transactionList = transactionService.
+                        findAllTransactionsByBankAccountAndDatesAndSendAmountInRange(
+                                bankAccount.getId(), dateAfter, dateBefore,
+                                transactionFilter.getMinAmount(), transactionFilter.getMaxAmount());
+
+            } else if (!transactionFilter.getSenderId().isBlank() && transactionFilter.getRecipientName().isBlank()) {
+                transactionList = transactionService.
+                        findAllTransactionsByBankAccountAndDatesAndSendAmountInRangeWithGivenSenderDni(
+                                bankAccount.getId(), dateAfter, dateBefore,
+                                transactionFilter.getMinAmount(), transactionFilter.getMaxAmount(),
+                                transactionFilter.getSenderId());
+
+            } else if (transactionFilter.getSenderId().isBlank() && !transactionFilter.getRecipientName().isBlank()) {
+                transactionList = transactionService.
+                        findAllTransactionsByBankAccountAndDatesAndSendAmountInRangeWithGivenRecipientName(
+                                bankAccount.getId(), dateAfter, dateBefore,
+                                transactionFilter.getMinAmount(), transactionFilter.getMaxAmount(),
+                                transactionFilter.getRecipientName());
+
+            } else {
+                transactionList = transactionService.
+                        findAllTransactionsByBankAccountAndDatesAndSendAmountInRangeWithGivenSenderDniAndRecipientName(
+                                bankAccount.getId(), dateAfter, dateBefore,
+                                transactionFilter.getMinAmount(), transactionFilter.getMaxAmount(),
+                                transactionFilter.getSenderId(), transactionFilter.getRecipientName());
+            }
+        }
+        model.addAttribute("transactionFilter", transactionFilter);
+        model.addAttribute("transactionList", transactionList);
+        return "client/bankAccount/operationHistory";
     }
 
     @PostMapping("/login")
