@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Collection;
 import java.util.List;
 
 @Controller
@@ -27,6 +26,8 @@ public class ClientController {
     protected BankAccountService bankAccountService;
     @Autowired
     protected ClientService clientService;
+    @Autowired
+    protected CompanyService companyService;
     @Autowired
     protected BadgeService badgeService;
     @Autowired
@@ -82,6 +83,99 @@ public class ClientController {
             System.out.println("ERROR: No accesible.");
             return "redirect:/client/view";
         }
+    }
+
+    @GetMapping("/account/transaction")
+    public String transferMoneyOnBankAccount (@RequestParam("id") Integer accountID, Model model) {
+        BankAccountEntity account = this.bankAccountRepository.findById(accountID).orElse(null);
+        model.addAttribute("account", account);
+        return "client/bankAccount/makeTransfer";
+    }
+
+    @PostMapping("/account/processTransfer")
+    public String processTransfer(@RequestParam("account") Integer accountID,
+                                  @RequestParam("beneficiary") String beneficiaryName,
+                                  @RequestParam("iban") String iban,
+                                  @RequestParam("amount") Double amount,
+                                  HttpSession session, Model model) {
+        if (amount <= 0) {
+            //fail message negative or zero amount
+            model.addAttribute("message", "Money transfer was denied, invalid amount (amount = " + amount + ")");
+            return "redirect:/account";
+        }
+
+        Integer clientID = (Integer) session.getAttribute("clientID");
+        ClientEntity client = this.clientRepository.findById(clientID).orElse(null);
+        ClientDTO clientDTO = new ClientDTO(client);
+        BankAccountEntity account = this.bankAccountRepository.findById(accountID).orElse(null);
+        BankAccountDTO bankAccount = new BankAccountDTO(account);
+        if (bankAccount.getBalance() < amount) {
+            //fail message not enough money
+            model.addAttribute("message", "Money transfer was unsuccessful, not enough money in your bank account");
+            return "redirect:/client/account?id="+accountID;
+        }
+
+        BadgeDTO originBadge = bankAccount.getBadgeByBadgeId();
+        BadgeDTO recipientBadge = new BadgeDTO();
+        TransactionDTO transaction = defineTransaction(clientDTO, bankAccount);
+        BenficiaryDTO beneficiary = beneficiaryService.findBenficiaryByNameAndIban(beneficiaryName, iban);
+        PaymentDTO payment = definePayment(amount, beneficiary);
+        BankAccountDTO recipientBankAccount = bankAccountService.findBankAccountEntityByIban(iban);
+
+        if (recipientBankAccount != null) {// Internal bank money transfer
+            CompanyDTO companyRecipient = companyService.findCompanyByName(beneficiaryName);
+            if (companyRecipient == null) { // Private Client is going to receive money, Authorized person can not figure as beneficiary only proper owner of the account.
+                ClientDTO clientRecipient = recipientBankAccount.getClientByClientId();
+                if (!clientRecipient.getName().equals(beneficiaryName)) {
+                    // fail message name is not matching
+                    model.addAttribute("message", "Money transfer was unsuccessful, recipient name is not correct");
+                    return "redirect:/client/account?id="+accountID;
+                }
+                // name matching proceed to transfer.
+            }// Company is going to receive money
+            recipientBadge = recipientBankAccount.getBadgeByBadgeId();
+
+            if (beneficiary == null) {
+                beneficiary = defineBeneficiary(beneficiaryName, iban, recipientBadge);
+            }
+
+            payment.setBenficiaryByBenficiaryId(beneficiary);
+
+            if (originBadge.getId() != recipientBadge.getId()) { // Do we need currency exchange?
+                CurrencyExchangeDTO currencyExchange = defineCurrencyExchange(originBadge, recipientBadge, amount, transaction, payment);
+                recipientBankAccount.setBalance(recipientBankAccount.getBalance() + currencyExchange.getFinalAmount());
+            } else {
+                recipientBankAccount.setBalance(recipientBankAccount.getBalance() + amount);
+            }
+            transaction.setPaymentByPaymentId(payment);
+            bankAccountService.save(recipientBankAccount, clientService, badgeService);
+
+        } else { // External bank money transfer
+            if (beneficiary == null) {
+                recipientBadge = badgeService.getRandomBadge(); // Assign random badge due to it unknown, and we can simulate this way international transactions
+                beneficiary = defineBeneficiary(beneficiaryName, iban, recipientBadge);
+            } else {
+                recipientBadge = badgeService.findBadgeEntityByName(beneficiary.getBadge());
+            }
+            payment.setBenficiaryByBenficiaryId(beneficiary);
+
+            if (originBadge.getId() != recipientBadge.getId()) { // Do we need currency exchange?
+                CurrencyExchangeDTO currencyExchange = defineCurrencyExchange(originBadge, recipientBadge, amount, transaction, payment);
+            }
+            transaction.setPaymentByPaymentId(payment);
+
+        }
+        if (beneficiaryService.findBenficiaryByBeneficiaryID(beneficiary) == null)
+            beneficiaryService.save(beneficiary);
+        paymentService.save(payment, beneficiaryService, currencyExchangeService, badgeService);
+        transactionService.save(transaction, clientService, bankAccountService, currencyExchangeService, paymentService, badgeService, beneficiaryService);
+
+        bankAccount.setBalance(bankAccount.getBalance() - amount);
+        bankAccountService.save(bankAccount, clientService, badgeService);
+
+        // success message
+        model.addAttribute("message", amount + " " + bankAccount.getBadgeByBadgeId().getName() + " was successfully transferred to " + beneficiaryName);
+        return "redirect:/client/account?id="+accountID;
     }
 
     @GetMapping("/account/moneyExchange")

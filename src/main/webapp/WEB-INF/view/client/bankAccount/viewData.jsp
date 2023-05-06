@@ -34,7 +34,7 @@
     </tr>
 </table>
 <a class="btn btn-primary" href='/client/account/moneyExchange?id=<%=account.getId()%>'>Money exchange</a>
-<a class="btn btn-primary" href=''>Make a transaction</a>
+<a class="btn btn-primary" href='/client/account/transaction?id=<%=account.getId()%>'>Make a transaction</a>
 <a class="btn btn-primary" href=''>Operation history</a>
 <a class="btn btn-danger" href='/client/view'>Return</a>
 </body>
