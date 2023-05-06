@@ -17,7 +17,7 @@
 </head>
 <body>
 <%
-    BankAccountEntity account = (BankAccountEntity) request.getAttribute("account");
+    BankAccountEntity account = (BankAccountEntity) session.getAttribute("account");
     List<BadgeDTO> badgeList = (List<BadgeDTO>) request.getAttribute("badgeList");
 %>
 <div id="transactionWindow">

@@ -16,7 +16,7 @@
 </head>
 <body>
 <%
-    BankAccountEntity account = (BankAccountEntity) request.getAttribute("account");
+    BankAccountEntity account = (BankAccountEntity) session.getAttribute("account");
 %>
 <div id="transactionWindow">
 <h1>Make a transaction</h1>

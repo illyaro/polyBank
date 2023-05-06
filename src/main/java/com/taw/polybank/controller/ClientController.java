@@ -77,7 +77,7 @@ public class ClientController {
         Integer clientID = (Integer) session.getAttribute("clientID");
         BankAccountEntity account = this.bankAccountRepository.findById(accountID).orElse(null);
         if (account.getClientByClientId().getId() == clientID) {
-            model.addAttribute("account", account);
+            session.setAttribute("account", account);
             return "client/bankAccount/viewData";
         } else {
             System.out.println("ERROR: No accesible.");
@@ -86,15 +86,12 @@ public class ClientController {
     }
 
     @GetMapping("/account/transaction")
-    public String transferMoneyOnBankAccount (@RequestParam("id") Integer accountID, Model model) {
-        BankAccountEntity account = this.bankAccountRepository.findById(accountID).orElse(null);
-        model.addAttribute("account", account);
+    public String transferMoneyOnBankAccount (Model model, HttpSession session) {
         return "client/bankAccount/makeTransfer";
     }
 
     @PostMapping("/account/processTransfer")
-    public String processTransfer(@RequestParam("account") Integer accountID,
-                                  @RequestParam("beneficiary") String beneficiaryName,
+    public String processTransfer(@RequestParam("beneficiary") String beneficiaryName,
                                   @RequestParam("iban") String iban,
                                   @RequestParam("amount") Double amount,
                                   HttpSession session, Model model) {
@@ -107,12 +104,12 @@ public class ClientController {
         Integer clientID = (Integer) session.getAttribute("clientID");
         ClientEntity client = this.clientRepository.findById(clientID).orElse(null);
         ClientDTO clientDTO = new ClientDTO(client);
-        BankAccountEntity account = this.bankAccountRepository.findById(accountID).orElse(null);
+        BankAccountEntity account = (BankAccountEntity) session.getAttribute("account");
         BankAccountDTO bankAccount = new BankAccountDTO(account);
         if (bankAccount.getBalance() < amount) {
             //fail message not enough money
             model.addAttribute("message", "Money transfer was unsuccessful, not enough money in your bank account");
-            return "redirect:/client/account?id="+accountID;
+            return "redirect:/client/account?id="+account.getId();
         }
 
         BadgeDTO originBadge = bankAccount.getBadgeByBadgeId();
@@ -129,7 +126,7 @@ public class ClientController {
                 if (!clientRecipient.getName().equals(beneficiaryName)) {
                     // fail message name is not matching
                     model.addAttribute("message", "Money transfer was unsuccessful, recipient name is not correct");
-                    return "redirect:/client/account?id="+accountID;
+                    return "redirect:/client/account?id="+account.getId();
                 }
                 // name matching proceed to transfer.
             }// Company is going to receive money
@@ -165,8 +162,7 @@ public class ClientController {
             transaction.setPaymentByPaymentId(payment);
 
         }
-        if (beneficiaryService.findBenficiaryByBeneficiaryID(beneficiary) == null)
-            beneficiaryService.save(beneficiary);
+        beneficiaryService.save(beneficiary);
         paymentService.save(payment, beneficiaryService, currencyExchangeService, badgeService);
         transactionService.save(transaction, clientService, bankAccountService, currencyExchangeService, paymentService, badgeService, beneficiaryService);
 
@@ -175,31 +171,36 @@ public class ClientController {
 
         // success message
         model.addAttribute("message", amount + " " + bankAccount.getBadgeByBadgeId().getName() + " was successfully transferred to " + beneficiaryName);
-        return "redirect:/client/account?id="+accountID;
+        return "redirect:/client/account?id="+account.getId();
     }
 
     @GetMapping("/account/moneyExchange")
-    public String moneyExchangeOnBankAccount (@RequestParam("id") Integer accountID, Model model, HttpSession session) {
+    public String moneyExchangeOnBankAccount (Model model, HttpSession session) {
         List<BadgeDTO>  badgeList = badgeService.findAll();
-        BankAccountEntity account = this.bankAccountRepository.findById(accountID).orElse(null);
+        BankAccountEntity account = (BankAccountEntity) session.getAttribute("account");
         model.addAttribute("badgeList", badgeList);
         model.addAttribute("account", account);
         return "client/bankAccount/moneyExchange";
     }
 
     @PostMapping("/account/makeExchange")
-    public String makeExchange(@RequestParam("account") Integer accountID, @RequestParam("badge") Integer badgeID, HttpSession session, Model model) {
+    public String makeExchange(@RequestParam("badge") Integer badgeID, HttpSession session, Model model) {
 
         Integer clientID = (Integer) session.getAttribute("clientID");
         ClientEntity client = this.clientRepository.findById(clientID).orElse(null);
         ClientDTO clientDTO = new ClientDTO(client);
-        BankAccountEntity bankAccount = this.bankAccountRepository.findById(accountID).orElse(null);
+        BankAccountEntity bankAccount = (BankAccountEntity) session.getAttribute("account");
         BankAccountDTO accountDTO = new BankAccountDTO(bankAccount);
         BadgeDTO currentBadge = new BadgeDTO(bankAccount.getBadgeByBadgeId());
         BadgeDTO targetBadge = badgeService.findById(badgeID);
 
         TransactionDTO transaction = defineTransaction(clientDTO, accountDTO);
-        BenficiaryDTO beneficiary = defineBeneficiary(client.getName(), bankAccount.getIban(), targetBadge);
+        BenficiaryDTO beneficiary = beneficiaryService.findBenficiaryByNameAndIban(
+                clientDTO.getName(), accountDTO.getIban()
+        );
+
+        if (beneficiary == null)
+            beneficiary = defineBeneficiary(client.getName(), bankAccount.getIban(), targetBadge);
         PaymentDTO payment = definePayment(bankAccount.getBalance(), beneficiary);
 
         payment.setBenficiaryByBenficiaryId(beneficiary);
@@ -217,7 +218,7 @@ public class ClientController {
             System.out.println("ERROR: Can't change currency to the same badge.");
         }
 
-        return "redirect:/client/account?id="+accountID;
+        return "redirect:/client/account?id="+accountDTO.getId();
     }
 
     @PostMapping("/login")

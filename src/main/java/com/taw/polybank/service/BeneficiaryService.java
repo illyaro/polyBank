@@ -25,11 +25,6 @@ public class BeneficiaryService {
     @Autowired
     protected ClientRepository clientRepository;
 
-    public BenficiaryDTO findBenficiaryByBeneficiaryID(BenficiaryDTO beneficiaryDTO) {
-        BenficiaryEntity beneficiary = beneficiaryRepository.findById(beneficiaryDTO.getId()).orElse(null);
-        return beneficiary == null ? null : beneficiary.toDTO();
-    }
-
     public BenficiaryDTO findBenficiaryByNameAndIban(String beneficiaryName, String iban) {
         BenficiaryEntity beneficiary = beneficiaryRepository.findBenficiaryEntityByNameAndIban(beneficiaryName, iban);
         return beneficiary == null ? null : beneficiary.toDTO();

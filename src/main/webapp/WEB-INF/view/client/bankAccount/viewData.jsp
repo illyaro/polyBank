@@ -10,7 +10,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    BankAccountEntity account = (BankAccountEntity) request.getAttribute("account");
+    BankAccountEntity account = (BankAccountEntity) session.getAttribute("account");
 %>
 <html>
 <head>
@@ -33,9 +33,9 @@
         <td><%=account.getClientByClientId().getName()%> <%=account.getClientByClientId().getSurname()%></td>
     </tr>
 </table>
-<a class="btn btn-primary" href='/client/account/moneyExchange?id=<%=account.getId()%>'>Money exchange</a>
+<a class="btn btn-primary" href='/client/account/moneyExchange'>Money exchange</a>
 <a class="btn btn-primary" href='/client/account/transaction?id=<%=account.getId()%>'>Make a transaction</a>
-<a class="btn btn-primary" href=''>Operation history</a>
+<a class="btn btn-primary" href='/client/account/operationHistory?id=<%=account.getId()%>'>Operation history</a>
 <a class="btn btn-danger" href='/client/view'>Return</a>
 </body>
 </html>
