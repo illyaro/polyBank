@@ -26,7 +26,7 @@ public interface BankAccountRepository extends JpaRepository<BankAccountEntity, 
     List<BankAccountEntity> findSuspiciousTransactionAccount();
 
     @Query("select c from BankAccountEntity c " +
-            "where NOT EXISTS (select t from TransactionEntity t where t.bankAccountByBankAccountId = c and t.timestamp > :timestamp)")
+            "where NOT EXISTS (select t from TransactionEntity t where t.bankAccountByBankAccountId = c and t.timestamp > :timestamp) and c.active")
     List<BankAccountEntity> findInactiveAccountsFrom(Timestamp timestamp);
 
 }

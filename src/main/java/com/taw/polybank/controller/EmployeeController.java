@@ -178,13 +178,13 @@ public class EmployeeController {
     }
 
     @GetMapping("manager/block/account/{id}")
-    public String getDisabled(@PathVariable("id") Integer id) {
+    public String getBlocked(@PathVariable("id") Integer id) {
         bankAccountService.blockAccountById(id);
         return ("redirect:/employee/manager/suspicious");
     }
 
     @GetMapping("manager/disable/account/{id}")
-    public String getBlocked(@PathVariable("id") Integer id) {
+    public String getDisabled(@PathVariable("id") Integer id) {
         bankAccountService.blockAccountById(id);
         return ("redirect:/employee/manager/accounts/inactive");
     }
