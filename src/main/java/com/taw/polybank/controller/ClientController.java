@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
+import java.util.Random;
 
 @Controller
 @RequestMapping("/client")
@@ -43,6 +44,8 @@ public class ClientController {
     @GetMapping("/view")
     public String viewClient(Model model, HttpSession session) {
         ClientDTO clientDTO = (ClientDTO) session.getAttribute("client");
+        if (clientDTO == null)
+            return "redirect:/";
         List<BankAccountDTO> accounts = bankAccountService.findByClient(clientDTO);
         model.addAttribute("client", clientDTO);
         model.addAttribute("accounts", accounts);
@@ -52,29 +55,44 @@ public class ClientController {
     @GetMapping("/edit")
     public String editClient(Model model, HttpSession session) {
         ClientDTO clientDTO = (ClientDTO) session.getAttribute("client");
+        if (clientDTO == null)
+            return "redirect:/";
         model.addAttribute("client", clientDTO);
         return "client/editData";
     }
 
+    @PostMapping("/edit")
+    public String saveClient (@ModelAttribute("client") ClientDTO client, HttpSession session) {
+        this.clientService.save(client);
+        session.setAttribute("client", client);
+        return "redirect:/client/view";
+    }
+
     @GetMapping("/register")
-    public String addClient(Model model) {
-        ClientEntity client = new ClientEntity();
+    public String registerClient(Model model) {
+        ClientDTO client = new ClientDTO();
         model.addAttribute("client", client);
         return "client/register";
     }
 
-    @PostMapping("/save")
-    public String saveClient (@ModelAttribute("client") ClientDTO clientDTO, HttpSession session) {
-        ClientEntity client = this.clientRepository.findById(clientDTO.getId()).orElse(null);
-        client.setName(clientDTO.getName());
-        client.setSurname(clientDTO.getSurname());
-        this.clientRepository.save(client);
-        return "redirect:/client/view";
+    @PostMapping("/register")
+    public String addClient(@ModelAttribute("client") ClientDTO client, @RequestParam("password") String password) {
+        BankAccountDTO account = new BankAccountDTO();
+        defineBankAccount(account);
+        client.setCreationDate(Timestamp.from(Instant.now()));
+        PasswordManager passwordManager = new PasswordManager(clientService);
+        String[] saltAndPass = passwordManager.savePassword(client, password);
+        account.setClientByClientId(client);
+        clientService.save(client, saltAndPass);
+        bankAccountService.save(account, clientService, badgeService);
+        return "redirect:/";
     }
 
     @GetMapping("/account")
     public String viewBankAccount (@RequestParam("id") Integer accountID, Model model, HttpSession session) {
         ClientDTO clientDTO = (ClientDTO) session.getAttribute("client");
+        if (clientDTO == null)
+            return "redirect:/";
         BankAccountDTO account = bankAccountService.findById(accountID);
 
         if (account.getClientByClientId().equals(clientDTO)) {
@@ -103,6 +121,8 @@ public class ClientController {
         }
 
         ClientDTO clientDTO = (ClientDTO) session.getAttribute("client");
+        if (clientDTO == null)
+            return "redirect:/";
         BankAccountDTO account = (BankAccountDTO) session.getAttribute("account");
         if (account.getBalance() < amount) {
             //fail message not enough money
@@ -176,6 +196,8 @@ public class ClientController {
     public String moneyExchangeOnBankAccount (Model model, HttpSession session) {
         List<BadgeDTO>  badgeList = badgeService.findAll();
         BankAccountDTO account = (BankAccountDTO) session.getAttribute("account");
+        if (account == null)
+            return "redirect:/";
         model.addAttribute("badgeList", badgeList);
         model.addAttribute("account", account);
         return "client/bankAccount/moneyExchange";
@@ -186,6 +208,8 @@ public class ClientController {
 
         ClientDTO clientDTO = (ClientDTO) session.getAttribute("client");
         BankAccountDTO account = (BankAccountDTO) session.getAttribute("account");
+        if (clientDTO == null || account == null)
+            return "redirect:/";
         BadgeDTO currentBadge = account.getBadgeByBadgeId();
         BadgeDTO targetBadge = badgeService.findById(badgeID);
 
@@ -231,6 +255,9 @@ public class ClientController {
     private String operationHistoryFilters(TransactionFilterIllya transactionFilter, HttpSession session, Model model) {
         List<TransactionDTO> transactionList;
         BankAccountDTO account = (BankAccountDTO) session.getAttribute("account");
+
+        if (account == null)
+            return "redirect:/";
 
         if (transactionFilter == null) {
             transactionList = transactionService.findTransactionsByBankAccountByBankAccountIdId(account.getId());
@@ -285,6 +312,18 @@ public class ClientController {
         return ("redirect:/login");
     }
 
+    private void defineBankAccount(BankAccountDTO bankAccount) {
+        bankAccount.setActive(false);
+        bankAccount.setBadgeByBadgeId(badgeService.findBadgeEntityByName("USD"));
+        Random random = new Random();
+        StringBuilder iban = new StringBuilder();
+        iban.append("ES44 5268 3000 ");
+        for (int i = 0; i < 12; i++) {
+            iban.append(random.nextInt(10));
+        }
+        bankAccount.setBalance(0.0);
+        bankAccount.setIban(iban.toString());
+    }
     private PaymentDTO definePayment(Double amount, BenficiaryDTO beneficiary) {
         PaymentDTO payment = new PaymentDTO();
         payment.setAmount(amount);

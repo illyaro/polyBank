@@ -14,11 +14,15 @@
 </head>
 <body>
 <h1>Client data:</h1>
-<form:form action="/client/save" modelAttribute="client" method="post">
-    DNI: <form:input path="dni" disabled="true" size="9"/><br>
-    Name: <form:input path="name" size="30" maxlength="30"  /><br/>
-    Surname: <form:input path="surname" size="40"  maxlength="40"/> <br/>
-    Password: <form:input path="password" type="password" size="30" maxlength="30"/>
+<form:form action="/client/register" modelAttribute="client" method="post">
+    <form:label path="dni">DNI: </form:label>
+    <form:input path="dni" size="9" maxlength="9"/><br>
+    <form:label path="name">Name: </form:label>
+    <form:input path="name" size="30" maxlength="30"  /><br/>
+    <form:label path="surname">Surname: </form:label>
+    <form:input path="surname" size="40"  maxlength="40"/> <br/>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" size="20" maxlength="64"/>
     <form:button>Save</form:button>
 </form:form>
 </body>
