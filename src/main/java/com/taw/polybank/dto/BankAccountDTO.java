@@ -10,6 +10,17 @@ public class BankAccountDTO {
     private ClientDTO clientByClientId;
     private BadgeDTO badgeByBadgeId;
 
+    public BankAccountDTO(){}
+
+    public BankAccountDTO(BankAccountEntity account){
+        this.id = account.getId();
+        this.iban = account.getIban();
+        this.active = account.isActive();
+        this.balance = account.getBalance();
+        this.clientByClientId = new ClientDTO(account.getClientByClientId());
+        this.badgeByBadgeId = new BadgeDTO(account.getBadgeByBadgeId());
+    }
+
     public int getId() {
         return id;
     }

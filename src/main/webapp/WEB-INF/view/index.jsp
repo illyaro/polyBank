@@ -20,5 +20,6 @@ To change this template use File | Settings | File Templates.
 <a class="prettyButton" href="login">Sign-in</a>
 <a class="prettyButton" href="employee">I'm an employee</a>
 <a class="prettyButton"  href="/company/registerCompany">Create corporate account</a>
+<a class="prettyButton"  href="/client/register">Create client account</a>
 </body>
 </html>

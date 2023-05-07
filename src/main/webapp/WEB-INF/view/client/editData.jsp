@@ -2,7 +2,7 @@
 <%@ taglib prefix="Nombre" uri="http://www.springframework.org/tags/form" %>
 <%--
   Created by IntelliJ IDEA.
-  User: jmsan
+  User: Pablo Ruiz-Cruces
   Date: 13/03/2023
   Time: 14:22
   To change this template use File | Settings | File Templates.
@@ -15,12 +15,12 @@
 </head>
 <body>
 <h1>Client data:</h1>
-<form:form action="/client/save" modelAttribute="client" method="post">
+<form:form action="/client/edit" modelAttribute="client" method="post">
     <form:hidden path="id"/>
-    DNI: <form:input path="dni" disabled="true" size="9"/><br>
+    <form:hidden path="dni"/><br>
     Name: <form:input path="name" size="30" maxlength="30"  /><br>
     Surnames: <form:input path="surname" size="40"  maxlength="40"/> <br>
-    <form:input path="creationDate" disabled="true" size="21"/><br>
+    <form:hidden path="creationDate"/><br>
     <form:button>Save</form:button>
 </form:form>
 </body>

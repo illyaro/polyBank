@@ -1,8 +1,10 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ page import="com.taw.polybank.entity.BankAccountEntity" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="com.taw.polybank.dto.BadgeDTO" %>
+<%@ page import="com.taw.polybank.dto.BankAccountDTO" %><%--
 <%--
   Created by IntelliJ IDEA.
-  User: Illya Rozumovskyy
+  User: Pablo Ruiz-Cruces
   Date: 07/04/2023
   Time: 23:34
   To change this template use File | Settings | File Templates.
@@ -15,17 +17,26 @@
 </head>
 <body>
 <%
-    BankAccountEntity account = (BankAccountEntity) request.getAttribute("account");
+    BankAccountDTO account = (BankAccountDTO) session.getAttribute("account");
+    List<BadgeDTO> badgeList = (List<BadgeDTO>) request.getAttribute("badgeList");
 %>
-<div id="transactionWindow">
-    <h1>Money Exchange</h1>
+<h1>Money Exchange</h1>
+<% if (account.isActive()) { %>
     <p>Balance: <%=account.getBalance()%> <%=account.getBadgeByBadgeId().getName()%></p>
 
-    <form:form modelAttribute="badge" method="post" action="/client/account/makeExchange?id=${account.getId()}">
-        <form:label path="id">Desired currency: </form:label>
-        <form:select path="id" items="${badgeList}" itemLabel="name" itemValue="id"/>
-        <form:button class="btn btn-primary">Exchange</form:button>
-    </form:form>
-</div>
+    <form action="/client/account/makeExchange" method="post">
+        <input type="hidden" id="account" name="account" value="<%=account.getId()%>">
+        <label for="badge">Desired currency: </label>
+        <select id="badge" name="badge">
+            <% for (BadgeDTO badge : badgeList) { %>
+                <option value="<%=badge.getId() %>"><%= badge.getName() %></option>
+            <% } %>
+        </select>
+        <input type="submit" class="btn btn-primary" value="Exchange">
+    </form>
+<% } else { %>
+<h3>Your account is not active</h3>
+<% } %>
+<a href="/client/account?id=<%=account.getId()%>" class="btn btn-danger">Return</a><br>
 </body>
 </html>

@@ -1,5 +1,6 @@
 package com.taw.polybank.dto;
 
+import com.taw.polybank.entity.BadgeEntity;
 import jakarta.persistence.*;
 
 import java.util.Collection;
@@ -8,6 +9,14 @@ public class BadgeDTO {
     private int id;
     private double value;
     private String name;
+
+    public BadgeDTO(){}
+
+    public BadgeDTO(BadgeEntity badge){
+        this.id = badge.getId();
+        this.value = badge.getValue();
+        this.name = badge.getName();
+    }
 
     public int getId() {
         return id;
