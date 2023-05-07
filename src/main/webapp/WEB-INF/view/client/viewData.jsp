@@ -1,5 +1,7 @@
-<%@ page import="com.taw.polybank.entity.ClientEntity" %>
-<%@ page import="com.taw.polybank.entity.BankAccountEntity" %><%--
+<%@ page import="com.taw.polybank.entity.BankAccountEntity" %>
+<%@ page import="com.taw.polybank.dto.ClientDTO" %>
+<%@ page import="com.taw.polybank.dto.BankAccountDTO" %>
+<%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: Pablo Ruiz-Cruces
   Date: 13/03/2023
@@ -14,7 +16,8 @@
 </head>
 <body>
 <%
-    ClientEntity client = (ClientEntity) request.getAttribute("client");
+    ClientDTO client = (ClientDTO) request.getAttribute("client");
+    List<BankAccountDTO> accounts = (List<BankAccountDTO>) request.getAttribute("accounts");
 %>
 <h1>Client data:</h1>
 <table class="table table-bordered">
@@ -37,8 +40,8 @@
     <tr>
         <th scope="row">Bank accounts:</th>
         <td>
-            <% for (BankAccountEntity bank : client.getBankAccountsById()) { %>
-            <a href="/client/account?id=<%=bank.getId()%>"><%=bank.getIban()%></a><br>
+            <% for (BankAccountDTO account : accounts) { %>
+            <a href="/client/account?id=<%=account.getId()%>"><%=account.getIban()%></a><br>
             <% } %>
         </td>
     </tr>

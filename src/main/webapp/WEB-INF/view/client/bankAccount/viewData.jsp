@@ -1,4 +1,4 @@
-<%@ page import="com.taw.polybank.entity.BankAccountEntity" %>
+<%@ page import="com.taw.polybank.dto.BankAccountDTO" %>
 <%--
   Created by IntelliJ IDEA.
   User: Pablo Ruiz-Cruces
@@ -14,7 +14,7 @@
 </head>
 <body>
 <%
-    BankAccountEntity account = (BankAccountEntity) session.getAttribute("account");
+    BankAccountDTO account = (BankAccountDTO) session.getAttribute("account");
 %>
 <h1>Account data:</h1>
 <table class="table table-bordered">

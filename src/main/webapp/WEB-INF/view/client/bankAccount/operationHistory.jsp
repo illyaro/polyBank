@@ -1,7 +1,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.taw.polybank.dto.TransactionDTO" %>
 <%@ page import="com.taw.polybank.dto.CurrencyExchangeDTO" %>
-<%@ page import="com.taw.polybank.entity.BankAccountEntity" %>
+<%@ page import="com.taw.polybank.dto.BankAccountDTO" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <%--
@@ -21,7 +21,7 @@
 <body>
 <%
     List<TransactionDTO> transactionList = (List<TransactionDTO>) request.getAttribute("transactionList");
-    BankAccountEntity account = (BankAccountEntity) session.getAttribute("account");
+    BankAccountDTO account = (BankAccountDTO) session.getAttribute("account");
 %>
 <h1>Operation history</h1>
 <h3>Filters</h3>
