@@ -36,7 +36,7 @@ public class ClientAssistanceController {
 
     @GetMapping(value={"/", ""})
     public String doListChats(Model model, HttpSession session) {
-        Optional<ClientDTO> client = this.clientService.findById((Integer) session.getAttribute("clientID"));
+        Optional<ClientDTO> client = this.clientService.findById(((ClientDTO) session.getAttribute("client")).getId());
         if (client.isPresent()) {
             List<ChatDTO> chatList = chatService.findByClient(client.get());
             model.addAttribute("chatList", chatList);
@@ -61,7 +61,7 @@ public class ClientAssistanceController {
 
     @PostMapping("/newChat")
     public String doNewChat (Model model, HttpSession session) {
-        Optional<ClientDTO> client = this.clientService.findById((Integer) session.getAttribute("clientID"));
+        Optional<ClientDTO> client = this.clientService.findById(((ClientDTO) session.getAttribute("client")).getId());
         if (client.isPresent()) {
             ChatDTO chat = new ChatDTO();
             chat.setClient(client.get());

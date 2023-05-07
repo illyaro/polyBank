@@ -56,7 +56,7 @@ public class AssistantController {
                     } else if (filter.getClientName() != "" && filter.getRecent() == false) {
                         chatList = this.chatService.findByEmployeeAndClientDniAndClientName(employee, filter.getClientDni(), filter.getClientName());
                     } else if (filter.getClientName() == "" && filter.getRecent() == true) {
-                        chatList = this.chatService.findByEmployeeAndClientDniAndRecent(employee, filter.getClientName());
+                        chatList = this.chatService.findByEmployeeAndClientDniAndRecent(employee, filter.getClientDni());
                     } else {
                         chatList = this.chatService.findByEmployeeAndClientDniAndClientNameAndRecent(employee, filter.getClientDni(), filter.getClientName());
                     }
