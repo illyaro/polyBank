@@ -1,9 +1,8 @@
 package com.taw.polybank.dto;
 
-import jakarta.persistence.*;
-
-import java.util.Collection;
-
+/**
+ * @author José Manuel Sánchez Rico
+ */
 public class PaymentDTO {
     private int id;
     private double amount;

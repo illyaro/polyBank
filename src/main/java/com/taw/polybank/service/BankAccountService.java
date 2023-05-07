@@ -14,7 +14,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+/**
+ * @author Illya Rozumovskyy 40%
+ * @author Lucía Gutiérrez Molina 27%
+ * @author José Manuel Sánchez Rico 33%
+ */
 @Service
 public class BankAccountService {
 

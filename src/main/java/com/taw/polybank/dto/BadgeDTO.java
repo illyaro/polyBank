@@ -5,6 +5,10 @@ import jakarta.persistence.*;
 
 import java.util.Collection;
 
+/**
+ * @author José Manuel Sánchez Rico 50%
+ * @author Pablo Ruiz-Cruces 50%
+ */
 public class BadgeDTO {
     private int id;
     private double value;

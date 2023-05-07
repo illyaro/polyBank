@@ -12,6 +12,9 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * @author Lucía Gutiérrez Molina
+ */
 @Controller
 @RequestMapping("/atm")
 public class ATMController {

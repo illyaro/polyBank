@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * @author Javier Jordán Luque
+ */
 @Repository
 public interface MessageRepository extends JpaRepository<MessageEntity, Integer> {
     @Query("select m from MessageEntity m where m.chatByChatId = :chat")

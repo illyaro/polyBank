@@ -2,7 +2,9 @@ package com.taw.polybank.ui.companyFilters;
 
 import java.sql.Date;
 import java.util.Calendar;
-
+/**
+ * @author Illya Rozumovskyy
+ */
 public class TransactionFilterIllya {
     private Date transactionAfter;
     private Date transactionBefore;

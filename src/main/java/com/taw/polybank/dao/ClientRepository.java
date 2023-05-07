@@ -8,7 +8,10 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.util.List;
-
+/**
+ * @author Illya Rozumovskyy 60%
+ * @author José Manuel Sánchez Rico 40%
+ */
 @Repository
 public interface ClientRepository extends JpaRepository<ClientEntity, Integer> {
     @Query("select c from ClientEntity c where c.dni = :user and c.password = :password")

@@ -2,6 +2,9 @@ package com.taw.polybank.dto;
 
 import java.sql.Timestamp;
 
+/**
+ * @author José Manuel Sánchez Rico
+ */
 public class RequestDTO {
     private int id;
     private boolean solved;

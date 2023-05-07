@@ -6,6 +6,9 @@ import com.taw.polybank.entity.SuspiciousAccountEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author Lucía Gutiérrez Molina
+ */
 @Service
 public class SuspiciousAccountService {
 

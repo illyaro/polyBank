@@ -16,6 +16,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * @author Illya Rozumovskyy 45%
+ * @author Lucía Gutiérrez Molina 10%
+ * @author José Manuel Sánchez Rico 45%
+ */
 @Service
 public class ClientService {
     @Autowired
@@ -50,19 +55,6 @@ public class ClientService {
             clientEntity.setPassword(password);
         }
         clientRepository.save(clientEntity);
-    }
-
-    public List<ClientDTO> findByNameOrSurname(String transactionOwner) {
-        List<ClientEntity> clientEntityList = clientRepository.findByNameOrSurname(transactionOwner);
-        return entityListToDTOList(clientEntityList);
-    }
-
-    public List<ClientDTO> entityListToDTOList (List<ClientEntity> clientEntityList) {
-        List<ClientDTO> clientDTOList = new ArrayList<>();
-        for (ClientEntity clientEntity : clientEntityList) {
-            clientDTOList.add(clientEntity.toDTO());
-        }
-        return clientDTOList;
     }
 
     public Optional<ClientDTO> findById(Integer id) {
@@ -104,10 +96,6 @@ public class ClientService {
         return clientEntity;
     }
 
-    public int getClientId(ClientDTO client) {
-        ClientEntity clientEntity = clientRepository.findByDNI(client.getDni());
-        return clientEntity.getId();
-    }
 
     public void save(ClientDTO clientDTO) {
         ClientEntity client = this.toEntidy(clientDTO);

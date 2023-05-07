@@ -12,6 +12,11 @@ import org.springframework.stereotype.Repository;
 import java.sql.Timestamp;
 import java.util.List;
 
+/**
+ * @author Illya Rozumovskyy 20%
+ * @author Lucía Gutiérrez Molina 5%
+ * @author José Manuel Sánchez Rico 75%
+ */
 @Repository
 public interface TransactionRepository extends JpaRepository<TransactionEntity, Integer> {
     List<TransactionEntity> findByBankAccountByBankAccountId(BankAccountEntity bankAccount);
@@ -27,8 +32,6 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
 
     @Query("select t from TransactionEntity t where t.bankAccountByBankAccountId = :bankAccount and t.timestamp >= :begin and t.timestamp <= :end and t.paymentByPaymentId.amount >= :amount")
     List<TransactionEntity> filterByBankAccount_TimestampRange_Amount(BankAccountEntity bankAccount, Timestamp begin, Timestamp end, double amount);
-
-    List<TransactionEntity> findTransactionEntitiesByClientByClientIdId(Integer id);
 
     List<TransactionEntity> findTransactionEntitiesByBankAccountByBankAccountIdId(Integer id);
 

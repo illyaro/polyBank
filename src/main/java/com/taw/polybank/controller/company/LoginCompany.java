@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-
+/**
+ * @author Illya Rozumovskyy
+ */
 @Controller
 @RequestMapping("/company")
 public class LoginCompany {

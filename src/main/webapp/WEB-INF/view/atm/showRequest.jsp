@@ -1,7 +1,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.taw.polybank.dto.RequestDTO" %><%--
   Created by IntelliJ IDEA.
-  User: lucia
+  User: Lucía Gutiérrez Molina
   Date: 15/04/2023
   Time: 11:06
   To change this template use File | Settings | File Templates.

@@ -1,7 +1,7 @@
 package com.taw.polybank.dto;
-
-import jakarta.persistence.*;
-
+/**
+ * @author José Manuel Sánchez Rico
+ */
 public class SuspiciousAccountDTO {
     private int id;
     private String iban;

@@ -12,7 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+/**
+ * @author Illya Rozumovskyy 75%
+ * @author Lucía Gutiérrez Molina 25%
+ */
 @Service
 public class BeneficiaryService {
 

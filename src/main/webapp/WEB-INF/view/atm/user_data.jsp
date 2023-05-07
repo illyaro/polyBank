@@ -3,7 +3,7 @@
 <%@ page import="com.taw.polybank.dto.ClientDTO" %>
 <%@ page import="com.taw.polybank.dto.BankAccountDTO" %><%--
   Created by IntelliJ IDEA.
-  User: lucia
+  User: Lucía Gutiérrez Molina
   Date: 27/03/2023
   Time: 13:42
   To change this template use File | Settings | File Templates.

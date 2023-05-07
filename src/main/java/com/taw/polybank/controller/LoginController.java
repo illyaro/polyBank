@@ -8,7 +8,9 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-
+/**
+ * @author José Manuel Sánchez Rico
+ */
 @Controller
 public class LoginController {
 
@@ -29,11 +31,6 @@ public class LoginController {
     @GetMapping("/login")
     public String doLogin()
     {
-        System.out.println(BCrypt.hashpw("123",BCrypt.gensalt()).length());
-        System.out.println(BCrypt.hashpw("123",BCrypt.gensalt()).length());
-        System.out.println(BCrypt.hashpw("123",BCrypt.gensalt()).length());
-        System.out.println(BCrypt.hashpw("123",BCrypt.gensalt()).length());
-        System.out.println(BCrypt.gensalt().length());
         return ("login");
     }
 }

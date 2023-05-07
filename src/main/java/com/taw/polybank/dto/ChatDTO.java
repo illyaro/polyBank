@@ -1,5 +1,8 @@
 package com.taw.polybank.dto;
-
+/**
+ * @author José Manuel Sánchez Rico 50%
+ * @author Javier Jordán Luque 50%
+ */
 public class ChatDTO {
     private int id;
     private boolean closed;

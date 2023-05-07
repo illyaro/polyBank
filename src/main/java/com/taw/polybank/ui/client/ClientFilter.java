@@ -1,5 +1,7 @@
 package com.taw.polybank.ui.client;
-
+/**
+ * @author José Manuel Sánchez Rico
+ */
 public class ClientFilter {
     private String name;
     private String DNI;

@@ -18,6 +18,9 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author Javier Jordán Luque
+ */
 @Controller
 @RequestMapping("client/assistance")
 public class ClientAssistanceController {

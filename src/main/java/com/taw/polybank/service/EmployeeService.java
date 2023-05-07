@@ -16,7 +16,11 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-
+/**
+ * @author Illya Rozumovskyy 20%
+ * @author Javier Jordán Luque 40%
+ * @author José Manuel Sánchez Rico 40%
+ */
 @Service
 public class EmployeeService {
     @Autowired
@@ -26,16 +30,6 @@ public class EmployeeService {
     private RequestRepository requestRepository;
     @Autowired
     private BankAccountRepository bankAccountRepository;
-
-
-    public List<EmployeeDTO> findAllClients(){
-        List <EmployeeEntity> employeeEntityList= employeeRepository.findAll();
-        List<EmployeeDTO> employeeDTOList = new ArrayList<>();
-        for (EmployeeEntity employee: employeeEntityList) {
-            employeeDTOList.add(employee.toDTO());
-        }
-        return employeeDTOList;
-    }
 
     public void solveRequest(Integer id, boolean approved) {
         Optional<RequestEntity> requestEntityOptional =requestRepository.findById(id);

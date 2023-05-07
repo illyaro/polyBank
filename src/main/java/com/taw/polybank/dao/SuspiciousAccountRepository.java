@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+/**
+ * @author Lucía Gutiérrez Molina
+ */
 @Repository
 public interface SuspiciousAccountRepository extends JpaRepository<SuspiciousAccountEntity, Integer> {
 

@@ -1,5 +1,7 @@
 package com.taw.polybank.ui.transaction;
-
+/**
+ * @author José Manuel Sánchez Ricoç
+ */
 public class TransactionFilterJose {
     private double amount;
     private String sorting;

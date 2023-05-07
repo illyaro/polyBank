@@ -3,7 +3,11 @@ package com.taw.polybank.dto;
 import com.taw.polybank.entity.ClientEntity;
 
 import java.sql.Timestamp;
-
+/**
+ * @author José Manuel Sánchez Rico 33%
+ * @author Pablo Ruiz-Cruces 33%
+ * @author Illya Rozumovskyy 34%
+ */
 public class ClientDTO {
     // It does not provide salt and password due to security concerns
 

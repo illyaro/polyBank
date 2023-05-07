@@ -17,6 +17,9 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * @author Pablo Ruiz-Cruces
+ */
 @Controller
 @RequestMapping("/client")
 public class ClientController {

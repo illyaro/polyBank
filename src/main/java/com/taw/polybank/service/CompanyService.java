@@ -13,7 +13,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+/**
+ * @author Illya Rozumovskyy 80%
+ * @author José Manuel Sánchez Rico 20%
+ */
 @Service
 public class CompanyService {
 
@@ -56,11 +59,6 @@ public class CompanyService {
 
         companyRepository.save(company);
         companyDTO.setId(company.getId());
-    }
-
-    public int getCompanyId(CompanyDTO company) {
-        CompanyEntity companyEntity = companyRepository.findCompanyEntityByName(company.getName());
-        return companyEntity.getId();
     }
 
     public void save(CompanyDTO companyDTO) {

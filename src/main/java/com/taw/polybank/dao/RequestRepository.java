@@ -9,7 +9,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+/**
+ * @author Illya Rozumovskyy 33%
+ * @author José Manuel Sánchez Rico 66%
+ */
 @Repository
 public interface RequestRepository extends JpaRepository<RequestEntity, Integer> {
 

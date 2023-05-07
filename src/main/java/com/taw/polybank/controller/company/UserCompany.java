@@ -15,6 +15,9 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 
+/**
+ * @author Illya Rozumovskyy
+ */
 @Controller
 @RequestMapping("/company/user")
 public class UserCompany {

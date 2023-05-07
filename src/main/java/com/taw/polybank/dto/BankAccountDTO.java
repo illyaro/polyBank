@@ -2,6 +2,9 @@ package com.taw.polybank.dto;
 
 import com.taw.polybank.entity.BankAccountEntity;
 
+/**
+ * @author José Manuel Sánchez Rico
+ */
 public class BankAccountDTO {
     private int id;
     private String iban;

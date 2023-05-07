@@ -1,7 +1,8 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%--
   Created by IntelliJ IDEA.
-  User: José Manuel Sánchez Rico
+  User: José Manuel Sánchez Rico 70%
+  User: Javier Jordán Luque 30%
   Date: 13/03/2023
   Time: 14:22
   To change this template use File | Settings | File Templates.

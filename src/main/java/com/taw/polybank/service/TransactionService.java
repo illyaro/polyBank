@@ -18,6 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @author Illya Rozumovskyy 40%
+ * @author Lucía Gutiérrez Molina 15%
+ * @author José Manuel Sánchez Rico 45%
+ */
 @Service
 public class TransactionService {
 

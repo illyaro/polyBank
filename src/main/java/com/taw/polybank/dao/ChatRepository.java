@@ -10,6 +10,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * @author Javier Jordán Luque
+ */
 @Repository
 public interface ChatRepository extends JpaRepository<ChatEntity, Integer> {
     @Query("select c from ChatEntity c where c.clientByClientId = :client")

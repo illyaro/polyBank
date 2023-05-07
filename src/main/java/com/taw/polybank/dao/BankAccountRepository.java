@@ -13,6 +13,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author Illya Rozumovskyy 20%
+ * @author Lucía Gutiérrez Molina 40%
+ * @author José Manuel Sánchez Rico 40%
+ */
 @Repository
 public interface BankAccountRepository extends JpaRepository<BankAccountEntity, Integer> {
 

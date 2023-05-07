@@ -2,6 +2,9 @@ package com.taw.polybank.dto;
 
 import java.sql.Timestamp;
 
+/**
+ * @author José Manuel Sánchez Rico
+ */
 public class TransactionDTO {
     private int id;
     private Timestamp timestamp;

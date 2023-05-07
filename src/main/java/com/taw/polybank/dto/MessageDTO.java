@@ -4,6 +4,10 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
+/**
+ * @author José Manuel Sánchez Rico 50%
+ * @author Javier Jordán Luque 50%
+ */
 public class MessageDTO {
     private int id;
     private String content;

@@ -7,7 +7,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+/**
+ * @author Illya Rozumovskyy 50%
+ * @author José Manuel Sánchez Rico 50%
+ */
 @Repository
 public interface CompanyRepository extends JpaRepository<CompanyEntity, Integer> {
 

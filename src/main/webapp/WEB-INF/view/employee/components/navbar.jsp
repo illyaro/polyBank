@@ -1,3 +1,7 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: José Manuel Sánchez Rico
+--%>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="/employee/manager/">Manager</a>

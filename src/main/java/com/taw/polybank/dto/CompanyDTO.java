@@ -1,7 +1,9 @@
 package com.taw.polybank.dto;
 
-import jakarta.persistence.*;
 
+/**
+ * @author José Manuel Sánchez Rico
+ */
 public class CompanyDTO {
     private int id;
     private String name;

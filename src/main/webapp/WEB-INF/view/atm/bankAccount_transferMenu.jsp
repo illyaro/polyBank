@@ -2,7 +2,7 @@
 <%@ page import="com.taw.polybank.dto.BankAccountDTO" %>
 <%@ page import="com.taw.polybank.dto.BadgeDTO" %><%--
   Created by IntelliJ IDEA.
-  User: lucia
+  User: Lucía Gutiérrez Molina
   Date: 01/04/2023
   Time: 18:08
   To change this template use File | Settings | File Templates.

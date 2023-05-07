@@ -1,5 +1,7 @@
 package com.taw.polybank.dto;
-
+/**
+ * @author José Manuel Sánchez Rico
+ */
 public class EmployeeDTO {
     // It does not provide salt and password due to security concerns
     private int id;

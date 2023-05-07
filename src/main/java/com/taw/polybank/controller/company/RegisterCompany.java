@@ -15,6 +15,9 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * @author Illya Rozumovskyy
+ */
 @Controller
 @RequestMapping("/company")
 public class RegisterCompany {

@@ -2,6 +2,9 @@ package com.taw.polybank.controller.atm;
 
 import java.sql.Date;
 
+/**
+ * @author Lucía Gutiérrez Molina
+ */
 public class TransactionFilterLucia {
     private Date timestampBegin;
     private Date timestampEnd;

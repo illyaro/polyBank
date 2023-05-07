@@ -1,5 +1,8 @@
 package com.taw.polybank.ui.assistence;
 
+/**
+ * @author Javier Jordán Luque
+ */
 public class AssistantFilter {
     private String clientDni;
     private String clientName;

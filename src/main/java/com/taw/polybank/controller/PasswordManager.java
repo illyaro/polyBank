@@ -9,6 +9,9 @@ import java.security.SecureRandom;
 
 import static org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder.BCryptVersion.$2B;
 
+/**
+ * @author Illya Rozumovskyy
+ */
 public class PasswordManager {
 
     private final BCryptPasswordEncoder.BCryptVersion ENCODER_VERSION = $2B;

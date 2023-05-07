@@ -1,5 +1,8 @@
 package com.taw.polybank.dto;
 
+/**
+ * @author José Manuel Sánchez Rico
+ */
 public class AuthorizedAccountDTO {
     private boolean blocked;
     private int authorizedAccountId;

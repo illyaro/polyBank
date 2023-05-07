@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * @author Illya Rozumovskyy
+ */
 @Repository
 public interface AuthorizedAccountRepository extends JpaRepository<AuthorizedAccountEntity, Integer> {
 

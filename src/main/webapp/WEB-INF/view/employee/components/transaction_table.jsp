@@ -1,6 +1,10 @@
 <%@ page import="com.taw.polybank.dto.TransactionDTO" %>
 <%@ page import="java.util.List" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%--
+  Created by IntelliJ IDEA.
+  User: José Manuel Sánchez Rico
+--%>
 <table class="table">
     <tr>
         <th scope="col">Id</th>

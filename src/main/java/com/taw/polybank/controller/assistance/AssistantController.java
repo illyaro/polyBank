@@ -21,7 +21,6 @@ import java.util.List;
 /**
  * @author Javier Jordán Luque
  */
-
 @Controller
 @RequestMapping("employee/assistance")
 public class AssistantController {
