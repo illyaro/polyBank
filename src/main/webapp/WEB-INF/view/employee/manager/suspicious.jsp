@@ -35,7 +35,7 @@
                 <td><%= bankAccountDTO.getId()%></td>
                 <td><%= bankAccountDTO.getIban()%></td>
                 <td><%= bankAccountDTO.getBalance()%></td>
-                <td><a href="/employee/manager/accounts/client/block/<%= bankAccountDTO.getId()%>">Block account</a></td>
+                <td><a href="/employee/manager/block/account/<%= bankAccountDTO.getId()%>">Block account</a></td>
             </tr>
             <% } %>
         <% } %>

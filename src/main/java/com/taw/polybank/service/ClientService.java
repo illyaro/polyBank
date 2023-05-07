@@ -176,14 +176,13 @@ public class ClientService {
         if ((filter.getDNI() == null || filter.getDNI().isBlank())
                 && (filter.getName() == null || filter.getName().isBlank()))
             return this.findAll();
-        if (filter.getDNI() != null && !filter.getDNI().isBlank()) {
-            List<ClientDTO> clientDTOS = new ArrayList<>();
-            clientDTOS.add(clientRepository.findByDNI(filter.getDNI()).toDTO());
-            return clientDTOS;
-        }
-        if (filter.getName() != null && !filter.getName().isBlank()){
-            return getClientDTOS(clientRepository.findByNameOrSurname(filter.getName()));
-        }
-        return Collections.emptyList();
+        if (filter.getDNI() != null && !filter.getDNI().isBlank()
+                && filter.getName() != null && !filter.getName().isBlank())
+            return getClientDTOS(clientRepository.findClientsByDNIAndName(filter.getDNI(), filter.getName()));
+        if (filter.getDNI() != null && !filter.getDNI().isBlank())
+            return getClientDTOS(clientRepository.findClientsByDNI(filter.getDNI()));
+        if (filter.getName() != null && !filter.getName().isBlank())
+            return getClientDTOS(clientRepository.findClientsByNameOrSurname(filter.getName()));
+        return this.findAll();
     }
 }
