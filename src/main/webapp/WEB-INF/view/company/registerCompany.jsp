@@ -29,7 +29,7 @@
             List<BadgeDTO> badgeList = (List<BadgeDTO>) request.getAttribute("badgeList");
             for(BadgeDTO b : badgeList){
         %>
-            <option value="<%=b.getId()%>" label="<%=b.getName()%>"></option>
+            <option value="<%=b.getId()%>"><%=b.getName()%></option>
         <% } %>
     </select>
     <br/>
