@@ -37,7 +37,7 @@
 <a class="btn btn-primary" href='/client/account/operationHistory'>Operation history</a>
 <% } else { %>
 <h3>Your account is not active</h3>
-<a class="btn btn-warning" href='/client/request'>Request activation</a>
+<a class="btn btn-warning" href='/client/account/request'>Request activation</a>
 <% } %>
 <a class="btn btn-danger" href='/client/view'>Return</a>
 </body>

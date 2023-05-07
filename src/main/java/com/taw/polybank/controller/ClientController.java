@@ -40,6 +40,8 @@ public class ClientController {
     protected BeneficiaryService beneficiaryService;
     @Autowired
     protected PaymentService paymentService;
+    @Autowired
+    protected RequestService requestService;
 
     @GetMapping("/view")
     public String viewClient(Model model, HttpSession session) {
@@ -299,6 +301,31 @@ public class ClientController {
         model.addAttribute("transactionFilter", transactionFilter);
         model.addAttribute("transactionList", transactionList);
         return "client/bankAccount/operationHistory";
+    }
+
+    @GetMapping("/account/request")
+    public String doRequestUnban(HttpSession session, Model model){
+        ClientDTO client = (ClientDTO) session.getAttribute("client");
+        BankAccountDTO account = (BankAccountDTO) session.getAttribute("account");
+        if(client == null || account == null)
+            return "redirect:/";
+
+        List<RequestDTO> requestsNotSolved = requestService.findByBankAccountByBankAccountIdAndAndSolved(account, false);
+        model.addAttribute("hasRequest", requestsNotSolved.size());
+
+        return "client/bankAccount/requestActivation";
+    }
+
+    @GetMapping("/account/makeRequest")
+    public String doMakeUnbanPetition(@RequestParam("description") String description, HttpSession session){
+        ClientDTO client = (ClientDTO) session.getAttribute("client");
+        BankAccountDTO account = (BankAccountDTO) session.getAttribute("account");
+        if(client == null || account == null)
+            return "redirect:/";
+        List<RequestDTO> requestsNotSolved = requestService.findByBankAccountByBankAccountIdAndAndSolved(account, false);
+        if (requestsNotSolved.size() <= 0)
+            requestService.createNewRequest(client, account, "activation", description);
+        return "redirect:/client/account?id="+account.getId();
     }
 
     @GetMapping("/logout")
