@@ -3,7 +3,7 @@
 <%@ page import="java.util.List" %>
 <%--
   Created by IntelliJ IDEA.
-  User: Illya Rozumovskyy
+  User: Pablo Ruiz-Cruces
   Date: 07/04/2023
   Time: 23:34
   To change this template use File | Settings | File Templates.
@@ -32,8 +32,9 @@
     <label for="amount">Amount: </label>
     <input id="amount" type="text" name="amount" maxlength="10" size="10" class="formElement" />
     <br/>
-    <button class="prettyButton" type="submit" >Make transaction</button>
+    <button class="btn btn-primary" type="submit" >Make transaction</button>
 </form>
 </div>
+<a href="/client/account?id=<%=account.getId()%>" class="btn btn-danger">Return</a><br>
 </body>
 </html>

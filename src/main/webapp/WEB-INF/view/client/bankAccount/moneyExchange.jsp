@@ -4,7 +4,7 @@
 <%@ page import="com.taw.polybank.dto.BadgeDTO" %><%--
 <%--
   Created by IntelliJ IDEA.
-  User: Illya Rozumovskyy
+  User: Pablo Ruiz-Cruces
   Date: 07/04/2023
   Time: 23:34
   To change this template use File | Settings | File Templates.
@@ -35,5 +35,6 @@
         <input type="submit" class="btn btn-primary" value="Exchange">
     </form>
 </div>
+<a href="/client/account?id=<%=account.getId()%>" class="btn btn-danger">Return</a><br>
 </body>
 </html>

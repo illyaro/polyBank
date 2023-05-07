@@ -1,12 +1,12 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.taw.polybank.dto.TransactionDTO" %>
 <%@ page import="com.taw.polybank.dto.CurrencyExchangeDTO" %>
-<%@ page import="com.taw.polybank.dto.ClientDTO" %>
+<%@ page import="com.taw.polybank.entity.BankAccountEntity" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <%--
   Created by IntelliJ IDEA.
-  User: Illya Rozumovskyy
+  User: Pablo Ruiz-Cruces
   Date: 08/04/2023
   Time: 11:03
   To change this template use File | Settings | File Templates.
@@ -14,16 +14,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <%
-        List<TransactionDTO> transactionList = (List<TransactionDTO>) request.getAttribute("transactionList");
-    %>
-
     <title>PolyBank - Bank Account</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="../../../commonStyle.css">
 </head>
 <body>
+<%
+    List<TransactionDTO> transactionList = (List<TransactionDTO>) request.getAttribute("transactionList");
+    BankAccountEntity account = (BankAccountEntity) session.getAttribute("account");
+%>
 <h1>Operation history</h1>
-
 <h3>Filters</h3>
 <form:form modelAttribute="transactionFilter" method="post" action="/client/account/operationHistory">
     <form:label path="senderId">Sender id:</form:label>
@@ -42,12 +42,11 @@
     <form:input type="date" path="transactionBefore"/>
 
     <br/>
-    <form:button class="prettyButton" type="submit" value="filter" name="filter">Filter</form:button>
+    <form:button class="btn btn-primary" type="submit" value="filter" name="filter">Filter</form:button>
+    <a href="/client/account/operationHistory" class="btn btn-primary">Reset</a><br/>
 </form:form>
 
-<a href="/client/account/operationHistory" class="prettyButton">Reset</a><br/>
-
-<table border="1">
+<table class="table table-bordered">
     <tr>
         <th rowspan="2">Time</th>
         <th colspan="5">Sender</th>
@@ -115,6 +114,6 @@
         }
     %>
 </table>
-
+<a href="/client/account?id=<%=account.getId()%>" class="btn btn-danger">Return</a><br>
 </body>
 </html>
