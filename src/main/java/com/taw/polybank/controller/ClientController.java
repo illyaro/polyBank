@@ -124,6 +124,8 @@ public class ClientController {
         if (clientDTO == null)
             return "redirect:/";
         BankAccountDTO account = (BankAccountDTO) session.getAttribute("account");
+        if (account == null || !account.isActive())
+            return "redirect:/";
         if (account.getBalance() < amount) {
             //fail message not enough money
             model.addAttribute("message", "Money transfer was unsuccessful, not enough money in your bank account");
@@ -196,7 +198,7 @@ public class ClientController {
     public String moneyExchangeOnBankAccount (Model model, HttpSession session) {
         List<BadgeDTO>  badgeList = badgeService.findAll();
         BankAccountDTO account = (BankAccountDTO) session.getAttribute("account");
-        if (account == null)
+        if (account == null || !account.isActive())
             return "redirect:/";
         model.addAttribute("badgeList", badgeList);
         model.addAttribute("account", account);
@@ -256,7 +258,7 @@ public class ClientController {
         List<TransactionDTO> transactionList;
         BankAccountDTO account = (BankAccountDTO) session.getAttribute("account");
 
-        if (account == null)
+        if (account == null || !account.isActive())
             return "redirect:/";
 
         if (transactionFilter == null) {
@@ -297,6 +299,12 @@ public class ClientController {
         model.addAttribute("transactionFilter", transactionFilter);
         model.addAttribute("transactionList", transactionList);
         return "client/bankAccount/operationHistory";
+    }
+
+    @GetMapping("/logout")
+    public String logout(Model model, HttpSession session){
+        session.invalidate();
+        return "redirect:/";
     }
 
     @PostMapping("/login")

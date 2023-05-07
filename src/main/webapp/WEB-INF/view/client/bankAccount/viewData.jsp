@@ -31,9 +31,14 @@
         <td><%=account.getClientByClientId().getName()%> <%=account.getClientByClientId().getSurname()%></td>
     </tr>
 </table>
+<% if (account.isActive()) { %>
 <a class="btn btn-primary" href='/client/account/moneyExchange'>Money exchange</a>
 <a class="btn btn-primary" href='/client/account/transaction'>Make a transaction</a>
 <a class="btn btn-primary" href='/client/account/operationHistory'>Operation history</a>
+<% } else { %>
+<h3>Your account is not active</h3>
+<a class="btn btn-warning" href='/client/request'>Request activation</a>
+<% } %>
 <a class="btn btn-danger" href='/client/view'>Return</a>
 </body>
 </html>

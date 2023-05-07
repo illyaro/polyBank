@@ -20,8 +20,8 @@
     BankAccountDTO account = (BankAccountDTO) session.getAttribute("account");
     List<BadgeDTO> badgeList = (List<BadgeDTO>) request.getAttribute("badgeList");
 %>
-<div id="transactionWindow">
-    <h1>Money Exchange</h1>
+<h1>Money Exchange</h1>
+<% if (account.isActive()) { %>
     <p>Balance: <%=account.getBalance()%> <%=account.getBadgeByBadgeId().getName()%></p>
 
     <form action="/client/account/makeExchange" method="post">
@@ -34,7 +34,9 @@
         </select>
         <input type="submit" class="btn btn-primary" value="Exchange">
     </form>
-</div>
+<% } else { %>
+<h3>Your account is not active</h3>
+<% } %>
 <a href="/client/account?id=<%=account.getId()%>" class="btn btn-danger">Return</a><br>
 </body>
 </html>

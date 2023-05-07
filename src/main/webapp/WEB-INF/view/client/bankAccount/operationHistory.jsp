@@ -24,6 +24,7 @@
     BankAccountDTO account = (BankAccountDTO) session.getAttribute("account");
 %>
 <h1>Operation history</h1>
+<% if (account.isActive()) { %>
 <h3>Filters</h3>
 <form:form modelAttribute="transactionFilter" method="post" action="/client/account/operationHistory">
     <form:label path="senderId">Sender id:</form:label>
@@ -114,6 +115,9 @@
         }
     %>
 </table>
+<% } else { %>
+<h3>Your account is not active</h3>
+<% } %>
 <a href="/client/account?id=<%=account.getId()%>" class="btn btn-danger">Return</a><br>
 </body>
 </html>

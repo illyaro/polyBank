@@ -18,7 +18,7 @@
 <%
     BankAccountDTO account = (BankAccountDTO) session.getAttribute("account");
 %>
-<div id="transactionWindow">
+<% if (account.isActive()) {%>
 <h1>Make a transaction</h1>
 <p>Balance: <%=account.getBalance()%> <%=account.getBadgeByBadgeId().getName()%></p>
 <form action="/client/account/processTransfer" method="post">
@@ -34,7 +34,9 @@
     <br/>
     <button class="btn btn-primary" type="submit" >Make transaction</button>
 </form>
-</div>
+<% } else { %>
+<h3>Your account is not active</h3>
+<% } %>
 <a href="/client/account?id=<%=account.getId()%>" class="btn btn-danger">Return</a><br>
 </body>
 </html>
