@@ -20,10 +20,11 @@
 <html>
 <head>
     <title>Polybank - Assistence - Chat</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
 </head>
 <body>
 <h1>Assistance Chat (Assistant <%= chat.getAssistant().getName() %>)</h1>
-<table border="1">
+<table class="table table-bordered">
     <tr>
         <th>ME</th>
         <th>ASSISTANT</th>
@@ -56,13 +57,13 @@
         <input hidden="true" name="chatId" value="<%= chat.getId() %>">
         <textarea name="content" cols="50" rows="5" maxlength="1000"></textarea>
         <br><br>
-        <button>Send</button>
+        <button class="btn btn-primary">Send</button>
     </form>
         <%
             }
         %>
     <form action="/client/assistance/" method="get">
-        <button>Back</button>
+        <button class="btn btn-danger">Back</button>
     </form>
 </body>
 </html>

@@ -16,6 +16,7 @@
 <html>
 <head>
     <title>Polybank - Assistence</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
 </head>
 <body>
 <h1>Chats List</h1>
@@ -28,10 +29,10 @@
    <br>
     Order By Most Recent Messages: <form:checkbox path="recent"></form:checkbox>
     <br>
-    <form:button>Filter</form:button>
+    <form:button class="btn btn-primary">Filter</form:button>
 </form:form>
 <br>
-<table border="1">
+<table class="table table-bordered">
     <tr>
         <th>DNI</th>
         <th>CLIENT</th>
@@ -45,7 +46,7 @@
         <td><%= chat.getClient().getDni() %></td>
         <td><%= chat.getClient().getName() %></td>
         <td><%= chat.isClosedToString() %></td>
-        <td><a href="/employee/assistance/chat?id=<%= chat.getId() %>">Open</a></td>
+        <td><a class="btn btn-primary" href="/employee/assistance/chat?id=<%= chat.getId() %>">Open</a></td>
     </tr>
     <%
         }
