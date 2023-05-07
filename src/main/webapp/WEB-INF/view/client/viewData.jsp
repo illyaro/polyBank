@@ -47,6 +47,7 @@
     </tr>
 </table>
 <a class="btn btn-primary" href='/client/edit?id=<%=client.getId()%>'>Edit my data</a>
+<a class="btn btn-primary" href='/client/assistance'>Assistance</a>
 <a class="btn btn-danger" href='/client/logout'>Log out</a>
 </body>
 </html>
