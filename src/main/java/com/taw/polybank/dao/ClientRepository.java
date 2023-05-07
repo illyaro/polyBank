@@ -21,6 +21,16 @@ public interface ClientRepository extends JpaRepository<ClientEntity, Integer> {
     @Query("select c from ClientEntity c where c.dni = :dni")
     ClientEntity findByDNI(@Param("dni") String dni);
 
+    @Query("select c from ClientEntity c where c.dni like concat('%',:dni ,'%')")
+    List<ClientEntity> findClientsByDNI(@Param("dni") String dni);
+
+    @Query("select c from ClientEntity c " +
+            "where (c.name like concat('%',:name ,'%') or c.surname like concat('%',:name ,'%'))")
+    List<ClientEntity> findClientsByNameOrSurname(String name);
+
+    @Query("select c from ClientEntity c where c.dni = :dni and c.name like concat('%',:name ,'%') or c.surname like concat('%',:name ,'%')")
+    List<ClientEntity> findClientsByDNIAndName(@Param("dni") String dni, String name);
+
     @Query("select ce from ClientEntity ce join ce.authorizedAccountsById aa join aa.bankAccountByBankAccountId bank " +
             "join bank.companiesById com where com.id = :id union select ce from ClientEntity ce " +
             "join ce.bankAccountsById bank join bank.companiesById com where com.id = :id")
